@@ -20,9 +20,10 @@ public class CustomerDataSeeder {
                      CustomerService customerService) throws IOException {
         CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
                 .setSkipHeaderRecord(true)
+                .setDelimiter(',')
                 .get();
         try (
-                var in = Thread.currentThread().getContextClassLoader().getResourceAsStream("data.csv");
+                var in = Thread.currentThread().getContextClassLoader().getResourceAsStream("data/customers.csv");
                 var reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in), StandardCharsets.UTF_8));
                 CSVParser csvParser = csvFormat.parse(reader)) {
 
