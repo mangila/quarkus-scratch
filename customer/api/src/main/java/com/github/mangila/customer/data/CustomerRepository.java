@@ -1,4 +1,4 @@
-package com.github.mangila.customer;
+package com.github.mangila.customer.data;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
