@@ -1,0 +1,7 @@
+[tools]
+quarkus = "3.32.4"
+
+[tasks.native]
+description = "Build native Quarkus image with Jib"
+run = "quarkus build --native"
+dir = "api"
