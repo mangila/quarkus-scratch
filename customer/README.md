@@ -2,7 +2,9 @@
 
 Simple REST API backend with Quarkus and frontend with Astro and Vue.
 
-## L1 and L2 caching
+## API
+
+### L1 and L2 caching
 
 For a L1 cache caffine is used and for L2 Redis.
 
