@@ -7,11 +7,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "customer")
+@Audited
 public class CustomerEntity {
 
     @Id
