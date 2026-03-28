@@ -1,6 +1,7 @@
 package com.github.mangila.customer.integration.pokeapi;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
