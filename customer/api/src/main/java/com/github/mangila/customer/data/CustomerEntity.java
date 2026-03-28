@@ -46,6 +46,7 @@ public class CustomerEntity {
     private JsonNode favoritePokemon;
 
     public CustomerEntity() {
+        // do nothing, for ORM 🐍 - it's swedish for "snake"
     }
 
     public CustomerEntity(UUID id, String name, String address, String email, String phone, JsonNode favoritePokemon) {
