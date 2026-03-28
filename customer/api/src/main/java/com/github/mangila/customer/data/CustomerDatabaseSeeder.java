@@ -30,11 +30,11 @@ public class CustomerDatabaseSeeder {
      * entities are saved to the database in batches. Additionally, tasks are scheduled with
      * randomized delays for each customer.
      *
-     * @param startupEvent An event that triggers application startup, used to identify the
-     *                     startup phase of the application lifecycle.
-     * @param customerMapper A mapper that converts CSV records into Customer domain objects.
-     * @param customerService A service for handling business logic related to Customer entities,
-     *                        including persistence operations.
+     * @param startupEvent     An event that triggers application startup, used to identify the
+     *                         startup phase of the application lifecycle.
+     * @param customerMapper   A mapper that converts CSV records into Customer domain objects.
+     * @param customerService  A service for handling business logic related to Customer entities,
+     *                         including persistence operations.
      * @param jobRunrScheduler A scheduler used to schedule tasks for customers asynchronously.
      * @throws IOException If an error occurs while accessing or reading the CSV file.
      */
@@ -51,8 +51,8 @@ public class CustomerDatabaseSeeder {
                 var in = Thread.currentThread().getContextClassLoader().getResourceAsStream("data/customers.csv");
                 var reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in), StandardCharsets.UTF_8));
                 CSVParser csvParser = csvFormat.parse(reader)) {
-            final int batchSize = 10;
-            var customerBuffer = new ArrayList<Customer>();
+            final int batchSize = 25;
+            final var customerBuffer = new ArrayList<Customer>(batchSize);
             csvParser.stream()
                     .peek(record -> Log.infof("%s", record))
                     .map(customerMapper::toDomain)
