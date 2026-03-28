@@ -36,8 +36,6 @@ public class CustomerRestResource {
     public Map<String, Object> hello() {
         final int pokemonId = -1;
         MDC.put("pokemonId", String.valueOf(pokemonId));
-        var rn = ThreadLocalRandom.current().nextInt(1, 100);
-        MDC.put(String.valueOf(rn), "asd");
         var json = pokeApiRestClient.fetchPokemonById(pokemonId);
         Log.info(pokeApiConfig.token());
         final var map = Map.of(

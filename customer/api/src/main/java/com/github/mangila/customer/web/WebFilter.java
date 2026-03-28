@@ -12,12 +12,16 @@ import org.jboss.resteasy.reactive.server.ServerResponseFilter;
 public class WebFilter {
 
     @ServerRequestFilter(preMatching = true)
-    public void filterTraceId(ContainerRequestContext requestContext) {
+    public void filterRequest(ContainerRequestContext requestContext) {
         Log.info(requestContext.getUriInfo().getRequestUri());
     }
 
     @ServerResponseFilter
-    public void filterTraceId(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
-        Log.info(requestContext.getUriInfo().getRequestUri());
+    public void filterResponse(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
+        try {
+            Log.info(requestContext.getUriInfo().getRequestUri());
+        } finally {
+            MDC.clear();
+        }
     }
 }

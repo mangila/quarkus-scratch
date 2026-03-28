@@ -5,7 +5,6 @@ import com.github.mangila.customer.shared.JsonService;
 import jakarta.ws.rs.ext.Provider;
 import org.eclipse.microprofile.faulttolerance.ExecutionContext;
 import org.eclipse.microprofile.faulttolerance.FallbackHandler;
-import org.jboss.logging.MDC;
 
 @Provider
 public class PokeApiRestClientFallbackHandler implements FallbackHandler<ObjectNode> {
@@ -18,7 +17,6 @@ public class PokeApiRestClientFallbackHandler implements FallbackHandler<ObjectN
 
     @Override
     public ObjectNode handle(ExecutionContext context) {
-        MDC.put("pokeapi-fallback", "true");
         var node = jsonService.createObjectNode();
         node.put("name", "MissingNo");
         return node;
