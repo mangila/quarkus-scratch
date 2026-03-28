@@ -6,10 +6,11 @@ import com.github.mangila.customer.shared.CustomerMapper;
 import com.github.mangila.customer.shared.CustomerService;
 import io.quarkus.logging.Log;
 import io.quarkus.runtime.StartupEvent;
-import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.jobrunr.utils.CollectionUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,12 +18,23 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Dependent
+@ApplicationScoped
 public class CustomerDatabaseSeeder {
 
+    private final CustomerMapper customerMapper;
+    private final CustomerService customerService;
+    private final JobRunrScheduler jobRunrScheduler;
+
+    public CustomerDatabaseSeeder(CustomerMapper customerMapper, CustomerService customerService, JobRunrScheduler jobRunrScheduler) {
+        this.customerMapper = customerMapper;
+        this.customerService = customerService;
+        this.jobRunrScheduler = jobRunrScheduler;
+    }
 
     /**
      * Seeds the initial application state by processing customer data from a CSV file and
@@ -30,19 +42,11 @@ public class CustomerDatabaseSeeder {
      * entities are saved to the database in batches. Additionally, tasks are scheduled with
      * randomized delays for each customer.
      *
-     * @param startupEvent     An event that triggers application startup, used to identify the
-     *                         startup phase of the application lifecycle.
-     * @param customerMapper   A mapper that converts CSV records into Customer domain objects.
-     * @param customerService  A service for handling business logic related to Customer entities,
-     *                         including persistence operations.
-     * @param jobRunrScheduler A scheduler used to schedule tasks for customers asynchronously.
+     * @param startupEvent An event that triggers an application startup, used to identify the
+     *                     startup phase of the application lifecycle.
      * @throws IOException If an error occurs while accessing or reading the CSV file.
      */
-    public void seed(@Observes StartupEvent startupEvent,
-                     CustomerMapper customerMapper,
-                     CustomerService customerService,
-                     JobRunrScheduler jobRunrScheduler
-    ) throws IOException {
+    public void seed(@Observes StartupEvent startupEvent) throws IOException {
         CSVFormat csvFormat = CSVFormat.DEFAULT.builder()
                 .setHeader(Customer.CSV_HEADER)
                 .setSkipHeaderRecord(true)
@@ -60,19 +64,27 @@ public class CustomerDatabaseSeeder {
                     .forEach(customer -> {
                         customerBuffer.add(customer);
                         if (customerBuffer.size() > batchSize) {
-                            customerService.saveAll(customerBuffer);
-                            customerBuffer
-                                    .stream()
-                                    .map(Customer::id)
-                                    .forEach(uuid -> {
-                                        final int randomPokemonId = getRandomNumber(1, 152);
-                                        final Duration randomDelay = Duration.ofSeconds(getRandomNumber(10, 120));
-                                        jobRunrScheduler.schedule(randomPokemonId, uuid, randomDelay);
-                                    });
+                            handleBatch(customerBuffer);
                             customerBuffer.clear();
                         }
                     });
+            if (CollectionUtils.isNotNullOrEmpty(customerBuffer)) {
+                handleBatch(customerBuffer);
+            }
         }
+    }
+
+    private void handleBatch(List<Customer> customerBuffer) {
+        customerService.saveAll(customerBuffer);
+        customerBuffer.stream()
+                .map(Customer::id)
+                .forEach(this::scheduleCustomerJob);
+    }
+
+    public void scheduleCustomerJob(UUID customerId) {
+        final int randomPokemonId = getRandomNumber(1, 152);
+        final Duration randomDelay = Duration.ofSeconds(getRandomNumber(10, 120));
+        jobRunrScheduler.schedule(randomPokemonId, customerId, randomDelay);
     }
 
     public int getRandomNumber(int origin, int bound) {

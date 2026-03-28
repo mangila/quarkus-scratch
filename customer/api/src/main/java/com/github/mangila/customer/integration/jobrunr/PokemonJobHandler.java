@@ -35,6 +35,6 @@ public class PokemonJobHandler implements JobRequestHandler<PokemonJobRequest> {
         final UUID customerId = jobRequest.customerId();
         final ObjectNode node = pokeApiRestClient.fetchPokemonById(pokemonId);
         customerPostgresRepository.persistFavoritePokemon(customerId, node);
-        log.info("Pokemon name: {}", node.get("name").asText());
+        log.info("Pokemon id: {} name: {}", pokemonId, node.get("name").asText());
     }
 }
