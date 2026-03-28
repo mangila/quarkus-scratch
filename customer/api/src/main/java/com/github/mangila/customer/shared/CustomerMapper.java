@@ -1,7 +1,7 @@
 package com.github.mangila.customer.shared;
 
 import com.github.mangila.customer.data.CustomerEntity;
-import com.github.mangila.customer.model.Customer;
+import com.github.mangila.customer.domain.Customer;
 import com.github.mangila.customer.web.CustomerDto;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.commons.csv.CSVRecord;

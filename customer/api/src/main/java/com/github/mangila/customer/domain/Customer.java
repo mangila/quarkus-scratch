@@ -1,4 +1,4 @@
-package com.github.mangila.customer.model;
+package com.github.mangila.customer.domain;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mangila.ensure4j.Ensure;

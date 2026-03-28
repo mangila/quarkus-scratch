@@ -1,7 +1,7 @@
 package com.github.mangila.customer.shared;
 
 import com.github.mangila.customer.data.CustomerPostgresRepository;
-import com.github.mangila.customer.model.Customer;
+import com.github.mangila.customer.domain.Customer;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;

@@ -4,10 +4,13 @@ import io.smallrye.config.ConfigMapping;
 
 @ConfigMapping(prefix = "app")
 public interface AppConfig {
-    String secret();
 
     @ConfigMapping(prefix = "app.integration")
     interface IntegrationConfig {
-        String secret();
+
+        @ConfigMapping(prefix = "app.integration.pokeapi")
+        interface PokeApi {
+            String token();
+        }
     }
 }

@@ -14,17 +14,14 @@ import java.util.Map;
 @Path("api/v1/customer")
 public class CustomerRestResource {
 
-    private final AppConfig appConfig;
-    private final AppConfig.IntegrationConfig integrationConfig;
+    private final AppConfig.IntegrationConfig.PokeApi pokeApiConfig;
     private final CustomerService customerService;
     private final PokeApiRestClient pokeApiRestClient;
 
-    public CustomerRestResource(AppConfig appConfig,
-                                AppConfig.IntegrationConfig integrationConfig,
+    public CustomerRestResource(AppConfig.IntegrationConfig.PokeApi pokeApiConfig,
                                 CustomerService customerService,
                                 @RestClient PokeApiRestClient pokeApiRestClient) {
-        this.appConfig = appConfig;
-        this.integrationConfig = integrationConfig;
+        this.pokeApiConfig = pokeApiConfig;
         this.customerService = customerService;
         this.pokeApiRestClient = pokeApiRestClient;
     }
@@ -34,8 +31,7 @@ public class CustomerRestResource {
     public Map<String, String> hello() {
         var json = pokeApiRestClient.getPokemonById(1);
         final var map = Map.of(
-                "app.secret", appConfig.secret(),
-                "integration.secret", integrationConfig.secret(),
+                "pokeapi_token", pokeApiConfig.token(),
                 "pokemon", json.toString()
         );
         return map;

@@ -9,5 +9,5 @@ dir = "api"
 
 [tasks.native]
 description = "Build native Quarkus image with Jib"
-run = "quarkus build -Dquarkus.profile=native"
+run = "quarkus build --native -Dquarkus.container-image.name=customer-api-native"
 dir = "api"

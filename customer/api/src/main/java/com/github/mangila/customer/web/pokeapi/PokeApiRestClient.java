@@ -5,13 +5,19 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
+import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParams;
+import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @RegisterRestClient(configKey = "pokeapi")
-@ClientHeaderParam(name = "Accept-Encoding", value = "gzip")
+@RegisterProvider(PokeApiRestClientAuthFilter.class)
+@ClientHeaderParams(value = {
+        @ClientHeaderParam(name = "User-Agent", value = "mangila-customer-api"),
+        @ClientHeaderParam(name = "Accept-Encoding", value = "gzip")
+})
 public interface PokeApiRestClient {
 
     @GET
-    @Path("/pokemon/{id}")
+    @Path("pokemon/{id}")
     ObjectNode getPokemonById(@PathParam("id") int id);
 }

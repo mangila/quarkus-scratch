@@ -2,7 +2,7 @@ package com.github.mangila.customer.data;
 
 import com.github.mangila.customer.shared.CustomerMapper;
 import com.github.mangila.customer.shared.CustomerService;
-import com.github.mangila.customer.model.Customer;
+import com.github.mangila.customer.domain.Customer;
 import io.quarkus.logging.Log;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.Dependent;
