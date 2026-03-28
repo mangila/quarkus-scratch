@@ -1,6 +1,6 @@
 package com.github.mangila.customer.web;
 
-import com.github.mangila.customer.config.ApplicationConfig;
+import com.github.mangila.customer.config.AppConfig;
 import com.github.mangila.customer.shared.CustomerService;
 import com.github.mangila.customer.web.pokeapi.PokeApiRestClient;
 import jakarta.ws.rs.GET;
@@ -14,16 +14,16 @@ import java.util.Map;
 @Path("api/v1/customer")
 public class CustomerRestResource {
 
-    private final ApplicationConfig applicationConfig;
-    private final ApplicationConfig.IntegrationConfig integrationConfig;
+    private final AppConfig appConfig;
+    private final AppConfig.IntegrationConfig integrationConfig;
     private final CustomerService customerService;
     private final PokeApiRestClient pokeApiRestClient;
 
-    public CustomerRestResource(ApplicationConfig applicationConfig,
-                                ApplicationConfig.IntegrationConfig integrationConfig,
+    public CustomerRestResource(AppConfig appConfig,
+                                AppConfig.IntegrationConfig integrationConfig,
                                 CustomerService customerService,
                                 @RestClient PokeApiRestClient pokeApiRestClient) {
-        this.applicationConfig = applicationConfig;
+        this.appConfig = appConfig;
         this.integrationConfig = integrationConfig;
         this.customerService = customerService;
         this.pokeApiRestClient = pokeApiRestClient;
@@ -34,7 +34,7 @@ public class CustomerRestResource {
     public Map<String, String> hello() {
         var json = pokeApiRestClient.getPokemonById(1);
         final var map = Map.of(
-                "app.secret", applicationConfig.secret(),
+                "app.secret", appConfig.secret(),
                 "integration.secret", integrationConfig.secret(),
                 "pokemon", json.toString()
         );

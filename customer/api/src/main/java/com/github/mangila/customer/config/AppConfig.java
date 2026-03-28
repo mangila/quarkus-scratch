@@ -3,7 +3,7 @@ package com.github.mangila.customer.config;
 import io.smallrye.config.ConfigMapping;
 
 @ConfigMapping(prefix = "app")
-public interface ApplicationConfig {
+public interface AppConfig {
     String secret();
 
     @ConfigMapping(prefix = "app.integration")
