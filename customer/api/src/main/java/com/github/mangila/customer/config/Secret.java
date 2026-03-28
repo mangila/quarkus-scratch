@@ -10,7 +10,9 @@ import org.jspecify.annotations.NonNull;
  * <p>
  * Instances of this class are immutable.
  */
-public class Secret {
+public final class Secret {
+
+    private static final String OBFUSCATED = "<hidden>";
 
     private final String value;
 
@@ -25,11 +27,11 @@ public class Secret {
     @Override
     @NonNull
     public String toString() {
-        return "<hidden>";
+        return OBFUSCATED;
     }
 
     @JsonValue
     public String serialize() {
-        return "<hidden>";
+        return OBFUSCATED;
     }
 }
