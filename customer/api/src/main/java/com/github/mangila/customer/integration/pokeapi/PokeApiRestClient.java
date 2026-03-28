@@ -1,4 +1,4 @@
-package com.github.mangila.customer.web.pokeapi;
+package com.github.mangila.customer.integration.pokeapi;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.ws.rs.GET;

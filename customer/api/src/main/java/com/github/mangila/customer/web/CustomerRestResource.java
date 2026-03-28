@@ -2,7 +2,7 @@ package com.github.mangila.customer.web;
 
 import com.github.mangila.customer.config.AppConfig;
 import com.github.mangila.customer.shared.CustomerService;
-import com.github.mangila.customer.web.pokeapi.PokeApiRestClient;
+import com.github.mangila.customer.integration.pokeapi.PokeApiRestClient;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;

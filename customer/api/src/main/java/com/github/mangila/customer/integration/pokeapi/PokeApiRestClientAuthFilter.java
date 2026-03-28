@@ -1,4 +1,4 @@
-package com.github.mangila.customer.web.pokeapi;
+package com.github.mangila.customer.integration.pokeapi;
 
 import com.github.mangila.customer.config.AppConfig;
 import jakarta.ws.rs.client.ClientRequestContext;
