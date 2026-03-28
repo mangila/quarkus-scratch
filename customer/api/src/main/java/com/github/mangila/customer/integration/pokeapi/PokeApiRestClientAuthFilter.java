@@ -13,7 +13,7 @@ import java.io.IOException;
  * PokeAPI does not provide an authentication flow, this is a simulated filter for scratch purposes
  * This would be a typical filter for an authentication flow with a client credentials grant.
  * <p>
- * During logging, the Authorization header is masked.
+ * During logging, the X-API-TOKEN header is masked.
  */
 @Provider
 public class PokeApiRestClientAuthFilter implements ClientRequestFilter {
@@ -27,6 +27,6 @@ public class PokeApiRestClientAuthFilter implements ClientRequestFilter {
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
         requestContext.getHeaders()
-                .add("Authorization", "Bearer " + pokeApiConfig.token());
+                .add("X-API-TOKEN", pokeApiConfig.token());
     }
 }
