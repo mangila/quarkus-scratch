@@ -65,13 +65,18 @@ public class CustomerDatabaseSeeder {
                                     .stream()
                                     .map(Customer::id)
                                     .forEach(uuid -> {
-                                        var rn = ThreadLocalRandom.current().nextInt(1, 152);
-                                        jobRunrScheduler.schedule(rn, uuid, Duration.ofSeconds(rn));
+                                        final int randomPokemonId = getRandomNumber(1, 152);
+                                        final Duration randomDelay = Duration.ofSeconds(getRandomNumber(10, 120));
+                                        jobRunrScheduler.schedule(randomPokemonId, uuid, randomDelay);
                                     });
                             customerBuffer.clear();
                         }
                     });
         }
+    }
+
+    public int getRandomNumber(int origin, int bound) {
+        return ThreadLocalRandom.current().nextInt(origin, bound);
     }
 
 }
