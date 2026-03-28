@@ -2,10 +2,12 @@ package com.github.mangila.customer.web;
 
 import com.github.mangila.customer.config.ApplicationConfig;
 import com.github.mangila.customer.shared.CustomerService;
+import com.github.mangila.customer.web.pokeapi.PokeApiRestClient;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.util.Map;
 
@@ -15,18 +17,26 @@ public class CustomerRestResource {
     private final ApplicationConfig applicationConfig;
     private final ApplicationConfig.IntegrationConfig integrationConfig;
     private final CustomerService customerService;
+    private final PokeApiRestClient pokeApiRestClient;
 
-    public CustomerRestResource(ApplicationConfig applicationConfig, ApplicationConfig.IntegrationConfig integrationConfig, CustomerService customerService) {
+    public CustomerRestResource(ApplicationConfig applicationConfig,
+                                ApplicationConfig.IntegrationConfig integrationConfig,
+                                CustomerService customerService,
+                                @RestClient PokeApiRestClient pokeApiRestClient) {
         this.applicationConfig = applicationConfig;
         this.integrationConfig = integrationConfig;
         this.customerService = customerService;
+        this.pokeApiRestClient = pokeApiRestClient;
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, String> hello() {
-        final var map = Map.of("app.secret", applicationConfig.secret(),
-        "integration.secret", integrationConfig.secret()
+        var json = pokeApiRestClient.getPokemonById(1);
+        final var map = Map.of(
+                "app.secret", applicationConfig.secret(),
+                "integration.secret", integrationConfig.secret(),
+                "pokemon", json.toString()
         );
         return map;
     }

@@ -2,7 +2,12 @@
 java = "graalvm-community-25.0.2"
 quarkus = "3.32.4"
 
+[tasks.jvm]
+description = "Build JVM Quarkus image with Jib"
+run = "quarkus build"
+dir = "api"
+
 [tasks.native]
 description = "Build native Quarkus image with Jib"
-run = "quarkus build --native"
+run = "quarkus build -Dquarkus.profile=native"
 dir = "api"
