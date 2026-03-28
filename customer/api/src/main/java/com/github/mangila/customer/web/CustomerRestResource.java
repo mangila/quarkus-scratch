@@ -29,7 +29,7 @@ public class CustomerRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, String> hello() {
-        var json = pokeApiRestClient.getPokemonById(1);
+        var json = pokeApiRestClient.fetchPokemonById(1);
         final var map = Map.of(
                 "pokeapi_token", pokeApiConfig.token(),
                 "pokemon", json.toString()
