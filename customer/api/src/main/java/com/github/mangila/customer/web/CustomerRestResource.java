@@ -3,6 +3,7 @@ package com.github.mangila.customer.web;
 import com.github.mangila.customer.config.AppConfig;
 import com.github.mangila.customer.integration.pokeapi.PokeApiRestClient;
 import com.github.mangila.customer.shared.CustomerService;
+import io.quarkus.logging.Log;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -12,8 +13,9 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.MDC;
 
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
-@Path("api/v1/customer")
+@Path("api/v1/customers")
 public class CustomerRestResource {
 
     private final AppConfig.IntegrationConfig.PokeApi pokeApiConfig;
@@ -31,10 +33,13 @@ public class CustomerRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public Map<String, String> hello() {
-        final int pokemonId = 1;
+    public Map<String, Object> hello() {
+        final int pokemonId = -1;
         MDC.put("pokemonId", String.valueOf(pokemonId));
+        var rn = ThreadLocalRandom.current().nextInt(1, 100);
+        MDC.put(String.valueOf(rn), "asd");
         var json = pokeApiRestClient.fetchPokemonById(pokemonId);
+        Log.info(pokeApiConfig.token());
         final var map = Map.of(
                 "pokeapi_token", pokeApiConfig.token(),
                 "pokemon", json.toString()

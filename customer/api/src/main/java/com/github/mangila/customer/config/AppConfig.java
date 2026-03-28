@@ -10,7 +10,7 @@ public interface AppConfig {
 
         @ConfigMapping(prefix = "app.integration.pokeapi")
         interface PokeApi {
-            String token();
+            Secret token();
         }
     }
 }

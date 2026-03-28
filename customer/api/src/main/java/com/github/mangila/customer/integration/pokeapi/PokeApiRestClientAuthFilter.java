@@ -4,7 +4,6 @@ import com.github.mangila.customer.config.AppConfig;
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.ext.Provider;
-import org.jboss.logging.MDC;
 
 import java.io.IOException;
 
@@ -27,8 +26,7 @@ public class PokeApiRestClientAuthFilter implements ClientRequestFilter {
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        MDC.put(this.getClass().getSimpleName(), "true");
         requestContext.getHeaders()
-                .add("X-API-TOKEN", pokeApiConfig.token());
+                .add("X-API-TOKEN", pokeApiConfig.token().reveal());
     }
 }

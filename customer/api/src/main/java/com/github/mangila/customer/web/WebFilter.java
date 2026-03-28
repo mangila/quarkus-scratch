@@ -4,6 +4,7 @@ import io.quarkus.logging.Log;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.ext.Provider;
+import org.jboss.logging.MDC;
 import org.jboss.resteasy.reactive.server.ServerRequestFilter;
 import org.jboss.resteasy.reactive.server.ServerResponseFilter;
 
@@ -12,11 +13,11 @@ public class WebFilter {
 
     @ServerRequestFilter(preMatching = true)
     public void filterTraceId(ContainerRequestContext requestContext) {
-        Log.info("Hello from: " + requestContext.getUriInfo().getRequestUri());
+        Log.info(requestContext.getUriInfo().getRequestUri());
     }
 
     @ServerResponseFilter
     public void filterTraceId(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
-        Log.info("Bye from: " + requestContext.getUriInfo().getRequestUri());
+        Log.info(requestContext.getUriInfo().getRequestUri());
     }
 }
