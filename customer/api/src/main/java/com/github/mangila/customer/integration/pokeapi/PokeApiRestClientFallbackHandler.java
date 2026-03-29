@@ -7,11 +7,11 @@ import org.eclipse.microprofile.faulttolerance.ExecutionContext;
 import org.eclipse.microprofile.faulttolerance.FallbackHandler;
 
 @Provider
-public class PokeApiRestClientFallbackHandler implements FallbackHandler<ObjectNode> {
+class PokeApiRestClientFallbackHandler implements FallbackHandler<ObjectNode> {
 
     private final JsonService jsonService;
 
-    public PokeApiRestClientFallbackHandler(JsonService jsonService) {
+    PokeApiRestClientFallbackHandler(JsonService jsonService) {
         this.jsonService = jsonService;
     }
 

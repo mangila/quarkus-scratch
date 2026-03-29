@@ -16,11 +16,11 @@ import java.io.IOException;
  * During logging, the X-API-TOKEN header is masked.
  */
 @Provider
-public class PokeApiRestClientAuthFilter implements ClientRequestFilter {
+class PokeApiRestClientAuthFilter implements ClientRequestFilter {
 
     private final AppConfig.IntegrationConfig.PokeApi pokeApiConfig;
 
-    public PokeApiRestClientAuthFilter(AppConfig.IntegrationConfig.PokeApi pokeApiConfig) {
+    PokeApiRestClientAuthFilter(AppConfig.IntegrationConfig.PokeApi pokeApiConfig) {
         this.pokeApiConfig = pokeApiConfig;
     }
 
