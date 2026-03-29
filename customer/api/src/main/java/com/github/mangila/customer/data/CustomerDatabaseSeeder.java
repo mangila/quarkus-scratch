@@ -74,6 +74,11 @@ public class CustomerDatabaseSeeder {
         }
     }
 
+    /**
+     * Double writes to postgres and jobrunr storage provider.
+     * Jobrunr PRO supports transaction for double writes.
+     * <a href="https://www.jobrunr.io/en/documentation/pro/transactions/">...</a>
+     */
     private void handleBatch(List<Customer> customerBuffer) {
         customerService.saveAll(customerBuffer);
         customerBuffer.stream()
@@ -84,7 +89,7 @@ public class CustomerDatabaseSeeder {
     public void scheduleCustomerJob(UUID customerId) {
         final int randomPokemonId = getRandomNumber(1, 152);
         final Duration randomDelay = Duration.ofSeconds(getRandomNumber(10, 120));
-        jobRunrScheduler.schedule(randomPokemonId, customerId, randomDelay);
+      //  jobRunrScheduler.schedule(randomPokemonId, customerId, randomDelay);
     }
 
     public int getRandomNumber(int origin, int bound) {

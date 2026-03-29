@@ -1,5 +1,6 @@
 package com.github.mangila.customer.data;
 
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 
 /**
@@ -7,4 +8,12 @@ import jakarta.enterprise.context.ApplicationScoped;
  */
 @ApplicationScoped
 public class CustomerRedisRepository {
+
+    /**
+     * Call a Redis function to let replicas race for a Lock and then run a DEL
+     * or just call DEL directly from all replicas.
+     */
+    public void evict(String key) {
+        Log.info("Evicting L2 key: " + key);
+    }
 }

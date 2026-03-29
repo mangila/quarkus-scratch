@@ -1,5 +1,6 @@
 package com.github.mangila.customer.data;
 
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 
 /**
@@ -7,4 +8,9 @@ import jakarta.enterprise.context.ApplicationScoped;
  */
 @ApplicationScoped
 public class CustomerCacheRepository {
+
+    public void evict(String key) {
+        Log.info("Evicting L1 key: " + key);
+    }
+
 }
