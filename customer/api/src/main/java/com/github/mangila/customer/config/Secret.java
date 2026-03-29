@@ -1,6 +1,7 @@
 package com.github.mangila.customer.config;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import jakarta.validation.constraints.NotBlank;
 import org.jspecify.annotations.NonNull;
 
 
@@ -16,7 +17,7 @@ public final class Secret {
 
     private final String value;
 
-    public Secret(String value) {
+    public Secret(@NotBlank String value) {
         this.value = value;
     }
 
@@ -31,6 +32,7 @@ public final class Secret {
     }
 
     @JsonValue
+    @NonNull
     public String serialize() {
         return OBFUSCATED;
     }

@@ -10,7 +10,7 @@ import org.jboss.logging.MDC;
 /**
  * Listen to updates on the customer table and evict the corresponding cache entry using PostgreSQL LISTEN/NOTIFY.
  * <p>
- * If a notification is lost, we will have "dirty" data in the cache for a short time until the TTL kicks in.
+ * If a notification is lost, we will have "dirty" data in the cache(s) for a short time until the TTL kicks in.
  */
 @ApplicationScoped
 public class CacheEvictRoute extends RouteBuilder {
