@@ -1,6 +1,7 @@
 package com.github.mangila.customer.web;
 
 import com.github.mangila.customer.config.AppConfig;
+import com.github.mangila.customer.integration.pgevent.PgEventUtils;
 import com.github.mangila.customer.integration.pokeapi.PokeApiService;
 import com.github.mangila.customer.shared.CustomerService;
 import io.quarkus.logging.Log;
@@ -44,7 +45,7 @@ public class CustomerRestResource {
                 "pokeapi_token", pokeApiConfig.token(),
                 "pokemon", json.get("name").asText()
         );
-        producerTemplate.sendBody("pgevent://postgres/customer_evict?datasource=#pgevent", "hello");
+        producerTemplate.sendBody(PgEventUtils.getEndpoint("customer_evict"), " ");
         return map;
     }
 

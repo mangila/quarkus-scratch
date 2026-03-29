@@ -10,7 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class CustomerCacheRepository {
 
     public void evict(String key) {
-        Log.info("Evicting L1 key: " + key);
+        Log.info("Evict L1");
     }
 
 }

@@ -4,7 +4,6 @@ import com.github.mangila.customer.domain.Customer;
 import com.github.mangila.customer.integration.jobrunr.JobRunrScheduler;
 import com.github.mangila.customer.shared.CustomerMapper;
 import com.github.mangila.customer.shared.CustomerService;
-import io.quarkus.logging.Log;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
@@ -53,23 +52,22 @@ public class CustomerDatabaseSeeder {
                 .get();
         try (
                 var in = Thread.currentThread().getContextClassLoader().getResourceAsStream("data/customers.csv");
-                var reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in), StandardCharsets.UTF_8));
+                var reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in, "customers.csv is null"), StandardCharsets.UTF_8));
                 CSVParser csvParser = csvFormat.parse(reader)) {
             final int batchSize = 25;
             final var customerBuffer = new ArrayList<Customer>(batchSize);
             csvParser.stream()
-                    .peek(record -> Log.infof("%s", record))
                     .map(customerMapper::toDomain)
-                    .peek(customer -> Log.infof("%s", customer))
                     .forEach(customer -> {
                         customerBuffer.add(customer);
-                        if (customerBuffer.size() > batchSize) {
+                        if (customerBuffer.size() >= batchSize) {
                             handleBatch(customerBuffer);
                             customerBuffer.clear();
                         }
                     });
             if (CollectionUtils.isNotNullOrEmpty(customerBuffer)) {
                 handleBatch(customerBuffer);
+                customerBuffer.clear();
             }
         }
     }
@@ -77,7 +75,8 @@ public class CustomerDatabaseSeeder {
     /**
      * Double writes to postgres and jobrunr storage provider.
      * Jobrunr PRO supports transaction for double writes.
-     * <a href="https://www.jobrunr.io/en/documentation/pro/transactions/">...</a>
+     * </p>
+     * <a href="https://www.jobrunr.io/en/documentation/pro/transactions/">JobRunr transactions</a>
      */
     private void handleBatch(List<Customer> customerBuffer) {
         customerService.saveAll(customerBuffer);
@@ -89,7 +88,7 @@ public class CustomerDatabaseSeeder {
     public void scheduleCustomerJob(UUID customerId) {
         final int randomPokemonId = getRandomNumber(1, 152);
         final Duration randomDelay = Duration.ofSeconds(getRandomNumber(10, 120));
-      //  jobRunrScheduler.schedule(randomPokemonId, customerId, randomDelay);
+        //  jobRunrScheduler.schedule(randomPokemonId, customerId, randomDelay);
     }
 
     public int getRandomNumber(int origin, int bound) {
