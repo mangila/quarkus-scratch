@@ -5,6 +5,7 @@ import io.github.mangila.ensure4j.Ensure;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ public record CustomerDto(
         @NotBlank String address,
         @NotBlank @Email String email,
         @NotBlank String phone,
-        JsonNode favoritePokemon
+        @Nullable JsonNode favoritePokemon
 ) {
 
     public CustomerDto {
