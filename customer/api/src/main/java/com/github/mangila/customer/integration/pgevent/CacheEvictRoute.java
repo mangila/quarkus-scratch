@@ -8,7 +8,7 @@ public class CacheEvictRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        from("pgevent:///postgres/pokemon_evict?datasource=#pgevent")
+        from("pgevent:///postgres/customer_evict?datasource=#pgevent")
                 .log("evict: ${body}");
     }
 }
