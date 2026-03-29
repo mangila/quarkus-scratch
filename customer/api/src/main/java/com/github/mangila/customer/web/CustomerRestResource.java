@@ -45,7 +45,7 @@ public class CustomerRestResource {
                 "pokeapi_token", pokeApiConfig.token(),
                 "pokemon", json.get("name").asText()
         );
-        producerTemplate.sendBody(PgEventUtils.getEndpoint("customer_evict"), " ");
+        producerTemplate.sendBody(PgEventUtils.getEndpoint("customer_evict"), "hej");
         return map;
     }
 

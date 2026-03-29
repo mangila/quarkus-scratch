@@ -7,13 +7,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.Type;
-import org.hibernate.envers.Audited;
 
 import java.util.UUID;
 
-@Entity
+@Entity(name = "Customer")
 @Table(name = "customer")
-@Audited
 public class CustomerEntity {
 
     @Id
@@ -25,6 +23,7 @@ public class CustomerEntity {
     private String name;
 
     @Column(nullable = false,
+            unique = true,
             columnDefinition = "TEXT"
     )
     private String address;
@@ -42,6 +41,7 @@ public class CustomerEntity {
 
     @Type(JsonType.class)
     @Column(
+            name = "favorite_pokemon",
             nullable = false,
             columnDefinition = "JSONB"
     )
