@@ -37,7 +37,7 @@ public class CustomerRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     public Map<String, Object> hello() {
-        final int pokemonId = 151;
+        final int pokemonId = 1;
         MDC.put("pokemonId", String.valueOf(pokemonId));
         var json = pokeApiService.fetchPokemonById(pokemonId);
         Log.info(pokeApiConfig.token());
