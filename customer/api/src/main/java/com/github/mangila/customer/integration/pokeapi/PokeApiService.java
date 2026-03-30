@@ -24,9 +24,10 @@ public class PokeApiService {
     public ObjectNode fetchPokemonById(@Positive int pokemonId) {
         var cache = pokeApiCache.getIfPresent(pokemonId);
         if (cache != null) {
-            Log.info("Cache hit");
+            Log.info("L1 Cache hit");
             return cache.join();
         }
+        // L2 check
         Log.info("Cache miss");
         var response = pokeApiRestClient.fetchPokemonById(pokemonId);
         if (response.has("fallback")) {
