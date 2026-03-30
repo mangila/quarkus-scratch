@@ -17,9 +17,6 @@ class PokeApiFallbackHandler implements FallbackHandler<ObjectNode> {
 
     @Override
     public ObjectNode handle(ExecutionContext context) {
-        var node = jsonService.createObjectNode();
-        node.put("name", "MissingNo");
-        node.put("fallback", true);
-        return node;
+        return jsonService.createObjectNode();
     }
 }

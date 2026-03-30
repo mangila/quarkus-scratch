@@ -6,12 +6,26 @@ Simple REST API backend with Quarkus and frontend with Astro and Vue.
 
 ### L1 and L2 caching
 
-For a L1 cache caffine is used and for L2 Redis.
+> [!NOTE]
+> "There are only two hard things in Computer Science: cache invalidation and naming things."
 
-This approach is nice if in a polygot environment you want to use Redis for caching.
+#### Alternative I
 
-An alternative is to use Hazelcast if in an only Java environment.
+* L1 Caffeine
+* L2 Redis
 
-For L1 Hazelcast Near Cache is used and for L2 Hazelcast.
+This approach is nice if in a polygot environment then use Redis for caching.
 
-The tricky part is the eviction policy.
+#### Alternative II
+
+* L1 Hazelcast Near Cache
+* L2 Hazelcast
+
+An alternative is to use Hazelcast if in and only Java environment.
+
+#### Alternative III (recommended)
+
+* L1 Caffeine
+* L2 Postgres
+
+Using a Postgres UNLOGGED table for caching.
