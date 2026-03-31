@@ -29,12 +29,12 @@ class PokeApiCache {
         CompletableFuture<ObjectNode> l1 = cache.as(CaffeineCache.class).getIfPresent(key);
         if (l1 != null) {
             Log.info("L1 Cache hit");
-            return l1;
+            return l1.thenApply(ObjectNode::deepCopy);
         }
         ObjectNode l2 = valueCommands.get(key);
         if (l2 != null) {
             Log.info("L2 Cache hit");
-            return CompletableFuture.completedFuture(l2);
+            return CompletableFuture.completedFuture(l2.deepCopy());
         }
         return null;
     }
