@@ -1,52 +1,64 @@
 package com.github.mangila.customer.web;
 
-import com.github.mangila.customer.config.AppConfig;
+import com.github.mangila.customer.domain.Customer;
 import com.github.mangila.customer.integration.pgevent.PgEventUtils;
-import com.github.mangila.customer.integration.pokeapi.PokeApiService;
+import com.github.mangila.customer.shared.CustomerMapper;
 import com.github.mangila.customer.shared.CustomerService;
-import io.quarkus.logging.Log;
 import io.smallrye.common.annotation.RunOnVirtualThread;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.apache.camel.ProducerTemplate;
 import org.slf4j.MDC;
 
-import java.util.Map;
+import java.util.UUID;
 
 @Path("api/v1/customers")
 public class CustomerRestResource {
 
-    private final AppConfig.IntegrationConfig.PokeApi pokeApiConfig;
     private final CustomerService customerService;
-    private final PokeApiService pokeApiService;
     private final ProducerTemplate producerTemplate;
+    private final CustomerMapper mapper;
 
-    public CustomerRestResource(AppConfig.IntegrationConfig.PokeApi pokeApiConfig,
-                                CustomerService customerService,
-                                PokeApiService pokeApiService,
-                                ProducerTemplate producerTemplate) {
-        this.pokeApiConfig = pokeApiConfig;
+    public CustomerRestResource(CustomerService customerService,
+                                ProducerTemplate producerTemplate,
+                                CustomerMapper mapper) {
         this.customerService = customerService;
-        this.pokeApiService = pokeApiService;
         this.producerTemplate = producerTemplate;
+        this.mapper = mapper;
     }
 
     @GET
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public Map<String, Object> hello() {
-        final int pokemonId = 1;
-        MDC.put("pokemonId", String.valueOf(pokemonId));
-        var json = pokeApiService.fetchPokemonById(pokemonId);
-        Log.info(pokeApiConfig.token());
-        final var map = Map.of(
-                "pokeapi_token", pokeApiConfig.token(),
-                "pokemon", json.get("name").asText()
-        );
+    public CustomerDto get(UUID id) {
+        MDC.put("customer.id", id.toString());
         producerTemplate.sendBody(PgEventUtils.getEndpoint("customer_evict"), "hej");
-        return map;
+        final Customer domain = customerService.findById(id);
+        final CustomerDto dto = mapper.toDto(domain);
+        return dto;
+    }
+
+    @POST
+    @RunOnVirtualThread
+    public Response create(@Valid CustomerDto dto) {
+        return Response.ok().entity("ok").build();
+    }
+
+    @PUT
+    @RunOnVirtualThread
+    public Response update(@Valid CustomerDto dto) {
+        return Response.ok().entity("ok").build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @RunOnVirtualThread
+    public Response delete(UUID id) {
+        MDC.put("customer.id", id.toString());
+        return Response.noContent().build();
     }
 
 }

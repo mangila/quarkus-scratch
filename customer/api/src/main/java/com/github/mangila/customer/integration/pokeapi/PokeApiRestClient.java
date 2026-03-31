@@ -1,6 +1,7 @@
 package com.github.mangila.customer.integration.pokeapi;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.quarkiverse.resteasy.problem.client.ThrowingHttpProblemClientExceptionMapper;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -14,6 +15,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 @RegisterRestClient(configKey = "pokeapi")
 @RegisterProviders(value = {
         @RegisterProvider(PokeApiRestClientAuthFilter.class),
+        @RegisterProvider(ThrowingHttpProblemClientExceptionMapper.class)
 })
 @ClientHeaderParams(value = {
         @ClientHeaderParam(name = "User-Agent", value = "mangila-customer-api"),

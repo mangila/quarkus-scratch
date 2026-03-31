@@ -78,9 +78,9 @@ public class CustomerDatabaseSeeder {
      * </p>
      * <a href="https://www.jobrunr.io/en/documentation/pro/transactions/">JobRunr transactions</a>
      */
-    private void handleBatch(List<Customer> customerBuffer) {
-        customerService.saveAll(customerBuffer);
-        customerBuffer.stream()
+    private void handleBatch(List<Customer> customers) {
+        customerService.saveAll(customers);
+        customers.stream()
                 .map(Customer::id)
                 .forEach(this::scheduleCustomerJob);
     }

@@ -47,4 +47,23 @@ public class CustomerMapper {
         return new CustomerEntity(id, name, address, email, phone, favoritePokemon.orElse(jsonService.createObjectNode()));
     }
 
+    public Customer toDomain(CustomerEntity entity) {
+        final var id = entity.getId();
+        final var name = entity.getName();
+        final var address = entity.getAddress();
+        final var email = entity.getEmail();
+        final var phone = entity.getPhone();
+        final var favoritePokemon = entity.getFavoritePokemon();
+        return new Customer(id, name, address, email, phone, Optional.ofNullable(favoritePokemon));
+    }
+
+    public CustomerDto toDto(Customer customer) {
+        final var id = customer.id();
+        final var name = customer.name();
+        final var address = customer.address();
+        final var email = customer.email();
+        final var phone = customer.phone();
+        final var favoritePokemon = customer.favoritePokemon();
+        return new CustomerDto(id, name, address, email, phone, favoritePokemon.orElse(jsonService.createObjectNode()));
+    }
 }

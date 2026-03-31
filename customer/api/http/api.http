@@ -1,0 +1,21 @@
+@host = http://localhost:8085
+@customer_id = {{$uuid}}
+
+### GET customer by ID
+GET {{host}}/api/v1/customers/{{customer_id}}
+Accept: application/json
+
+### CREATE customer
+POST {{host}}/api/v1/customers
+Content-Type: application/json
+
+{}
+
+### UPDATE customer
+PUT {{host}}/api/v1/customers
+Content-Type: application/json
+
+{}
+
+### DELETE customer
+DELETE {{host}}/api/v1/customers/{{customer_id}}
