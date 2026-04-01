@@ -1,4 +1,4 @@
-package com.github.mangila.customer.web.dto;
+package com.github.mangila.customer.web.cqrs;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

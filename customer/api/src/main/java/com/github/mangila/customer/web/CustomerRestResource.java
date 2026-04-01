@@ -1,9 +1,9 @@
 package com.github.mangila.customer.web;
 
 import com.github.mangila.customer.integration.pgevent.PgEventUtils;
-import com.github.mangila.customer.web.dto.CreateCustomerCommand;
+import com.github.mangila.customer.web.cqrs.CreateCustomerCommand;
 import com.github.mangila.customer.web.dto.CustomerDto;
-import com.github.mangila.customer.web.dto.UpdateCustomerCommand;
+import com.github.mangila.customer.web.cqrs.UpdateCustomerCommand;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
