@@ -1,4 +1,4 @@
-package com.github.mangila.customer.web;
+package com.github.mangila.customer.web.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.mangila.ensure4j.Ensure;

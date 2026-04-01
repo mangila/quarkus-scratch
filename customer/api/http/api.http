@@ -9,13 +9,26 @@ Accept: application/json
 POST {{host}}/api/v1/customers
 Content-Type: application/json
 
-{}
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "address": "123 Main Street, Springfield",
+  "phone": "+1234567890",
+  "favoritePokemonId": "1"
+}
 
 ### UPDATE customer
 PUT {{host}}/api/v1/customers
 Content-Type: application/json
 
-{}
+{
+  "id": "{{customer_id}}",
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "address": "123 Main Street, Springfield",
+  "phone": "+1234567890",
+  "favoritePokemonId": "151"
+}
 
 ### DELETE customer
 DELETE {{host}}/api/v1/customers/{{customer_id}}

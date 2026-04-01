@@ -34,6 +34,7 @@ class PokeApiCache {
         ObjectNode l2 = valueCommands.get(key);
         if (l2 != null) {
             Log.info("L2 Cache hit");
+            putL1(key, l2);
             return CompletableFuture.completedFuture(l2.deepCopy());
         }
         return null;
@@ -41,13 +42,19 @@ class PokeApiCache {
 
     /**
      * Put in the L1 with a TTL key to not put too much RAM in the replicas box.
-     * Since we treat this as static data from pokeapi responses, no need to worry about eviction,
-     * and we keep the responses in L2.
+     */
+    public void putL1(String key, ObjectNode value) {
+        Log.info("Put L1 cache");
+        cache.as(CaffeineCache.class).put(key, CompletableFuture.completedFuture(value));
+    }
+
+    /**
+     * Put in the L2 cache with no TTL key.
      * We could send a pgevent to notify other replicas and fill the L1 cache, but sending a full payload with a pgevent
      * can be too much data for the event pipe.
      */
-    public void put(String key, ObjectNode value) {
+    public void putL2(String key, ObjectNode value) {
+        Log.info("Put L2 cache");
         valueCommands.set(key, value);
-        cache.as(CaffeineCache.class).put(key, CompletableFuture.completedFuture(value));
     }
 }

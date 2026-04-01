@@ -2,6 +2,8 @@ package com.github.mangila.customer.integration.jobrunr;
 
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.jobrunr.scheduling.JobBuilder;
 import org.jobrunr.scheduling.JobRequestScheduler;
 
@@ -17,7 +19,7 @@ public class JobRunrScheduler {
         this.scheduler = scheduler;
     }
 
-    public void schedule(int pokemonId, UUID customerId, Duration delay) {
+    public void schedule(@Positive int pokemonId, @NotNull UUID customerId, Duration delay) {
         final var request = new PokemonJobRequest(pokemonId, customerId);
         final var job = JobBuilder.aJob()
                 .scheduleIn(delay)

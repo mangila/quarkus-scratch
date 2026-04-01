@@ -3,6 +3,7 @@ package com.github.mangila.customer.shared;
 import com.github.mangila.customer.data.CustomerPostgresRepository;
 import com.github.mangila.customer.domain.Customer;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,11 +29,21 @@ public class CustomerService {
         this.mapper = mapper;
     }
 
-    public Optional<Customer> findById(UUID id) {
+    public Optional<Customer> findById(@NotNull UUID id) {
         return postgresRepository.findById(id)
                 .map(mapper::toDomain);
     }
 
+    public void save(Customer customer) {
+
+    }
+
     public void saveAll(List<Customer> customers) {
+    }
+
+    public void update(Customer domain) {
+    }
+
+    public void delete(UUID id) {
     }
 }

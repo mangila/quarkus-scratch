@@ -45,7 +45,8 @@ public class PokeApiService {
         } else {
             vTexecutor.execute(() -> {
                 Log.info("Cache Put");
-                pokeApiCache.put(cacheKey, response);
+                pokeApiCache.putL2(cacheKey, response);
+                pokeApiCache.putL1(cacheKey, response);
             });
         }
         return response;

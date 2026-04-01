@@ -1,15 +1,20 @@
 package com.github.mangila.customer.web;
 
 import com.github.mangila.customer.integration.pgevent.PgEventUtils;
-import com.github.mangila.customer.shared.CustomerServiceRestAdapter;
+import com.github.mangila.customer.web.dto.CreateCustomerCommand;
+import com.github.mangila.customer.web.dto.CustomerDto;
+import com.github.mangila.customer.web.dto.UpdateCustomerCommand;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import org.apache.camel.ProducerTemplate;
 import org.slf4j.MDC;
 
+import java.net.URI;
 import java.util.UUID;
 
 @Path("api/v1/customers")
@@ -36,14 +41,21 @@ public class CustomerRestResource {
 
     @POST
     @RunOnVirtualThread
-    public Response create(@Valid CustomerDto dto) {
-        return Response.ok().entity("ok").build();
+    public Response create(@Valid CreateCustomerCommand command, @Context UriInfo uriInfo) {
+        final UUID id = restAdapter.create(command);
+        URI location = uriInfo.getAbsolutePathBuilder()
+                .path(id.toString())
+                .build();
+        return Response.created(location)
+                .build();
     }
 
     @PUT
     @RunOnVirtualThread
-    public Response update(@Valid CustomerDto dto) {
-        return Response.ok().entity("ok").build();
+    public Response update(@Valid UpdateCustomerCommand command) {
+        MDC.put("customer.id", command.id().toString());
+        restAdapter.update(command);
+        return Response.noContent().build();
     }
 
     @DELETE
@@ -51,6 +63,7 @@ public class CustomerRestResource {
     @RunOnVirtualThread
     public Response delete(@PathParam("id") UUID id) {
         MDC.put("customer.id", id.toString());
+        restAdapter.delete(id);
         return Response.noContent().build();
     }
 

@@ -2,7 +2,8 @@ package com.github.mangila.customer.shared;
 
 import com.github.mangila.customer.data.CustomerEntity;
 import com.github.mangila.customer.domain.Customer;
-import com.github.mangila.customer.web.CustomerDto;
+import com.github.mangila.customer.web.dto.CustomerDto;
+import com.github.mangila.customer.web.dto.UpdateCustomerCommand;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.commons.csv.CSVRecord;
 
@@ -65,5 +66,14 @@ public class CustomerMapper {
         final var phone = customer.phone();
         final var favoritePokemon = customer.favoritePokemon();
         return new CustomerDto(id, name, address, email, phone, favoritePokemon.orElse(jsonService.createObjectNode()));
+    }
+
+    public Customer toDomain(UpdateCustomerCommand command) {
+        final var id = command.id();
+        final var name = command.name();
+        final var address = command.address();
+        final var email = command.email();
+        final var phone = command.phone();
+        return new Customer(id, name, address, email, phone, Optional.empty());
     }
 }
