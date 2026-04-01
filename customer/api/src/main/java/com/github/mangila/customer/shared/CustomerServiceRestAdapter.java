@@ -8,6 +8,14 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.UUID;
 
+/**
+ * REST Adapter for the CustomerService
+ * <p>
+ * This is where we would implement the business logic for the REST API.
+ * It acts as a bridge between the REST API and the service layer, handling
+ * requests and responses, and coordinating with the cache and service layers.
+ * </p>
+ */
 @ApplicationScoped
 public class CustomerServiceRestAdapter {
 
@@ -15,7 +23,7 @@ public class CustomerServiceRestAdapter {
     private final CustomerRedisRepository redisRepository;
     private final CustomerMapper mapper;
     private final CustomerService customerService;
-    
+
     public CustomerServiceRestAdapter(CustomerCacheRepository cacheRepository,
                                       CustomerRedisRepository redisRepository, CustomerMapper mapper,
                                       CustomerService customerService) {

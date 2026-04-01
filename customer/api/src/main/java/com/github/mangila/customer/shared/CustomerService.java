@@ -8,6 +8,14 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Service layer for the Customer domain.
+ * <p>
+ * Here is where we would implement business logic. Before entering
+ * the repository layer, we would validate input, perform any necessary
+ * transformations, and enforce business rules.
+ *
+ */
 @ApplicationScoped
 public class CustomerService {
 
