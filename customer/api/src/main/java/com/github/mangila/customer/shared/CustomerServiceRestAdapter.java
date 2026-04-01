@@ -2,11 +2,14 @@ package com.github.mangila.customer.shared;
 
 import com.github.mangila.customer.data.CustomerCacheRepository;
 import com.github.mangila.customer.data.CustomerRedisRepository;
-import com.github.mangila.customer.domain.Customer;
 import com.github.mangila.customer.web.CustomerDto;
+import io.quarkiverse.resteasy.problem.HttpProblem;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.UUID;
+
+import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
 
 /**
  * REST Adapter for the CustomerService
@@ -25,7 +28,8 @@ public class CustomerServiceRestAdapter {
     private final CustomerService customerService;
 
     public CustomerServiceRestAdapter(CustomerCacheRepository cacheRepository,
-                                      CustomerRedisRepository redisRepository, CustomerMapper mapper,
+                                      CustomerRedisRepository redisRepository,
+                                      CustomerMapper mapper,
                                       CustomerService customerService) {
         this.cacheRepository = cacheRepository;
         this.redisRepository = redisRepository;
@@ -36,13 +40,17 @@ public class CustomerServiceRestAdapter {
     public CustomerDto findById(UUID id) {
         final CustomerDto l1 = cacheRepository.getIfPresent(id);
         if (l1 != null) {
+            Log.info("L1 Cache hit");
             return l1;
         }
         final CustomerDto l2 = redisRepository.getIfPresent(id);
         if (l2 != null) {
+            Log.info("L2 Cache hit");
             return l2;
         }
-        final Customer db = customerService.findById(id);
-        return mapper.toDto(db);
+        Log.info("Cache miss");
+        return customerService.findById(id)
+                .map(mapper::toDto)
+                .orElseThrow(() -> HttpProblem.valueOf(NOT_FOUND, "Customer not found"));
     }
 }

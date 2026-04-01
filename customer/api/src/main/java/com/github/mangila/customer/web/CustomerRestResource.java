@@ -31,8 +31,7 @@ public class CustomerRestResource {
     public CustomerDto get(@PathParam("id") UUID id) {
         MDC.put("customer.id", id.toString());
         producerTemplate.sendBody(PgEventUtils.getEndpoint("customer_evict"), "hej");
-        final CustomerDto dto = restAdapter.findById(id);
-        return dto;
+        return restAdapter.findById(id);
     }
 
     @POST
@@ -50,7 +49,7 @@ public class CustomerRestResource {
     @DELETE
     @Path("/{id}")
     @RunOnVirtualThread
-    public Response delete(UUID id) {
+    public Response delete(@PathParam("id") UUID id) {
         MDC.put("customer.id", id.toString());
         return Response.noContent().build();
     }
