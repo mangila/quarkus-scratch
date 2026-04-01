@@ -7,7 +7,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import java.util.UUID;
 
 public record UpdateCustomerCommand(
-        @NotBlank UUID id,
+        UUID id,
         @NotBlank String name,
         @NotBlank String address,
         @NotBlank @Email String email,
