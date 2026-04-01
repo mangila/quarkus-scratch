@@ -1,9 +1,7 @@
 package com.github.mangila.customer.web;
 
-import com.github.mangila.customer.domain.Customer;
 import com.github.mangila.customer.integration.pgevent.PgEventUtils;
-import com.github.mangila.customer.shared.CustomerMapper;
-import com.github.mangila.customer.shared.CustomerService;
+import com.github.mangila.customer.shared.CustomerServiceRestAdapter;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -17,27 +15,23 @@ import java.util.UUID;
 @Path("api/v1/customers")
 public class CustomerRestResource {
 
-    private final CustomerService customerService;
+    private final CustomerServiceRestAdapter restAdapter;
     private final ProducerTemplate producerTemplate;
-    private final CustomerMapper mapper;
 
-    public CustomerRestResource(CustomerService customerService,
-                                ProducerTemplate producerTemplate,
-                                CustomerMapper mapper) {
-        this.customerService = customerService;
+    public CustomerRestResource(CustomerServiceRestAdapter restAdapter,
+                                ProducerTemplate producerTemplate) {
+        this.restAdapter = restAdapter;
         this.producerTemplate = producerTemplate;
-        this.mapper = mapper;
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CustomerDto get(UUID id) {
+    public CustomerDto get(@PathParam("id") UUID id) {
         MDC.put("customer.id", id.toString());
         producerTemplate.sendBody(PgEventUtils.getEndpoint("customer_evict"), "hej");
-        final Customer domain = customerService.findById(id);
-        final CustomerDto dto = mapper.toDto(domain);
+        final CustomerDto dto = restAdapter.findById(id);
         return dto;
     }
 

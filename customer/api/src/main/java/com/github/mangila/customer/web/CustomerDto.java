@@ -10,7 +10,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.UUID;
 
 public record CustomerDto(
-        @NotNull @org.hibernate.validator.constraints.UUID UUID id,
+        @NotNull UUID id,
         @NotBlank String name,
         @NotBlank String address,
         @NotBlank @Email String email,

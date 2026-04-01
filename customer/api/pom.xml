@@ -64,6 +64,11 @@
             <version>8.5.2</version>
         </dependency>
         <dependency>
+            <groupId>io.quarkiverse.resteasy-problem</groupId>
+            <artifactId>quarkus-resteasy-problem</artifactId>
+            <version>3.32.0</version>
+        </dependency>
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-arc</artifactId>
         </dependency>
@@ -74,11 +79,6 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest-jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkiverse.resteasy-problem</groupId>
-            <artifactId>quarkus-resteasy-problem</artifactId>
-            <version>3.32.0</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
