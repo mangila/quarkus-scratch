@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.Type;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "Customer")
@@ -22,11 +24,11 @@ public class CustomerEntity {
     )
     private String name;
 
+    @Type(JsonType.class)
     @Column(nullable = false,
-            unique = true,
-            columnDefinition = "TEXT"
+            columnDefinition = "JSONB"
     )
-    private String address;
+    private JsonNode address;
 
     @Column(nullable = false,
             unique = true,
@@ -41,23 +43,22 @@ public class CustomerEntity {
 
     @Type(JsonType.class)
     @Column(
-            name = "favorite_pokemon",
+            name = "orders",
             nullable = false,
             columnDefinition = "JSONB"
     )
-    private JsonNode favoritePokemon;
+    private List<UUID> orders = new ArrayList<>();
 
     public CustomerEntity() {
         // do nothing, for ORM 🐍 - it's swedish for "snake"
     }
 
-    public CustomerEntity(UUID id, String name, String address, String email, String phone, JsonNode favoritePokemon) {
+    public CustomerEntity(UUID id, String name, String address, String email, String phone) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.email = email;
         this.phone = phone;
-        this.favoritePokemon = favoritePokemon;
     }
 
     public UUID getId() {
@@ -100,11 +101,11 @@ public class CustomerEntity {
         this.phone = phone;
     }
 
-    public JsonNode getFavoritePokemon() {
-        return favoritePokemon;
+    public List<UUID> getOrders() {
+        return orders;
     }
 
-    public void setFavoritePokemon(JsonNode favoritePokemon) {
-        this.favoritePokemon = favoritePokemon;
+    public void setOrders(List<UUID> orders) {
+        this.orders = orders;
     }
 }
