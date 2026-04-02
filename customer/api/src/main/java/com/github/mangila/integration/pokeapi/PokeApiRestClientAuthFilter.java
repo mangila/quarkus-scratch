@@ -1,6 +1,6 @@
-package com.github.mangila.customer.integration.pokeapi;
+package com.github.mangila.integration.pokeapi;
 
-import com.github.mangila.customer.config.AppConfig;
+import com.github.mangila.config.AppConfig;
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.ext.Provider;

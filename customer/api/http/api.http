@@ -14,7 +14,7 @@ Content-Type: application/json
   "email": "john.doe@example.com",
   "address": "123 Main Street, Springfield",
   "phone": "+1234567890",
-  "favoritePokemonId": "1"
+  "favoritePokemonId": "2"
 }
 
 ### UPDATE customer

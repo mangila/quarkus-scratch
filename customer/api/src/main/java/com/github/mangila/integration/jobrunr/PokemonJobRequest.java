@@ -1,4 +1,4 @@
-package com.github.mangila.customer.integration.jobrunr;
+package com.github.mangila.integration.jobrunr;
 
 import org.jobrunr.jobs.lambdas.JobRequest;
 

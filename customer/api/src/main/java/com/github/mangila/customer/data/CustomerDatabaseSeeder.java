@@ -1,7 +1,7 @@
 package com.github.mangila.customer.data;
 
 import com.github.mangila.customer.domain.Customer;
-import com.github.mangila.customer.integration.jobrunr.JobRunrScheduler;
+import com.github.mangila.integration.jobrunr.JobRunrScheduler;
 import com.github.mangila.customer.shared.CustomerMapper;
 import com.github.mangila.customer.shared.CustomerService;
 import io.quarkus.runtime.StartupEvent;

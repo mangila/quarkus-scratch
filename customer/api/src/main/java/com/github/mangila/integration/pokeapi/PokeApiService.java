@@ -1,4 +1,4 @@
-package com.github.mangila.customer.integration.pokeapi;
+package com.github.mangila.integration.pokeapi;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.quarkus.logging.Log;

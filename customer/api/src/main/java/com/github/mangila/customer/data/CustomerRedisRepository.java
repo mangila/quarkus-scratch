@@ -6,7 +6,7 @@ import io.quarkus.redis.datasource.RedisDataSource;
 import io.quarkus.redis.datasource.value.SetArgs;
 import io.quarkus.redis.datasource.value.ValueCommands;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.Nullable;
 
@@ -19,6 +19,8 @@ import java.util.UUID;
 @ApplicationScoped
 public class CustomerRedisRepository {
 
+    private static final String KEY_PREFIX = "customer::";
+
     private final ValueCommands<String, CustomerDto> valueCommands;
 
     public CustomerRedisRepository(RedisDataSource redisDataSource) {
@@ -26,20 +28,22 @@ public class CustomerRedisRepository {
     }
 
     @Nullable
-    public CustomerDto getIfPresent(@NotNull UUID id) {
-        final var value = valueCommands.get(id.toString());
+    public CustomerDto getIfPresent(UUID id) {
+        final var key = getkey(id);
+        final var value = valueCommands.get(key);
         if (value != null) {
-            Log.info("L2 Cache hit");
+            Log.info("L2 Hit");
             return value;
         } else {
-            Log.info("L2 Cache miss");
+            Log.info("L2 Miss");
             return null;
         }
     }
 
-    public void put(@NotNull UUID id, @Valid CustomerDto dto) {
-        Log.info("Put L2");
-        valueCommands.set(id.toString(), dto, new SetArgs().ex(Duration.ofHours(1)));
+    public void put(UUID id, CustomerDto dto) {
+        Log.info("L2 Put");
+        final var key = getkey(id);
+        valueCommands.set(key, dto, new SetArgs().ex(Duration.ofHours(1)));
     }
 
     /**
@@ -48,6 +52,15 @@ public class CustomerRedisRepository {
      * OR Postgres connects to Redis directly and performs a DEL on redis and sends LISTEN/NOTIFY to the L1 cache(s)
      */
     public void evict(String key) {
-        Log.info("Evict L2");
+        Log.info("L2 Evict");
+        valueCommands.getdel(getkey(key));
+    }
+
+    private static String getkey(@NotNull UUID id) {
+        return KEY_PREFIX + id;
+    }
+
+    private static String getkey(@NotBlank String id) {
+        return KEY_PREFIX + id;
     }
 }

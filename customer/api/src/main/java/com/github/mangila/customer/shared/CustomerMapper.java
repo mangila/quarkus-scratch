@@ -4,6 +4,7 @@ import com.github.mangila.customer.data.CustomerEntity;
 import com.github.mangila.customer.domain.Customer;
 import com.github.mangila.customer.web.dto.CustomerDto;
 import com.github.mangila.customer.web.cqrs.UpdateCustomerCommand;
+import com.github.mangila.shared.JsonService;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.commons.csv.CSVRecord;
 

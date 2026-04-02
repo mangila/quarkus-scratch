@@ -9,6 +9,6 @@ public record CreateCustomerCommand(
         @NotBlank String address,
         @NotBlank @Email String email,
         @NotBlank String phone,
-        @PositiveOrZero Integer favoritePokemonId
+        @PositiveOrZero int favoritePokemonId
 ) {
 }

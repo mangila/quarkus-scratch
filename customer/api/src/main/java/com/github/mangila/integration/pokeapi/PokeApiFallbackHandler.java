@@ -1,7 +1,7 @@
-package com.github.mangila.customer.integration.pokeapi;
+package com.github.mangila.integration.pokeapi;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.mangila.customer.shared.JsonService;
+import com.github.mangila.shared.JsonService;
 import jakarta.ws.rs.ext.Provider;
 import org.eclipse.microprofile.faulttolerance.ExecutionContext;
 import org.eclipse.microprofile.faulttolerance.FallbackHandler;

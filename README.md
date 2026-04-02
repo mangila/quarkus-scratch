@@ -1,3 +1,3 @@
 # quarkus-scratch
 
-Scratch projects using Quarkus
+Just me playing around with Quarkus stuff

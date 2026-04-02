@@ -1,4 +1,4 @@
-package com.github.mangila.customer.web;
+package com.github.mangila.customer.web.filter;
 
 import io.quarkus.logging.Log;
 import jakarta.ws.rs.container.ContainerRequestContext;

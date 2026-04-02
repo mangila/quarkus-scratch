@@ -1,4 +1,4 @@
-package com.github.mangila.customer.config;
+package com.github.mangila.config;
 
 import io.smallrye.config.ConfigMapping;
 import jakarta.validation.Valid;

@@ -1,6 +1,6 @@
-package com.github.mangila.customer.integration.pgevent;
+package com.github.mangila.integration.pgevent;
 
-import com.github.mangila.customer.config.AppConfig;
+import com.github.mangila.config.AppConfig;
 import com.github.mangila.customer.data.CustomerCacheRepository;
 import com.github.mangila.customer.data.CustomerRedisRepository;
 import io.github.mangila.ensure4j.Ensure;

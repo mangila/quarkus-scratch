@@ -3,13 +3,13 @@ package com.github.mangila.customer.web;
 import com.github.mangila.customer.data.CustomerCacheRepository;
 import com.github.mangila.customer.data.CustomerRedisRepository;
 import com.github.mangila.customer.domain.Customer;
-import com.github.mangila.customer.integration.jobrunr.JobRunrScheduler;
+import com.github.mangila.integration.jobrunr.JobRunrScheduler;
 import com.github.mangila.customer.shared.CustomerFactory;
 import com.github.mangila.customer.shared.CustomerMapper;
 import com.github.mangila.customer.shared.CustomerService;
 import com.github.mangila.customer.web.cqrs.CreateCustomerCommand;
-import com.github.mangila.customer.web.dto.CustomerDto;
 import com.github.mangila.customer.web.cqrs.UpdateCustomerCommand;
+import com.github.mangila.customer.web.dto.CustomerDto;
 import io.quarkiverse.resteasy.problem.HttpProblem;
 import io.quarkus.virtual.threads.VirtualThreads;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -99,6 +99,9 @@ public class CustomerServiceRestAdapter {
         customerService.delete(id);
     }
 
+    /**
+     * Schedule a job to update the customer's favorite Pokémon.
+     */
     private void schedulePokemon(int pokemonId, UUID customerId) {
         if (pokemonId != 0) {
             vTexecutor.execute(() -> jobRunrScheduler.schedule(pokemonId, customerId, Duration.ofSeconds(10)));

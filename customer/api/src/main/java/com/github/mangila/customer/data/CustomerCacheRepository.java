@@ -6,9 +6,6 @@ import io.quarkus.cache.CacheName;
 import io.quarkus.cache.CaffeineCache;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
@@ -27,25 +24,25 @@ public class CustomerCacheRepository {
     }
 
     @Nullable
-    public CustomerDto getIfPresent(@NotNull UUID id) {
+    public CustomerDto getIfPresent(UUID id) {
         final CompletableFuture<CustomerDto> value = cache.as(CaffeineCache.class)
                 .getIfPresent(id.toString());
         if (value != null) {
-            Log.info("L1 Cache hit");
+            Log.info("L1 Hit");
             return value.join();
         } else {
-            Log.info("L1 Cache miss");
+            Log.info("L1 Miss");
             return null;
         }
     }
 
-    public void evict(@NotBlank String key) {
-        Log.info("Evict L1");
-        var _ = cache.invalidate(key);
+    public void put(UUID id, CustomerDto dto) {
+        Log.info("L1 Put");
+        cache.as(CaffeineCache.class).put(id.toString(), CompletableFuture.completedFuture(dto));
     }
 
-    public void put(@NotNull UUID id, @Valid CustomerDto dto) {
-        Log.info("Put L1");
-        cache.as(CaffeineCache.class).put(id.toString(), CompletableFuture.completedFuture(dto));
+    public void evict(String key) {
+        Log.info("L1 Evict");
+        var _ = cache.invalidate(key);
     }
 }

@@ -1,4 +1,4 @@
-package com.github.mangila.customer.shared;
+package com.github.mangila.shared;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;

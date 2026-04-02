@@ -1,4 +1,4 @@
-package com.github.mangila.customer.config;
+package com.github.mangila.config;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.validation.constraints.NotBlank;
