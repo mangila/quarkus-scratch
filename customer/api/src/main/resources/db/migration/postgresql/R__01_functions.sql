@@ -1,9 +1,8 @@
 CREATE OR REPLACE FUNCTION fn_customer_cache_evict() RETURNS trigger AS
 $$
 DECLARE
-    v_customer_id          uuid := NULL;
-    v_channel              TEXT := 'customer_evict';
-    v_ttl_cache_table_name TEXT := 'ttl_cache';
+    v_customer_id uuid := NULL;
+    v_channel     TEXT := 'customer_evict';
 BEGIN
     IF TG_OP = 'DELETE' THEN
         v_customer_id := OLD.id;
@@ -11,12 +10,12 @@ BEGIN
         v_customer_id := NEW.id;
     END IF;
 
-    --! Evict from l2 cache
+    --! l2 cache evict
     DELETE
-    FROM v_ttl_cache_table_name
-    WHERE key = v_customer_id::text;
+    FROM ttl_cache
+    WHERE cache_key = v_customer_id::text;
 
-    --! Notify subscribers
+    --! l1 cache evict
     PERFORM pg_notify(v_channel, v_customer_id::text);
 
     IF TG_OP = 'DELETE' THEN

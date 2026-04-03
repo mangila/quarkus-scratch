@@ -1,4 +1,4 @@
-package com.github.mangila.customer.web.exception;
+package com.github.mangila.shared;
 
 import io.github.mangila.ensure4j.EnsureException;
 import io.quarkiverse.resteasy.problem.ExceptionMapperBase;

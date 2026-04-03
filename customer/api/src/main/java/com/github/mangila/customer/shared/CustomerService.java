@@ -21,17 +21,14 @@ import java.util.UUID;
 public class CustomerService {
 
     private final CustomerPostgresRepository postgresRepository;
-    private final CustomerMapper mapper;
 
-    public CustomerService(CustomerPostgresRepository postgresRepository,
-                           CustomerMapper mapper) {
+    public CustomerService(CustomerPostgresRepository postgresRepository) {
         this.postgresRepository = postgresRepository;
-        this.mapper = mapper;
     }
 
     public Optional<Customer> findById(@NotNull UUID id) {
-        return postgresRepository.findById(id)
-                .map(mapper::toDomain);
+        return postgresRepository.findByIdOptional(id)
+                .map(customer -> null);
     }
 
     public void save(Customer customer) {

@@ -1,12 +1,11 @@
 package com.github.mangila.integration.jobrunr;
 
+import com.github.mangila.integration.csv.CustomerCsvRoute;
+import com.github.mangila.integration.csv.ProductCsvRoute;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import org.jobrunr.jobs.annotations.Job;
-import org.jobrunr.jobs.annotations.Recurring;
-import org.jobrunr.jobs.context.JobContext;
 import org.jobrunr.scheduling.JobBuilder;
 import org.jobrunr.scheduling.JobRequestScheduler;
 
@@ -34,11 +33,27 @@ public class JobRunrScheduler {
         Log.infof("Scheduled PokemonId: %s for CustomerId: %s", pokemonId, customerId);
     }
 
-    @Recurring(id = "my-recurring-job", cron = "*/15 * * * * *")
-    @Job(name = "My recurring job")
-    public void executeSampleJob(JobContext context) {
-        Log.info("Executing sample job");
-        context.runStepOnce("hej", () -> Log.info("Hello world"));
-        throw new RuntimeException("Test");
+    public void schedule(CustomerCsvRoute.CustomerCsv csv, Duration delay) {
+        final var request = new CustomerCsvJobRequest(csv);
+        final var job = JobBuilder.aJob()
+                .scheduleIn(delay)
+                .withName("Customer: %s".formatted(csv.getId()))
+                .withJobRequest(request)
+                .withLabels("customer", "csv")
+                .withAmountOfRetries(10);
+        scheduler.create(job);
+        Log.info("customer csv");
+    }
+
+    public void schedule(ProductCsvRoute.ProductCsv csv, Duration delay) {
+        final var request = new ProductCsvJobRequest(csv);
+        final var job = JobBuilder.aJob()
+                .scheduleIn(delay)
+                .withName("Product: %s".formatted(csv.getId()))
+                .withJobRequest(request)
+                .withLabels("product", "csv")
+                .withAmountOfRetries(10);
+        scheduler.create(job);
+        Log.info("product csv");
     }
 }

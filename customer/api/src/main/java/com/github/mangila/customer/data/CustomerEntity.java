@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @Entity(name = "Customer")
 @Table(name = "customer")
+@Audited
 public class CustomerEntity {
 
     @Id
@@ -53,12 +55,13 @@ public class CustomerEntity {
         // do nothing, for ORM 🐍 - it's swedish for "snake"
     }
 
-    public CustomerEntity(UUID id, String name, String address, String email, String phone) {
+    public CustomerEntity(UUID id, String name, JsonNode address, String email, String phone, List<UUID> orders) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.email = email;
         this.phone = phone;
+        this.orders = orders;
     }
 
     public UUID getId() {
@@ -77,11 +80,11 @@ public class CustomerEntity {
         this.name = name;
     }
 
-    public String getAddress() {
+    public JsonNode getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(JsonNode address) {
         this.address = address;
     }
 
