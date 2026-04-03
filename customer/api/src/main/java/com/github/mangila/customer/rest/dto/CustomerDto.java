@@ -1,4 +1,4 @@
-package com.github.mangila.customer.web.dto;
+package com.github.mangila.customer.rest.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.Email;

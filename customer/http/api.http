@@ -33,7 +33,7 @@ Content-Type: application/json
 ### DELETE customer
 DELETE {{host}}/api/v1/customers/{{customer_id}}
 
-### UPLOAD CSV file
+### UPLOAD Customers CSV file
 POST {{host}}/api/v1/customers/csv
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
@@ -43,5 +43,20 @@ Content-Type: text/plain
 
 < ../data/customers.csv
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### UPLOAD Products CSV file
+POST {{host}}/api/v1/products/csv
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="csv"; filename="products.csv"
+Content-Type: text/plain
+
+< ../data/products.csv
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### GET job status with metadata
+GET {{host}}/api/v1/jobrunr/status/019d554c-b0b4-73b7-9e55-a84e66067c27
+Content-Type: */*
 
 

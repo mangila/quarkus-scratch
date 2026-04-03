@@ -1,18 +1,14 @@
-package com.github.mangila.customer.web;
+package com.github.mangila.customer.rest;
 
 import com.github.mangila.customer.data.CustomerCacheRepository;
 import com.github.mangila.customer.shared.CustomerService;
-import com.github.mangila.customer.web.cqrs.CreateCustomerCommand;
-import com.github.mangila.customer.web.cqrs.UpdateCustomerCommand;
-import com.github.mangila.customer.web.dto.CustomerDto;
+import com.github.mangila.customer.rest.cqrs.CreateCustomerCommand;
+import com.github.mangila.customer.rest.cqrs.UpdateCustomerCommand;
+import com.github.mangila.customer.rest.dto.CustomerDto;
 import com.github.mangila.integration.jobrunr.JobRunrScheduler;
-import io.github.mangila.ensure4j.Ensure;
 import io.quarkus.virtual.threads.VirtualThreads;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.core.MediaType;
-import org.jboss.resteasy.reactive.multipart.FileUpload;
 
-import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
@@ -62,11 +58,5 @@ public class CustomerServiceRestAdapter {
 
     public void delete(UUID id) {
         customerService.delete(id);
-    }
-
-    public UUID upload(FileUpload file) {
-        final var contentType = file.contentType();
-        Ensure.isTrue(MediaType.TEXT_PLAIN.equals(contentType), "Only text/plain content type is supported");
-        return scheduler.schedule(file, Duration.ofSeconds(1));
     }
 }

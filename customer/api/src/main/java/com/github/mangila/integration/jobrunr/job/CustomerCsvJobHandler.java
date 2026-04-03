@@ -1,4 +1,4 @@
-package com.github.mangila.integration.jobrunr;
+package com.github.mangila.integration.jobrunr.job;
 
 import com.github.mangila.customer.shared.CustomerService;
 import jakarta.enterprise.context.ApplicationScoped;

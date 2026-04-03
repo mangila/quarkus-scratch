@@ -2,10 +2,13 @@ package com.github.mangila.integration.jobrunr;
 
 import com.github.mangila.integration.csv.CustomerCsvRoute;
 import com.github.mangila.integration.csv.ProductCsvRoute;
+import com.github.mangila.integration.jobrunr.job.CsvFileUploadJobRequest;
+import com.github.mangila.integration.jobrunr.job.CustomerCsvJobRequest;
+import com.github.mangila.integration.jobrunr.job.ProductCsvJobRequest;
+import com.github.mangila.shared.model.CsvFileUpload;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.jboss.logmanager.MDC;
-import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.jobrunr.scheduling.JobBuilder;
 import org.jobrunr.scheduling.JobRequestScheduler;
 
@@ -45,19 +48,20 @@ public class JobRunrScheduler {
         scheduler.create(job);
     }
 
-    public UUID schedule(FileUpload upload, Duration delay) {
-        final var originalFileName = upload.fileName();
-        final var path = upload.uploadedFile().toString();
-        final var domain = "customer";
+    public UUID schedule(CsvFileUpload csv, Duration duration) {
+        final var file = csv.file();
+        final var originalFileName = file.fileName();
+        final var path = file.uploadedFile().toString();
+        final var domain = csv.domain().value();
         MDC.put("domain", domain);
         Log.info("file upload");
-        final var request = new CsvUploadJobRequest(originalFileName, path, domain);
+        final var request = new CsvFileUploadJobRequest(originalFileName, path, domain);
         final var job = JobBuilder.aJob()
-                .scheduleIn(delay)
+                .scheduleIn(duration)
                 .withName("Upload: %s".formatted(originalFileName))
                 .withJobRequest(request)
-                .withLabels("upload", "csv", "customer")
-                .withAmountOfRetries(10);
+                .withLabels("upload", "csv", domain)
+                .withAmountOfRetries(0);
         return scheduler.create(job).asUUID();
     }
 }

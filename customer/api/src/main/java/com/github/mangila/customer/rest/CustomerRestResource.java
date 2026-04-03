@@ -1,9 +1,10 @@
-package com.github.mangila.customer.web;
+package com.github.mangila.customer.rest;
 
-import com.github.mangila.customer.web.cqrs.CreateCustomerCommand;
-import com.github.mangila.customer.web.cqrs.UpdateCustomerCommand;
-import com.github.mangila.customer.web.dto.CustomerDto;
+import com.github.mangila.customer.rest.cqrs.CreateCustomerCommand;
+import com.github.mangila.customer.rest.cqrs.UpdateCustomerCommand;
+import com.github.mangila.customer.rest.dto.CustomerDto;
 import com.github.mangila.integration.pgevent.PgEventProducer;
+import com.github.mangila.shared.UuidFactory;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -22,23 +23,30 @@ import java.util.UUID;
 @Path("api/v1/customers")
 public class CustomerRestResource {
 
+    private final UuidFactory uuidFactory;
     private final PgEventProducer pgEventProducer;
     private final CustomerServiceRestAdapter restAdapter;
+    private final CustomerFileServiceRestAdapter fileServiceRestAdapter;
 
-    public CustomerRestResource(PgEventProducer pgEventProducer,
-                                CustomerServiceRestAdapter restAdapter) {
+    public CustomerRestResource(UuidFactory uuidFactory,
+                                PgEventProducer pgEventProducer,
+                                CustomerServiceRestAdapter customerServiceRestAdapter,
+                                CustomerFileServiceRestAdapter customerFileServiceRestAdapter) {
+        this.uuidFactory = uuidFactory;
         this.pgEventProducer = pgEventProducer;
-        this.restAdapter = restAdapter;
+        this.restAdapter = customerServiceRestAdapter;
+        this.fileServiceRestAdapter = customerFileServiceRestAdapter;
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CustomerDto get(@PathParam("id") UUID id) {
-        MDC.put("customer.id", id.toString());
+    public CustomerDto get(@PathParam("id") String id) {
+        final UUID uuid = uuidFactory.create(id);
+        MDC.put("customer.id", uuid.toString());
         pgEventProducer.sendBody("customer_evict", null);
-        return restAdapter.findById(id);
+        return restAdapter.findById(uuid);
     }
 
     @POST
@@ -63,9 +71,10 @@ public class CustomerRestResource {
     @DELETE
     @Path("/{id}")
     @RunOnVirtualThread
-    public Response delete(@PathParam("id") UUID id) {
-        MDC.put("customer.id", id.toString());
-        restAdapter.delete(id);
+    public Response delete(@PathParam("id") String id) {
+        final UUID uuid = uuidFactory.create(id);
+        MDC.put("customer.id", uuid.toString());
+        restAdapter.delete(uuid);
         return Response.noContent().build();
     }
 
@@ -80,7 +89,7 @@ public class CustomerRestResource {
         MDC.put("file.size", String.valueOf(file.size()));
         MDC.put("file.type", file.contentType());
         MDC.put("file.path", file.uploadedFile().toString());
-        var jobId = restAdapter.upload(file);
+        UUID jobId = fileServiceRestAdapter.upload(file);
         return Response.ok()
                 .entity(Map.of("jobId", jobId))
                 .build();

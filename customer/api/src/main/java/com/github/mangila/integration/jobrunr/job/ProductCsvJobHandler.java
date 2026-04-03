@@ -1,4 +1,4 @@
-package com.github.mangila.integration.jobrunr;
+package com.github.mangila.integration.jobrunr.job;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import org.jobrunr.jobs.lambdas.JobRequestHandler;

@@ -1,53 +1,74 @@
 package com.github.mangila.integration.csv;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.integration.jobrunr.JobRunrScheduler;
-import io.quarkus.virtual.threads.VirtualThreads;
+import com.github.mangila.shared.JsonService;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.bean.validator.BeanValidationException;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.apache.camel.model.dataformat.BindyType;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.validator.constraints.URL;
 import org.hibernate.validator.constraints.UUID;
 import org.jboss.logging.MDC;
+import org.jobrunr.server.runner.ThreadLocalJobContext;
 
 import java.time.Duration;
-import java.util.concurrent.ExecutorService;
 
 @ApplicationScoped
 public class ProductCsvRoute extends RouteBuilder {
 
-    public static final String ROUTE_ID = "product-csv-route";
+    public static final String ROUTE_ID = "product-csv";
 
-    private final String uploadsDirectory;
+    private final JsonService jsonService;
     private final JobRunrScheduler scheduler;
-    private final ExecutorService vTexecutor;
 
-    public ProductCsvRoute(@ConfigProperty(name = "quarkus.http.body.uploads-directory") String uploadsDirectory,
-                           JobRunrScheduler scheduler,
-                           @VirtualThreads ExecutorService vTexecutor) {
-        this.uploadsDirectory = uploadsDirectory;
+    public ProductCsvRoute(JsonService jsonService,
+                           JobRunrScheduler scheduler) {
+        this.jsonService = jsonService;
         this.scheduler = scheduler;
-        this.vTexecutor = vTexecutor;
     }
 
     @Override
     public void configure() throws Exception {
+        configureBeanValidationExceptionHandling();
         from("direct:%s".formatted(ROUTE_ID))
                 .routeId(ROUTE_ID)
                 .unmarshal()
                 .bindy(BindyType.Csv, ProductCsv.class)
+                .to("bean-validator://validate-product")
                 .split(body())
                 .streaming()
-                .to("bean-validator://validate")
                 .process(exchange -> {
                     var productCsv = exchange.getIn().getBody(ProductCsv.class);
                     MDC.put("product.id", productCsv.getId());
-                    vTexecutor.execute(() -> scheduler.schedule(productCsv, Duration.ofSeconds(10)));
+                    scheduler.schedule(productCsv, Duration.ofSeconds(10));
+                });
+    }
+
+    public void configureBeanValidationExceptionHandling() {
+        onException(BeanValidationException.class)
+                .handled(false)
+                .logExhausted(false)
+                .process(exchange -> {
+                    final var exception = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, BeanValidationException.class);
+                    final ObjectNode errorJsonNode = jsonService.createObjectNode();
+                    exception.getConstraintViolations().forEach(violation -> {
+                        String key = violation.getPropertyPath().toString() + ":" + violation.getInvalidValue();
+                        errorJsonNode.put(key, violation.getMessage());
+                    });
+                    final var isJob = ThreadLocalJobContext.hasJobContext();
+                    if (isJob) {
+                        final var jobContext = ThreadLocalJobContext.getJobContext();
+                        jobContext.saveMetadata("errors", errorJsonNode.toString());
+                    }
+                    Log.infof("Validation errors: %s", errorJsonNode.toPrettyString());
                 });
     }
 
