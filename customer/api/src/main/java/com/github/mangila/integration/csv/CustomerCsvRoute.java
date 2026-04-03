@@ -12,6 +12,7 @@ import org.apache.camel.component.bean.validator.BeanValidationException;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.apache.camel.model.dataformat.BindyType;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.validator.constraints.UUID;
 import org.jboss.logging.MDC;
 
@@ -23,16 +24,21 @@ public class CustomerCsvRoute extends RouteBuilder {
 
     public static final String ROUTE_ID = "customer-csv-route";
 
+    private final String uploadsDirectory;
     private final JobRunrScheduler scheduler;
     private final ExecutorService vTexecutor;
 
-    public CustomerCsvRoute(JobRunrScheduler scheduler, @VirtualThreads ExecutorService vTexecutor) {
+    public CustomerCsvRoute(@ConfigProperty(name = "quarkus.http.body.uploads-directory") String uploadsDirectory,
+                            JobRunrScheduler scheduler,
+                            @VirtualThreads ExecutorService vTexecutor) {
+        this.uploadsDirectory = uploadsDirectory;
         this.scheduler = scheduler;
         this.vTexecutor = vTexecutor;
     }
 
     @Override
     public void configure() throws Exception {
+        final var endpoint = "file:%s".formatted(uploadsDirectory);
         onException(BeanValidationException.class)
                 .handled(false)
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400))
@@ -43,10 +49,9 @@ public class CustomerCsvRoute extends RouteBuilder {
                 .log("Processed ${body.size} customers");
         from("direct:%s".formatted(ROUTE_ID))
                 .routeId(ROUTE_ID)
-                .log("Reading customers CSV")
+                .log("Reading: ${header.original} - ${body}")
                 .pollEnrich()
-                .simple("file:target/uploads?fileName=${body}")
-                .log("Reading from ${file:name}")
+                .simple(endpoint + "?fileName=${body}&noop=true")
                 .unmarshal()
                 .bindy(BindyType.Csv, CustomerCsv.class)
                 .split(body())

@@ -25,7 +25,8 @@ public class CsvUploadJobHandler implements JobRequestHandler<CsvUploadJobReques
         final var path = jobRequest.path();
         final var fileName = Paths.get(jobRequest.path()).getFileName().toString();
         Log.infof("CSV upload job started for route: %s, path: %s", route, fileName);
-        producerTemplate.sendBody("direct:%s".formatted(CustomerCsvRoute.ROUTE_ID), fileName);
+
+        producerTemplate.sendBodyAndHeader("direct:%s".formatted(CustomerCsvRoute.ROUTE_ID), fileName, "original", originalFileName);
         Files.deleteIfExists(Paths.get(path));
     }
 }
