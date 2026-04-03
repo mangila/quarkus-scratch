@@ -1,4 +1,4 @@
-package com.github.mangila.shared.exception;
+package com.github.mangila.shared.exception.mapper;
 
 import io.quarkiverse.resteasy.problem.ExceptionMapperBase;
 import io.quarkiverse.resteasy.problem.HttpProblem;

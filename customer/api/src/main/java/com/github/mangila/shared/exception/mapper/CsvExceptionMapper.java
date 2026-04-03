@@ -1,6 +1,6 @@
-package com.github.mangila.shared.exception;
+package com.github.mangila.shared.exception.mapper;
 
-import io.github.mangila.ensure4j.EnsureException;
+import com.github.mangila.shared.exception.CsvException;
 import io.quarkiverse.resteasy.problem.ExceptionMapperBase;
 import io.quarkiverse.resteasy.problem.HttpProblem;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -11,10 +11,10 @@ import static jakarta.ws.rs.core.Response.Status.BAD_REQUEST;
 
 @Provider
 @APIResponse(responseCode = "400", description = "Bad Request: server could not understand the request due to invalid syntax")
-public class EnsureExceptionMapper extends ExceptionMapperBase<EnsureException>
-        implements ExceptionMapper<EnsureException> {
+public class CsvExceptionMapper extends ExceptionMapperBase<CsvException>
+        implements ExceptionMapper<CsvException> {
     @Override
-    protected HttpProblem toProblem(EnsureException e) {
+    protected HttpProblem toProblem(CsvException e) {
         return HttpProblem.valueOf(BAD_REQUEST, e.getMessage());
     }
 }

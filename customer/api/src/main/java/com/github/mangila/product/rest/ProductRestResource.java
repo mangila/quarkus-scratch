@@ -35,7 +35,7 @@ public class ProductRestResource {
         MDC.put("file.type", file.contentType());
         MDC.put("file.path", file.uploadedFile().toString());
         UUID jobId = fileServiceRestAdapter.upload(file);
-        return Response.ok()
+        return Response.accepted()
                 .entity(Map.of("jobId", jobId))
                 .build();
     }

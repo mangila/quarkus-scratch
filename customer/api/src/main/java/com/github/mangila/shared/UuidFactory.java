@@ -1,5 +1,6 @@
 package com.github.mangila.shared;
 
+import com.github.mangila.shared.exception.NotValidUuidException;
 import io.github.mangila.ensure4j.Ensure;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -25,9 +26,4 @@ public class UuidFactory {
         }
     }
 
-    public static class NotValidUuidException extends RuntimeException {
-        public NotValidUuidException(String message, Throwable cause) {
-            super(message, cause);
-        }
-    }
 }
