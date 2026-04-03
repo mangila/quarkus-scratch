@@ -20,7 +20,7 @@ public class CsvUploadJobHandler implements JobRequestHandler<CsvUploadJobReques
 
     @Override
     public void run(CsvUploadJobRequest jobRequest) throws Exception {
-        final var o = jobRequest.s();
+        final var originalFileName = jobRequest.originalFileName();
         final var route = jobRequest.route();
         final var path = jobRequest.path();
         final var fileName = Paths.get(jobRequest.path()).getFileName().toString();

@@ -59,7 +59,7 @@ public class JobRunrScheduler {
         scheduler.create(job);
     }
 
-    public void schedule(FileUpload upload, Duration delay) {
+    public UUID schedule(FileUpload upload, Duration delay) {
         final var originalFileName = upload.fileName();
         final var path = upload.uploadedFile().toString();
         final var route = CustomerCsvRoute.ROUTE_ID;
@@ -72,6 +72,6 @@ public class JobRunrScheduler {
                 .withJobRequest(request)
                 .withLabels("upload", "csv", "customer")
                 .withAmountOfRetries(10);
-        scheduler.create(job);
+        return scheduler.create(job).asUUID();
     }
 }

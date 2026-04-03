@@ -16,6 +16,7 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.slf4j.MDC;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.UUID;
 
 @Path("api/v1/customers")
@@ -79,8 +80,10 @@ public class CustomerRestResource {
         MDC.put("file.size", String.valueOf(file.size()));
         MDC.put("file.type", file.contentType());
         MDC.put("file.path", file.uploadedFile().toString());
-        restAdapter.upload(file);
-        return Response.ok().build();
+        var jobId = restAdapter.upload(file);
+        return Response.ok()
+                .entity(Map.of("jobId", jobId))
+                .build();
     }
 
 }
