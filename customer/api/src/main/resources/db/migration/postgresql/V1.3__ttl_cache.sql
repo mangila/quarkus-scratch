@@ -1,7 +1,7 @@
 CREATE UNLOGGED TABLE ttl_cache
 (
-    cache_key        TEXT PRIMARY KEY,
-    payload    JSONB     NOT NULL,
+    cache_key  TEXT PRIMARY KEY,
+    payload    JSONB       NOT NULL,
     expires_at TIMESTAMPTZ NOT NULL
 );
 

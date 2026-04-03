@@ -10,6 +10,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.apache.camel.model.dataformat.BindyType;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.hibernate.validator.constraints.URL;
 import org.hibernate.validator.constraints.UUID;
 import org.jboss.logging.MDC;
@@ -22,40 +23,32 @@ public class ProductCsvRoute extends RouteBuilder {
 
     public static final String ROUTE_ID = "product-csv-route";
 
+    private final String uploadsDirectory;
     private final JobRunrScheduler scheduler;
     private final ExecutorService vTexecutor;
 
-    public ProductCsvRoute(JobRunrScheduler scheduler, @VirtualThreads ExecutorService vTexecutor) {
+    public ProductCsvRoute(@ConfigProperty(name = "quarkus.http.body.uploads-directory") String uploadsDirectory,
+                           JobRunrScheduler scheduler,
+                           @VirtualThreads ExecutorService vTexecutor) {
+        this.uploadsDirectory = uploadsDirectory;
         this.scheduler = scheduler;
         this.vTexecutor = vTexecutor;
     }
 
     @Override
     public void configure() throws Exception {
-        final String endpoint = getEndpoint();
-        onCompletion()
-                .process(_ -> MDC.clear())
-                .log("Processed ${body.size} products");
         from("direct:%s".formatted(ROUTE_ID))
                 .routeId(ROUTE_ID)
-                .log("Reading products CSV")
-                .pollEnrich(endpoint)
-                .log("Reading from ${file:name}")
                 .unmarshal()
                 .bindy(BindyType.Csv, ProductCsv.class)
                 .split(body())
                 .streaming()
+                .to("bean-validator://validate")
                 .process(exchange -> {
                     var productCsv = exchange.getIn().getBody(ProductCsv.class);
                     MDC.put("product.id", productCsv.getId());
                     vTexecutor.execute(() -> scheduler.schedule(productCsv, Duration.ofSeconds(10)));
                 });
-    }
-
-    public String getEndpoint() {
-        final var dataResource = getCamelContext().getClassResolver()
-                .loadResourceAsURL("data");
-        return dataResource.toString() + "?fileName=products.csv";
     }
 
     @CsvRecord(separator = ",", skipFirstLine = true)

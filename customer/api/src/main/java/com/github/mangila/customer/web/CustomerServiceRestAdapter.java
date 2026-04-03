@@ -67,6 +67,6 @@ public class CustomerServiceRestAdapter {
     public UUID upload(FileUpload file) {
         final var contentType = file.contentType();
         Ensure.isTrue(MediaType.TEXT_PLAIN.equals(contentType), "Only text/plain content type is supported");
-        return scheduler.schedule(file, Duration.ofSeconds(10));
+        return scheduler.schedule(file, Duration.ofSeconds(1));
     }
 }

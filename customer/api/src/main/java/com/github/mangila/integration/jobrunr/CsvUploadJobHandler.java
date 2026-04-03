@@ -1,32 +1,35 @@
 package com.github.mangila.integration.jobrunr;
 
-import com.github.mangila.integration.csv.CustomerCsvRoute;
-import io.quarkus.logging.Log;
+import com.github.mangila.integration.csv.CsvRoute;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.camel.ProducerTemplate;
+import org.apache.camel.impl.engine.DefaultProducerTemplate;
 import org.jobrunr.jobs.lambdas.JobRequestHandler;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 
 @ApplicationScoped
 public class CsvUploadJobHandler implements JobRequestHandler<CsvUploadJobRequest> {
 
+    private final String endpoint = "direct:%s".formatted(CsvRoute.ROUTE_ID);
     private final ProducerTemplate producerTemplate;
 
     public CsvUploadJobHandler(ProducerTemplate producerTemplate) {
-        this.producerTemplate = producerTemplate;
+        this.producerTemplate = new DefaultProducerTemplate(producerTemplate.getCamelContext());
+        this.producerTemplate.setDefaultEndpointUri(endpoint);
+        this.producerTemplate.start();
     }
 
     @Override
     public void run(CsvUploadJobRequest jobRequest) throws Exception {
         final var originalFileName = jobRequest.originalFileName();
-        final var route = jobRequest.route();
-        final var path = jobRequest.path();
-        final var fileName = Paths.get(jobRequest.path()).getFileName().toString();
-        Log.infof("CSV upload job started for route: %s, path: %s", route, fileName);
-
-        producerTemplate.sendBodyAndHeader("direct:%s".formatted(CustomerCsvRoute.ROUTE_ID), fileName, "original", originalFileName);
-        Files.deleteIfExists(Paths.get(path));
+        final var domain = jobRequest.domain();
+        final var path = Paths.get(jobRequest.path());
+        final var fileName = path.getFileName().toString();
+        final Map<String, Object> headers = Map.of("domain", domain, "original", originalFileName);
+        producerTemplate.sendBodyAndHeaders(fileName, headers);
+        Files.deleteIfExists(path);
     }
 }

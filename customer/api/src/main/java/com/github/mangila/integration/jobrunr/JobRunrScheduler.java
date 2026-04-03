@@ -4,8 +4,6 @@ import com.github.mangila.integration.csv.CustomerCsvRoute;
 import com.github.mangila.integration.csv.ProductCsvRoute;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import org.jboss.logmanager.MDC;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.jobrunr.scheduling.JobBuilder;
@@ -21,18 +19,6 @@ public class JobRunrScheduler {
 
     public JobRunrScheduler(JobRequestScheduler scheduler) {
         this.scheduler = scheduler;
-    }
-
-    public void schedule(@Positive int pokemonId, @NotNull UUID customerId, Duration delay) {
-        final var request = new PokemonJobRequest(pokemonId, customerId);
-        final var job = JobBuilder.aJob()
-                .scheduleIn(delay)
-                .withName("Pokemon: %s".formatted(pokemonId))
-                .withJobRequest(request)
-                .withLabels("pokemon")
-                .withAmountOfRetries(10);
-        scheduler.create(job);
-        Log.infof("Scheduled PokemonId: %s for CustomerId: %s", pokemonId, customerId);
     }
 
     public void schedule(CustomerCsvRoute.CustomerCsv csv, Duration delay) {
@@ -62,13 +48,13 @@ public class JobRunrScheduler {
     public UUID schedule(FileUpload upload, Duration delay) {
         final var originalFileName = upload.fileName();
         final var path = upload.uploadedFile().toString();
-        final var route = CustomerCsvRoute.ROUTE_ID;
-        MDC.put("route", route);
+        final var domain = "customer";
+        MDC.put("domain", domain);
         Log.info("file upload");
-        final var request = new CsvUploadJobRequest(originalFileName, path, route);
+        final var request = new CsvUploadJobRequest(originalFileName, path, domain);
         final var job = JobBuilder.aJob()
                 .scheduleIn(delay)
-                .withName("Upload: %s".formatted(upload.fileName()))
+                .withName("Upload: %s".formatted(originalFileName))
                 .withJobRequest(request)
                 .withLabels("upload", "csv", "customer")
                 .withAmountOfRetries(10);
