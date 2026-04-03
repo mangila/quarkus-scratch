@@ -6,6 +6,8 @@ import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import org.jboss.logmanager.MDC;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.jobrunr.scheduling.JobBuilder;
 import org.jobrunr.scheduling.JobRequestScheduler;
 
@@ -34,6 +36,7 @@ public class JobRunrScheduler {
     }
 
     public void schedule(CustomerCsvRoute.CustomerCsv csv, Duration delay) {
+        Log.info("customer csv");
         final var request = new CustomerCsvJobRequest(csv);
         final var job = JobBuilder.aJob()
                 .scheduleIn(delay)
@@ -42,10 +45,10 @@ public class JobRunrScheduler {
                 .withLabels("customer", "csv")
                 .withAmountOfRetries(10);
         scheduler.create(job);
-        Log.info("customer csv");
     }
 
     public void schedule(ProductCsvRoute.ProductCsv csv, Duration delay) {
+        Log.info("product csv");
         final var request = new ProductCsvJobRequest(csv);
         final var job = JobBuilder.aJob()
                 .scheduleIn(delay)
@@ -54,6 +57,21 @@ public class JobRunrScheduler {
                 .withLabels("product", "csv")
                 .withAmountOfRetries(10);
         scheduler.create(job);
-        Log.info("product csv");
+    }
+
+    public void schedule(FileUpload upload, Duration delay) {
+        final var originalFileName = upload.fileName();
+        final var path = upload.uploadedFile().toString();
+        final var route = CustomerCsvRoute.ROUTE_ID;
+        MDC.put("route", route);
+        Log.info("file upload");
+        final var request = new CsvUploadJobRequest(originalFileName, path, route);
+        final var job = JobBuilder.aJob()
+                .scheduleIn(delay)
+                .withName("Upload: %s".formatted(upload.fileName()))
+                .withJobRequest(request)
+                .withLabels("upload", "csv", "customer")
+                .withAmountOfRetries(10);
+        scheduler.create(job);
     }
 }

@@ -1,9 +1,9 @@
 package com.github.mangila.customer.web;
 
-import com.github.mangila.integration.pgevent.PgEventProducer;
 import com.github.mangila.customer.web.cqrs.CreateCustomerCommand;
 import com.github.mangila.customer.web.cqrs.UpdateCustomerCommand;
 import com.github.mangila.customer.web.dto.CustomerDto;
+import com.github.mangila.integration.pgevent.PgEventProducer;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -11,6 +11,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import org.jboss.resteasy.reactive.RestForm;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.slf4j.MDC;
 
 import java.net.URI;
@@ -64,6 +66,21 @@ public class CustomerRestResource {
         MDC.put("customer.id", id.toString());
         restAdapter.delete(id);
         return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/csv")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
+    public Response csv(@RestForm("csv") FileUpload file) {
+        MDC.put("operation", "customer-csv");
+        MDC.put("file.name", file.fileName());
+        MDC.put("file.size", String.valueOf(file.size()));
+        MDC.put("file.type", file.contentType());
+        MDC.put("file.path", file.uploadedFile().toString());
+        restAdapter.upload(file);
+        return Response.ok().build();
     }
 
 }

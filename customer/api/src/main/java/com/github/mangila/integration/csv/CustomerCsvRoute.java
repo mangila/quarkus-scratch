@@ -3,10 +3,16 @@ package com.github.mangila.integration.csv;
 import com.github.mangila.integration.jobrunr.JobRunrScheduler;
 import io.quarkus.virtual.threads.VirtualThreads;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.bean.validator.BeanValidationException;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.apache.camel.model.dataformat.BindyType;
+import org.hibernate.validator.constraints.UUID;
 import org.jboss.logging.MDC;
 
 import java.time.Duration;
@@ -27,19 +33,25 @@ public class CustomerCsvRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        final String endpoint = getEndpoint();
+        onException(BeanValidationException.class)
+                .handled(false)
+                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400))
+                .setBody(simple("Validation Failed: ${exception.message}"))
+                .log("Validation Failed: ${body}");
         onCompletion()
                 .process(_ -> MDC.clear())
                 .log("Processed ${body.size} customers");
         from("direct:%s".formatted(ROUTE_ID))
                 .routeId(ROUTE_ID)
                 .log("Reading customers CSV")
-                .pollEnrich(endpoint)
+                .pollEnrich()
+                .simple("file:target/uploads?fileName=${body}")
                 .log("Reading from ${file:name}")
                 .unmarshal()
                 .bindy(BindyType.Csv, CustomerCsv.class)
                 .split(body())
                 .streaming()
+                .to("bean-validator://validateCustomerCsv")
                 .process(exchange -> {
                     var customer = exchange.getIn().getBody(CustomerCsv.class);
                     MDC.put("customer.id", customer.getId());
@@ -47,28 +59,27 @@ public class CustomerCsvRoute extends RouteBuilder {
                 });
     }
 
-    public String getEndpoint() {
-        final var dataResource = getCamelContext().getClassResolver()
-                .loadResourceAsURL("data");
-        return dataResource.toString() + "?fileName=customers.csv";
-    }
-
     @CsvRecord(separator = ",", skipFirstLine = true)
     public static class CustomerCsv {
-        // id,name,address,email,phone
         @DataField(pos = 1)
+        @UUID
+        @NotNull
         private String id;
 
         @DataField(pos = 2)
+        @NotBlank
         private String name;
 
         @DataField(pos = 3)
+        @NotBlank
         private String address;
 
         @DataField(pos = 4)
+        @Email
         private String email;
 
         @DataField(pos = 5)
+        @NotBlank
         private String phone;
 
         public String getPhone() {

@@ -3,10 +3,15 @@ package com.github.mangila.integration.csv;
 import com.github.mangila.integration.jobrunr.JobRunrScheduler;
 import io.quarkus.virtual.threads.VirtualThreads;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.apache.camel.model.dataformat.BindyType;
+import org.hibernate.validator.constraints.URL;
+import org.hibernate.validator.constraints.UUID;
 import org.jboss.logging.MDC;
 
 import java.time.Duration;
@@ -56,15 +61,21 @@ public class ProductCsvRoute extends RouteBuilder {
     @CsvRecord(separator = ",", skipFirstLine = true)
     public static class ProductCsv {
         @DataField(pos = 1)
+        @UUID
+        @NotNull
         private String id;
 
         @DataField(pos = 2)
+        @NotBlank
         private String name;
 
         @DataField(pos = 3)
+        @URL
         private String image_url;
 
         @DataField(pos = 4)
+        @Digits(integer = 10, fraction = 2)
+        @NotNull
         private String price;
 
         public String getPrice() {
