@@ -2,7 +2,6 @@ package com.github.mangila.integration.pgevent;
 
 import com.github.mangila.config.AppConfig;
 import com.github.mangila.customer.data.CustomerCacheRepository;
-import com.github.mangila.customer.data.CustomerRedisRepository;
 import io.github.mangila.ensure4j.Ensure;
 import io.github.mangila.ensure4j.ops.EnsureStringOps;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,9 +18,12 @@ public class CacheEvictRoute extends RouteBuilder {
 
     private static final EnsureStringOps ENSURE_STRING_OPS = Ensure.strings();
 
+    private final CustomerCacheRepository cacheRepository;
     private final String endpoint;
 
-    public CacheEvictRoute(AppConfig.IntegrationConfig.PgEvent pgEventConfig) {
+    public CacheEvictRoute(AppConfig.IntegrationConfig.PgEvent pgEventConfig,
+                           CustomerCacheRepository cacheRepository) {
+        this.cacheRepository = cacheRepository;
         var channel = pgEventConfig.channels()
                 .stream()
                 .filter(c -> c.equals("customer_evict"))
@@ -32,18 +34,15 @@ public class CacheEvictRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+        onCompletion()
+                .log("Evicted customer from cache")
+                .process(_ -> MDC.clear());
         from(endpoint)
                 .process(exchange -> {
                     var payload = exchange.getIn().getBody(String.class);
                     ENSURE_STRING_OPS.notBlank(payload, "Customer ID cannot be blank");
                     MDC.put("customerId", payload);
                 })
-                .bean(CustomerCacheRepository.class, "evict")
-                .bean(CustomerRedisRepository.class, "evict")
-                .onCompletion()
-                .process(_ -> {
-                    MDC.clear();
-                })
-                .end();
+                .bean(cacheRepository, "evict");
     }
 }

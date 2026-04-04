@@ -1,12 +1,14 @@
 package com.github.mangila.integration.jobrunr;
 
+import com.github.mangila.integration.csv.CustomerCsvRoute;
+import com.github.mangila.integration.csv.ProductCsvRoute;
+import com.github.mangila.integration.jobrunr.job.CsvFileUploadJobRequest;
+import com.github.mangila.integration.jobrunr.job.CustomerCsvJobRequest;
+import com.github.mangila.integration.jobrunr.job.ProductCsvJobRequest;
+import com.github.mangila.shared.model.CsvFileUpload;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import org.jobrunr.jobs.annotations.Job;
-import org.jobrunr.jobs.annotations.Recurring;
-import org.jobrunr.jobs.context.JobContext;
+import org.jboss.logmanager.MDC;
 import org.jobrunr.scheduling.JobBuilder;
 import org.jobrunr.scheduling.JobRequestScheduler;
 
@@ -22,23 +24,44 @@ public class JobRunrScheduler {
         this.scheduler = scheduler;
     }
 
-    public void schedule(@Positive int pokemonId, @NotNull UUID customerId, Duration delay) {
-        final var request = new PokemonJobRequest(pokemonId, customerId);
+    public void schedule(CustomerCsvRoute.CustomerCsv csv, Duration delay) {
+        Log.info("customer csv");
+        final var request = new CustomerCsvJobRequest(csv);
         final var job = JobBuilder.aJob()
                 .scheduleIn(delay)
-                .withName("Pokemon: %s".formatted(pokemonId))
+                .withName("Customer: %s".formatted(csv.getId()))
                 .withJobRequest(request)
-                .withLabels("pokemon")
+                .withLabels("customer", "csv")
                 .withAmountOfRetries(10);
         scheduler.create(job);
-        Log.infof("Scheduled PokemonId: %s for CustomerId: %s", pokemonId, customerId);
     }
 
-    @Recurring(id = "my-recurring-job", cron = "*/15 * * * * *")
-    @Job(name = "My recurring job")
-    public void executeSampleJob(JobContext context) {
-        Log.info("Executing sample job");
-        context.runStepOnce("hej", () -> Log.info("Hello world"));
-        throw new RuntimeException("Test");
+    public void schedule(ProductCsvRoute.ProductCsv csv, Duration delay) {
+        Log.info("product csv");
+        final var request = new ProductCsvJobRequest(csv);
+        final var job = JobBuilder.aJob()
+                .scheduleIn(delay)
+                .withName("Product: %s".formatted(csv.getId()))
+                .withJobRequest(request)
+                .withLabels("product", "csv")
+                .withAmountOfRetries(10);
+        scheduler.create(job);
+    }
+
+    public UUID schedule(CsvFileUpload csv, Duration duration) {
+        final var file = csv.file();
+        final var originalFileName = file.fileName();
+        final var path = file.uploadedFile().toString();
+        final var domain = csv.domain().value();
+        MDC.put("domain", domain);
+        Log.info("file upload");
+        final var request = new CsvFileUploadJobRequest(originalFileName, path, domain);
+        final var job = JobBuilder.aJob()
+                .scheduleIn(duration)
+                .withName("Upload: %s".formatted(originalFileName))
+                .withJobRequest(request)
+                .withLabels("upload", "csv", domain)
+                .withAmountOfRetries(0);
+        return scheduler.create(job).asUUID();
     }
 }

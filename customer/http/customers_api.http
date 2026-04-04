@@ -1,0 +1,44 @@
+### GET customer by ID
+GET {{host}}/api/v1/customers/{{customer_id}}
+Accept: application/json
+
+### CREATE customer
+POST {{host}}/api/v1/customers
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "address": "123 Main Street, Springfield",
+  "phone": "+1234567890"
+}
+
+### UPDATE customer
+PUT {{host}}/api/v1/customers
+Content-Type: application/json
+
+{
+  "id": "{{customer_id}}",
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com",
+  "address": "000 Second Street, Springfield",
+  "phone": "+467323423423"
+}
+
+### DELETE customer
+DELETE {{host}}/api/v1/customers/{{customer_id}}
+
+### UPLOAD Customers CSV file
+POST {{host}}/api/v1/customers/csv
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="csv"; filename="customers.csv"
+Content-Type: text/plain
+
+< ../data/customers.csv
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+> {%
+    client.global.set("job_id", response.body.jobId)
+%}}

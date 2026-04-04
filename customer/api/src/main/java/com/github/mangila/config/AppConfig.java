@@ -14,7 +14,7 @@ public interface AppConfig {
 
         @ConfigMapping(prefix = "app.integration.pgevent")
         interface PgEvent {
-            @Size(max = 1)
+            @Size(max = 3)
             List<String> channels();
         }
 

@@ -2,16 +2,21 @@ package com.github.mangila.customer.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "Customer")
 @Table(name = "customer")
+@Audited
 public class CustomerEntity {
 
     @Id
@@ -22,11 +27,11 @@ public class CustomerEntity {
     )
     private String name;
 
+    @Type(JsonType.class)
     @Column(nullable = false,
-            unique = true,
-            columnDefinition = "TEXT"
+            columnDefinition = "JSONB"
     )
-    private String address;
+    private JsonNode address;
 
     @Column(nullable = false,
             unique = true,
@@ -39,25 +44,38 @@ public class CustomerEntity {
     )
     private String phone;
 
+    @NotAudited
     @Type(JsonType.class)
     @Column(
-            name = "favorite_pokemon",
+            name = "orders",
             nullable = false,
             columnDefinition = "JSONB"
     )
-    private JsonNode favoritePokemon;
+    private List<UUID> orders = new ArrayList<>();
+
+    @NotAudited
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Instant updatedAt;
+
+    @Version
+    private Long version;
 
     public CustomerEntity() {
         // do nothing, for ORM 🐍 - it's swedish for "snake"
     }
 
-    public CustomerEntity(UUID id, String name, String address, String email, String phone, JsonNode favoritePokemon) {
+    public CustomerEntity(UUID id, String name, JsonNode address, String email, String phone, List<UUID> orders) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.email = email;
         this.phone = phone;
-        this.favoritePokemon = favoritePokemon;
+        this.orders = orders;
     }
 
     public UUID getId() {
@@ -76,11 +94,11 @@ public class CustomerEntity {
         this.name = name;
     }
 
-    public String getAddress() {
+    public JsonNode getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(JsonNode address) {
         this.address = address;
     }
 
@@ -100,11 +118,35 @@ public class CustomerEntity {
         this.phone = phone;
     }
 
-    public JsonNode getFavoritePokemon() {
-        return favoritePokemon;
+    public List<UUID> getOrders() {
+        return orders;
     }
 
-    public void setFavoritePokemon(JsonNode favoritePokemon) {
-        this.favoritePokemon = favoritePokemon;
+    public void setOrders(List<UUID> orders) {
+        this.orders = orders;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

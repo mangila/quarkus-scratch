@@ -1,18 +1,11 @@
 package com.github.mangila.customer.data;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
-public class CustomerPostgresRepository {
+public class CustomerPostgresRepository implements PanacheRepositoryBase<CustomerEntity, UUID> {
 
-    public void persistFavoritePokemon(UUID id, ObjectNode node) {
-    }
-
-    public Optional<CustomerEntity> findById(UUID id) {
-        return Optional.empty();
-    }
 }

@@ -1,6 +1,6 @@
 package com.github.mangila.customer.data;
 
-import com.github.mangila.customer.web.dto.CustomerDto;
+import com.github.mangila.customer.rest.dto.CustomerDto;
 import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheName;
 import io.quarkus.cache.CaffeineCache;
