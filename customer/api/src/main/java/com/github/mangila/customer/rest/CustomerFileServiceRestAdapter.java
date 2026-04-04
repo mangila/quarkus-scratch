@@ -25,7 +25,8 @@ public class CustomerFileServiceRestAdapter {
 
     public UUID upload(FileUpload file) {
         try (var lines = Files.lines(file.uploadedFile())) {
-            String header = lines.findFirst().orElseThrow();
+            String header = lines.findFirst()
+                    .orElseThrow(() -> new CsvException("CSV header not found"));
             if (!Customer.CSV_HEADERS.equals(header)) {
                 Log.errorf("CSV header is not valid. Expected: %s, Actual: %s", Customer.CSV_HEADERS, header);
                 throw new CsvException(String.format("CSV header is not valid. Expected: %s, Actual: %s", Customer.CSV_HEADERS, header));
