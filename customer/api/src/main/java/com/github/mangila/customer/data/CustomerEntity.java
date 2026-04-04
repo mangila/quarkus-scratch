@@ -2,13 +2,14 @@ package com.github.mangila.customer.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +44,7 @@ public class CustomerEntity {
     )
     private String phone;
 
+    @NotAudited
     @Type(JsonType.class)
     @Column(
             name = "orders",
@@ -50,6 +52,18 @@ public class CustomerEntity {
             columnDefinition = "JSONB"
     )
     private List<UUID> orders = new ArrayList<>();
+
+    @NotAudited
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Instant updatedAt;
+
+    @Version
+    private Long version;
 
     public CustomerEntity() {
         // do nothing, for ORM 🐍 - it's swedish for "snake"
@@ -110,5 +124,29 @@ public class CustomerEntity {
 
     public void setOrders(List<UUID> orders) {
         this.orders = orders;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

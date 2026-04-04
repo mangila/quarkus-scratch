@@ -43,6 +43,7 @@ public class CsvRoute extends RouteBuilder {
                 .log("Reading: ${header.original} - ${body}")
                 .pollEnrich()
                 .simple(fileEndpoint)
+                .timeout(5000)
                 .choice()
                 .when(simple("${header.domain} == 'customer'"))
                 .to("direct:%s".formatted(CustomerCsvRoute.ROUTE_ID))

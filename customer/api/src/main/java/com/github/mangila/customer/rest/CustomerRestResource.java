@@ -3,7 +3,6 @@ package com.github.mangila.customer.rest;
 import com.github.mangila.customer.rest.cqrs.CreateCustomerCommand;
 import com.github.mangila.customer.rest.cqrs.UpdateCustomerCommand;
 import com.github.mangila.customer.rest.dto.CustomerDto;
-import com.github.mangila.integration.pgevent.PgEventProducer;
 import com.github.mangila.shared.UuidFactory;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.validation.Valid;
@@ -24,16 +23,13 @@ import java.util.UUID;
 public class CustomerRestResource {
 
     private final UuidFactory uuidFactory;
-    private final PgEventProducer pgEventProducer;
     private final CustomerServiceRestAdapter restAdapter;
     private final CustomerFileServiceRestAdapter fileServiceRestAdapter;
 
     public CustomerRestResource(UuidFactory uuidFactory,
-                                PgEventProducer pgEventProducer,
                                 CustomerServiceRestAdapter customerServiceRestAdapter,
                                 CustomerFileServiceRestAdapter customerFileServiceRestAdapter) {
         this.uuidFactory = uuidFactory;
-        this.pgEventProducer = pgEventProducer;
         this.restAdapter = customerServiceRestAdapter;
         this.fileServiceRestAdapter = customerFileServiceRestAdapter;
     }
@@ -45,7 +41,6 @@ public class CustomerRestResource {
     public CustomerDto get(@PathParam("id") String id) {
         final UUID uuid = uuidFactory.create(id);
         MDC.put("customer.id", uuid.toString());
-        pgEventProducer.sendBody("customer_evict", null);
         return restAdapter.findById(uuid);
     }
 

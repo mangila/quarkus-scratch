@@ -13,12 +13,13 @@ import java.util.Map;
 @ApplicationScoped
 public class CsvFileUploadJobHandler implements JobRequestHandler<CsvFileUploadJobRequest> {
 
-    private final String endpoint = "direct:%s".formatted(CsvRoute.ROUTE_ID);
+    private static final String ENDPOINT = "direct:%s".formatted(CsvRoute.ROUTE_ID);
+
     private final ProducerTemplate producerTemplate;
 
     public CsvFileUploadJobHandler(ProducerTemplate producerTemplate) {
         this.producerTemplate = new DefaultProducerTemplate(producerTemplate.getCamelContext());
-        this.producerTemplate.setDefaultEndpointUri(endpoint);
+        this.producerTemplate.setDefaultEndpointUri(ENDPOINT);
         this.producerTemplate.start();
     }
 

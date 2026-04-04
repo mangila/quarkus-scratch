@@ -1,11 +1,13 @@
 package com.github.mangila.customer.shared;
 
+import com.github.mangila.customer.data.CustomerEntity;
 import com.github.mangila.customer.data.CustomerPostgresRepository;
 import com.github.mangila.customer.domain.Customer;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,26 +23,38 @@ import java.util.UUID;
 public class CustomerService {
 
     private final CustomerPostgresRepository postgresRepository;
+    private final CustomerMapper mapper;
 
-    public CustomerService(CustomerPostgresRepository postgresRepository) {
+    public CustomerService(CustomerPostgresRepository postgresRepository,
+                           CustomerMapper mapper) {
         this.postgresRepository = postgresRepository;
+        this.mapper = mapper;
     }
 
+    @Transactional
     public Optional<Customer> findById(@NotNull UUID id) {
         return postgresRepository.findByIdOptional(id)
-                .map(customer -> null);
+                .map(mapper::toDomain);
     }
 
+    @Transactional
     public void save(Customer customer) {
-
+        final var entity = mapper.toEntity(customer);
+        postgresRepository.persist(entity);
     }
 
-    public void saveAll(List<Customer> customers) {
+    @Transactional
+    public void update(Customer customer) throws EntityNotFoundException {
+        final CustomerEntity entity = postgresRepository.findByIdOptional(customer.id())
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+        entity.setName(customer.name());
+        entity.setAddress(customer.address());
+        entity.setEmail(customer.email());
+        entity.setPhone(customer.phone());
     }
 
-    public void update(Customer domain) {
-    }
-
-    public void delete(UUID id) {
+    @Transactional
+    public boolean delete(UUID id) {
+        return postgresRepository.deleteById(id);
     }
 }

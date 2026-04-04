@@ -1,16 +1,20 @@
 package com.github.mangila.customer.rest;
 
 import com.github.mangila.customer.data.CustomerCacheRepository;
-import com.github.mangila.customer.shared.CustomerService;
+import com.github.mangila.customer.domain.Customer;
 import com.github.mangila.customer.rest.cqrs.CreateCustomerCommand;
 import com.github.mangila.customer.rest.cqrs.UpdateCustomerCommand;
 import com.github.mangila.customer.rest.dto.CustomerDto;
-import com.github.mangila.integration.jobrunr.JobRunrScheduler;
-import io.quarkus.virtual.threads.VirtualThreads;
+import com.github.mangila.customer.shared.CustomerFactory;
+import com.github.mangila.customer.shared.CustomerMapper;
+import com.github.mangila.customer.shared.CustomerService;
+import io.quarkiverse.resteasy.problem.HttpProblem;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
+
+import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
 
 /**
  * REST Adapter for the CustomerService
@@ -23,19 +27,19 @@ import java.util.concurrent.ExecutorService;
 @ApplicationScoped
 public class CustomerServiceRestAdapter {
 
-    private final JobRunrScheduler scheduler;
+    private final CustomerFactory customerFactory;
+    private final CustomerMapper mapper;
     private final CustomerCacheRepository cacheRepository;
     private final CustomerService customerService;
-    private final ExecutorService vTexecutor;
 
-    public CustomerServiceRestAdapter(JobRunrScheduler scheduler,
+    public CustomerServiceRestAdapter(CustomerFactory customerFactory,
+                                      CustomerMapper mapper,
                                       CustomerCacheRepository cacheRepository,
-                                      CustomerService customerService,
-                                      @VirtualThreads ExecutorService vTexecutor) {
-        this.scheduler = scheduler;
+                                      CustomerService customerService) {
+        this.customerFactory = customerFactory;
+        this.mapper = mapper;
         this.cacheRepository = cacheRepository;
         this.customerService = customerService;
-        this.vTexecutor = vTexecutor;
     }
 
     public CustomerDto findById(UUID id) {
@@ -43,20 +47,30 @@ public class CustomerServiceRestAdapter {
         if (cache != null) {
             return cache;
         }
-        return null;
-        //  .orElseThrow(() -> HttpProblem.valueOf(NOT_FOUND, "Customer not found"));
+        return customerService.findById(id)
+                .map(mapper::toDto)
+                .orElseThrow(() -> HttpProblem.valueOf(NOT_FOUND, "Customer not found"));
     }
 
     public UUID create(CreateCustomerCommand command) {
-        customerService.save(null);
-        return null;
+        final Customer customer = customerFactory.from(command);
+        customerService.save(customer);
+        return customer.id();
     }
 
     public void update(UpdateCustomerCommand command) {
-        customerService.update(null);
+        final Customer customer = mapper.toDomain(command);
+        try {
+            customerService.update(customer);
+        } catch (EntityNotFoundException e) {
+            throw HttpProblem.valueOf(NOT_FOUND, "Customer not found");
+        }
     }
 
     public void delete(UUID id) {
-        customerService.delete(id);
+        final boolean deleted = customerService.delete(id);
+        if (!deleted) {
+            throw HttpProblem.valueOf(NOT_FOUND, "Customer not found");
+        }
     }
 }
