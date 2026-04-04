@@ -18,6 +18,6 @@ public class ProductFileServiceRestAdapter {
     }
 
     public UUID upload(FileUpload file) {
-        return csvService.upload(new CsvFileUpload(file, DomainKey.product()));
+        return csvService.scheduleUpload(new CsvFileUpload(file, DomainKey.product()));
     }
 }

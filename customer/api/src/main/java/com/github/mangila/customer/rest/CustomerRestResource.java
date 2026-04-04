@@ -79,7 +79,7 @@ public class CustomerRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     public Response csv(@RestForm("csv") FileUpload file) {
-        MDC.put("operation", "customer-csv");
+        MDC.put("domain", "customer");
         MDC.put("file.name", file.fileName());
         MDC.put("file.size", String.valueOf(file.size()));
         MDC.put("file.type", file.contentType());

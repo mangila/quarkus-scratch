@@ -53,7 +53,6 @@ public class JobRunrScheduler {
         final var originalFileName = file.fileName();
         final var path = file.uploadedFile().toString();
         final var domain = csv.domain().value();
-        MDC.put("domain", domain);
         Log.info("file upload");
         final var request = new CsvFileUploadJobRequest(originalFileName, path, domain);
         final var job = JobBuilder.aJob()

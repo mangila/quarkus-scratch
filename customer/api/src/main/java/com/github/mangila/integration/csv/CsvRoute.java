@@ -34,8 +34,6 @@ public class CsvRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         onCompletion()
-                .process(_ -> MDC.clear());
-        onCompletion()
                 .onCompleteOnly()
                 .log("Completed processing ${body.size} records");
         from("direct:%s".formatted(ROUTE_ID))

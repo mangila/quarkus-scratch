@@ -1,6 +1,6 @@
 package com.github.mangila.integration.csv;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.github.mangila.integration.jobrunr.JobRunrScheduler;
 import com.github.mangila.shared.JsonService;
 import io.quarkus.logging.Log;
@@ -58,17 +58,22 @@ public class ProductCsvRoute extends RouteBuilder {
                 .logExhausted(false)
                 .process(exchange -> {
                     final var exception = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, BeanValidationException.class);
-                    final ObjectNode errorJsonNode = jsonService.createObjectNode();
+                    final ArrayNode errorJsonArray = jsonService.createObjectNode().putArray("errors");
                     exception.getConstraintViolations().forEach(violation -> {
-                        String key = violation.getPropertyPath().toString() + ":" + violation.getInvalidValue();
-                        errorJsonNode.put(key, violation.getMessage());
+                        final String value = violation.getInvalidValue().toString();
+                        final String field = violation.getPropertyPath().toString();
+                        final String message = violation.getMessage();
+                        errorJsonArray.addObject()
+                                .put("field", field)
+                                .put("value", value)
+                                .put("message", message);
                     });
                     final var isJob = ThreadLocalJobContext.hasJobContext();
                     if (isJob) {
                         final var jobContext = ThreadLocalJobContext.getJobContext();
-                        jobContext.saveMetadata("errors", errorJsonNode.toString());
+                        jobContext.saveMetadata("errors", errorJsonArray.toString());
                     }
-                    Log.infof("Validation errors: %s", errorJsonNode.toPrettyString());
+                    Log.infof("Validation errors: %s", errorJsonArray.toString());
                 });
     }
 
