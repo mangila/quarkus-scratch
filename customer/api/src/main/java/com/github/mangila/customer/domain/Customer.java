@@ -16,8 +16,6 @@ public record Customer(
         List<UUID> orders
 ) {
 
-    public static final String CSV_HEADERS = "id,name,address,email,phone";
-
     private static final EnsureStringOps ENSURE_STRING = Ensure.strings();
 
     public Customer {

@@ -1,6 +1,6 @@
 package com.github.mangila.shared.exception.mapper;
 
-import com.github.mangila.shared.exception.NotValidUuidException;
+import com.github.mangila.shared.exception.ApplicationException;
 import io.quarkiverse.resteasy.problem.ExceptionMapperBase;
 import io.quarkiverse.resteasy.problem.HttpProblem;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -11,10 +11,10 @@ import static jakarta.ws.rs.core.Response.Status.BAD_REQUEST;
 
 @Provider
 @APIResponse(responseCode = "400", description = "Bad Request: server could not understand the request due to invalid syntax")
-public class NotValidUuidExceptionMapper extends ExceptionMapperBase<NotValidUuidException>
-        implements ExceptionMapper<NotValidUuidException> {
+public class ApplicationExceptionMapper extends ExceptionMapperBase<ApplicationException>
+        implements ExceptionMapper<ApplicationException> {
     @Override
-    protected HttpProblem toProblem(NotValidUuidException e) {
+    protected HttpProblem toProblem(ApplicationException e) {
         return HttpProblem.valueOf(BAD_REQUEST, e.getMessage());
     }
 }

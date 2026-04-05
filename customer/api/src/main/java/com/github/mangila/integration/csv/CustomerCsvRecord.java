@@ -5,12 +5,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
-import org.hibernate.validator.constraints.UUID;
 
 @CsvRecord(separator = ",", skipFirstLine = true)
 public class CustomerCsvRecord {
+
+    public static final String CSV_HEADERS = "id,name,address,email,phone";
+
     @DataField(pos = 1)
-    @UUID
     @NotNull
     private String id;
 
@@ -30,28 +31,16 @@ public class CustomerCsvRecord {
     @NotBlank
     private String phone;
 
-    public String getPhone() {
-        return phone;
+    public CustomerCsvRecord() {
+
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public String getId() {
+        return id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -62,11 +51,27 @@ public class CustomerCsvRecord {
         this.name = name;
     }
 
-    public String getId() {
-        return id;
+    public String getAddress() {
+        return address;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

@@ -6,6 +6,7 @@ import com.github.mangila.integration.pgcache.TtlCacheRepository;
 import com.github.mangila.shared.JsonService;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.bean.validator.BeanValidationException;
 import org.apache.camel.model.dataformat.BindyType;
@@ -47,13 +48,14 @@ public class CsvRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         handleBeanValidationException();
+        handleIllegalArgumentException();
         handleException();
         onCompletion()
                 .onCompleteOnly()
-                .log("Completed processing ${body.size} records");
+                .log("Completed processing: ${body.size} records");
         from("direct:%s".formatted(ROUTE_ID))
                 .routeId(ROUTE_ID)
-                .log("Reading: ${header.original} - ${body}")
+                .log(LoggingLevel.INFO, "Reading: ${header.original} - ${body}")
                 .pollEnrich()
                 .simple(fileEndpoint)
                 .timeout(5000)
@@ -65,7 +67,8 @@ public class CsvRoute extends RouteBuilder {
                 .split(body())
                 .streaming()
                 .process(exchange -> {
-                    final var customerCsv = exchange.getMessage(CustomerCsvRecord.class);
+                    final var customerCsv = exchange.getMessage()
+                            .getBody(CustomerCsvRecord.class);
                     MDC.put("customer.id", customerCsv.getId());
                     scheduler.schedule(customerCsv, Duration.ofSeconds(10));
                 })
@@ -77,13 +80,14 @@ public class CsvRoute extends RouteBuilder {
                 .split(body())
                 .streaming()
                 .process(exchange -> {
-                    final var productCsv = exchange.getMessage(ProductCsvRecord.class);
+                    final var productCsv = exchange.getMessage()
+                            .getBody(ProductCsvRecord.class);
                     MDC.put("product.id", productCsv.getId());
                     scheduler.schedule(productCsv, Duration.ofSeconds(10));
                 })
                 .endChoice()
                 .otherwise()
-                .log("Unknown domain: ${header.domain}")
+                .log(LoggingLevel.WARN, "Unknown domain: ${header.domain}")
                 .end();
     }
 
@@ -110,7 +114,26 @@ public class CsvRoute extends RouteBuilder {
                     }
                     exchange.getMessage().setBody(errorJsonArray);
                 })
-                .log("Validation errors: ${body}");
+                .log(LoggingLevel.DEBUG, "${exception.message} - ${body}");
+    }
+
+    private void handleIllegalArgumentException() {
+        onException(IllegalArgumentException.class)
+                .handled(false)
+                .logExhausted(false)
+                .process(exchange -> {
+                    final var exception = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, IllegalArgumentException.class);
+                    final ArrayNode errorJsonArray = jsonService.createObjectNode().putArray("errors");
+                    errorJsonArray.addObject()
+                            .put("message", exception.getMessage());
+                    final var isJob = ThreadLocalJobContext.hasJobContext();
+                    if (isJob) {
+                        final var jobContext = ThreadLocalJobContext.getJobContext();
+                        jobContext.saveMetadata("errors", errorJsonArray.toString());
+                    }
+                    exchange.getMessage().setBody(errorJsonArray);
+                })
+                .log(LoggingLevel.DEBUG, "${exception.message} - ${body}");
     }
 
     private void handleException() {
@@ -129,6 +152,6 @@ public class CsvRoute extends RouteBuilder {
                     }
                     exchange.getMessage().setBody(errorJsonArray);
                 })
-                .log("Error processing CSV route: ${exception.message}");
+                .log(LoggingLevel.ERROR, "${exception.message} - ${body}");
     }
 }

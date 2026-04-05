@@ -1,8 +1,8 @@
 package com.github.mangila.shared;
 
-import com.github.mangila.customer.domain.Customer;
+import com.github.mangila.integration.csv.CustomerCsvRecord;
 import com.github.mangila.integration.jobrunr.JobRunrScheduler;
-import com.github.mangila.shared.exception.CsvException;
+import com.github.mangila.shared.exception.ApplicationException;
 import com.github.mangila.shared.model.CsvFileUpload;
 import com.github.mangila.shared.model.DomainKey;
 import io.github.mangila.ensure4j.Ensure;
@@ -28,7 +28,7 @@ public class CsvService {
     public CsvService(JobRunrScheduler jobRunrScheduler) {
         this.jobRunrScheduler = jobRunrScheduler;
         this.domainKeyToCsvHeaders = Map.of(
-                DomainKey.customer(), Customer.CSV_HEADERS,
+                DomainKey.customer(), CustomerCsvRecord.CSV_HEADERS,
                 DomainKey.product(), "id,name,image_url,price",
                 DomainKey.order(), "order.csv"
         );
@@ -45,7 +45,7 @@ public class CsvService {
         final boolean supported = supportedMediaTypes
                 .stream()
                 .anyMatch(type -> type.equals(csv.file().contentType()));
-        Ensure.isTrue(supported, () -> new CsvException("Not supported media type. Expected: %s, Actual: %s".formatted(supportedMediaTypes, csv.file().contentType())));
+        Ensure.isTrue(supported, () -> new ApplicationException("Not supported media type. Expected: %s, Actual: %s".formatted(supportedMediaTypes, csv.file().contentType())));
     }
 
     private void validateHeader(CsvFileUpload csv) {
@@ -53,11 +53,12 @@ public class CsvService {
         final var file = csv.file();
         try (var lines = Files.lines(file.uploadedFile())) {
             String header = lines.findFirst()
-                    .orElseThrow(() -> new CsvException("CSV header not found"));
+                    .orElseThrow(() -> new ApplicationException("CSV header not found"));
             var headerToCheck = domainKeyToCsvHeaders.get(domain);
             if (!headerToCheck.equals(header)) {
-                Log.errorf("CSV header is not valid. Expected: %s, Actual: %s", headerToCheck, header);
-                throw new CsvException(String.format("CSV header is not valid. Expected: %s, Actual: %s", headerToCheck, header));
+                final var errMsg = "CSV header is not valid. Expected: %s, Actual: %s";
+                Log.errorf(errMsg, headerToCheck, header);
+                throw new ApplicationException(String.format(errMsg, headerToCheck, header));
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);

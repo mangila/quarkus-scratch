@@ -6,12 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.hibernate.validator.constraints.URL;
-import org.hibernate.validator.constraints.UUID;
 
 @CsvRecord(separator = ",", skipFirstLine = true)
 public class ProductCsvRecord {
+
     @DataField(pos = 1)
-    @UUID
     @NotNull
     private String id;
 

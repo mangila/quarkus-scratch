@@ -1,7 +1,7 @@
 package com.github.mangila.integration.jobrunr.job;
 
 import com.github.mangila.integration.csv.CsvRoute;
-import com.github.mangila.shared.exception.CsvException;
+import com.github.mangila.shared.exception.ApplicationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.engine.DefaultProducerTemplate;
@@ -35,7 +35,7 @@ public class CsvFileUploadJobHandler implements JobRequestHandler<CsvFileUploadJ
         try {
             producerTemplate.sendBodyAndHeaders(fileName, headers);
         } catch (Exception e) {
-            throw new CsvException("Error uploading CSV file: %s".formatted(originalFileName), e);
+            throw new ApplicationException("Error uploading CSV file: %s".formatted(originalFileName), e);
         }
     }
 }
