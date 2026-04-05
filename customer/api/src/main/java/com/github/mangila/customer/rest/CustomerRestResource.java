@@ -3,6 +3,7 @@ package com.github.mangila.customer.rest;
 import com.github.mangila.customer.rest.cqrs.CreateCustomerCommand;
 import com.github.mangila.customer.rest.cqrs.UpdateCustomerCommand;
 import com.github.mangila.customer.rest.dto.CustomerDto;
+import com.github.mangila.integration.pgevent.PgEventProducer;
 import com.github.mangila.shared.UuidFactory;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.validation.Valid;
@@ -22,13 +23,16 @@ import java.util.UUID;
 @Path("api/v1/customers")
 public class CustomerRestResource {
 
+    private final PgEventProducer pgEventProducer;
     private final UuidFactory uuidFactory;
     private final CustomerServiceRestAdapter restAdapter;
     private final CustomerFileServiceRestAdapter fileServiceRestAdapter;
 
-    public CustomerRestResource(UuidFactory uuidFactory,
+    public CustomerRestResource(PgEventProducer pgEventProducer,
+                                UuidFactory uuidFactory,
                                 CustomerServiceRestAdapter customerServiceRestAdapter,
                                 CustomerFileServiceRestAdapter customerFileServiceRestAdapter) {
+        this.pgEventProducer = pgEventProducer;
         this.uuidFactory = uuidFactory;
         this.restAdapter = customerServiceRestAdapter;
         this.fileServiceRestAdapter = customerFileServiceRestAdapter;

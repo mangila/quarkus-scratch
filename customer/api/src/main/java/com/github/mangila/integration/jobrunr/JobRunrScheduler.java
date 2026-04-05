@@ -1,14 +1,13 @@
 package com.github.mangila.integration.jobrunr;
 
-import com.github.mangila.integration.csv.CustomerCsvRoute;
-import com.github.mangila.integration.csv.ProductCsvRoute;
+import com.github.mangila.integration.csv.CustomerCsvRecord;
+import com.github.mangila.integration.csv.ProductCsvRecord;
 import com.github.mangila.integration.jobrunr.job.CsvFileUploadJobRequest;
 import com.github.mangila.integration.jobrunr.job.CustomerCsvJobRequest;
 import com.github.mangila.integration.jobrunr.job.ProductCsvJobRequest;
 import com.github.mangila.shared.model.CsvFileUpload;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jboss.logmanager.MDC;
 import org.jobrunr.scheduling.JobBuilder;
 import org.jobrunr.scheduling.JobRequestScheduler;
 
@@ -24,8 +23,8 @@ public class JobRunrScheduler {
         this.scheduler = scheduler;
     }
 
-    public void schedule(CustomerCsvRoute.CustomerCsv csv, Duration delay) {
-        Log.info("customer csv");
+    public void schedule(CustomerCsvRecord csv, Duration delay) {
+        Log.info("schedule customer csv row");
         final var request = new CustomerCsvJobRequest(csv);
         final var job = JobBuilder.aJob()
                 .scheduleIn(delay)
@@ -36,8 +35,8 @@ public class JobRunrScheduler {
         scheduler.create(job);
     }
 
-    public void schedule(ProductCsvRoute.ProductCsv csv, Duration delay) {
-        Log.info("product csv");
+    public void schedule(ProductCsvRecord csv, Duration delay) {
+        Log.info("schedule product csv row");
         final var request = new ProductCsvJobRequest(csv);
         final var job = JobBuilder.aJob()
                 .scheduleIn(delay)
@@ -53,7 +52,7 @@ public class JobRunrScheduler {
         final var originalFileName = file.fileName();
         final var path = file.uploadedFile().toString();
         final var domain = csv.domain().value();
-        Log.info("file upload");
+        Log.info("schedule csv file upload");
         final var request = new CsvFileUploadJobRequest(originalFileName, path, domain);
         final var job = JobBuilder.aJob()
                 .scheduleIn(duration)

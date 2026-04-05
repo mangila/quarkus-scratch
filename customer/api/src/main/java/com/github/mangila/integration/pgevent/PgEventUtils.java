@@ -15,6 +15,6 @@ final class PgEventUtils {
     @NonNull
     static String getEndpoint(String channel) {
         ENSURE_STRING_OPS.notBlank(channel, "channel cannot be blank");
-        return "pgevent://postgres/%s?datasource=#pgevent".formatted(channel);
+        return "pgevent:///quarkus/%s?datasource=#pgevent".formatted(channel);
     }
 }

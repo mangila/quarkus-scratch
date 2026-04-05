@@ -9,7 +9,9 @@ Content-Type: application/json
 {
   "name": "John Doe",
   "email": "john.doe@example.com",
-  "address": "123 Main Street, Springfield",
+  "address": {
+    "street": "29 Kropf Junction"
+  },
   "phone": "+1234567890"
 }
 
@@ -18,10 +20,12 @@ PUT {{host}}/api/v1/customers
 Content-Type: application/json
 
 {
-  "id": "{{customer_id}}",
+  "id": "9600436b-6eba-4924-a763-0b73b484397e",
   "name": "Jane Doe",
   "email": "jane.doe@example.com",
-  "address": "000 Second Street, Springfield",
+  "address": {
+    "street": "000 Second Street"
+  },
   "phone": "+467323423423"
 }
 

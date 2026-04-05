@@ -1,22 +1,20 @@
-CREATE OR REPLACE FUNCTION fn_customer_cache_evict() RETURNS trigger AS
+CREATE OR REPLACE FUNCTION fn_cache_evict() RETURNS trigger AS
 $$
 DECLARE
-    v_customer_id uuid := NULL;
-    v_channel     TEXT := 'customer_evict';
+    var_id      UUID := NEW.id;
+    var_channel TEXT := 'cache_evict';
 BEGIN
     IF TG_OP = 'DELETE' THEN
-        v_customer_id := OLD.id;
-    ELSE
-        v_customer_id := NEW.id;
+        var_id := OLD.id;
     END IF;
 
     --! l2 cache evict
     DELETE
     FROM ttl_cache
-    WHERE cache_key = v_customer_id::text;
+    WHERE cache_key = var_id::text;
 
     --! l1 cache evict
-    PERFORM pg_notify(v_channel, v_customer_id::text);
+    PERFORM pg_notify(var_channel, json_build_object('tg_table_name', TG_TABLE_NAME, 'id', var_id)::text);
 
     IF TG_OP = 'DELETE' THEN
         RETURN OLD;

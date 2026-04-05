@@ -32,10 +32,11 @@ public class CustomerServiceRestAdapter {
     private final CustomerCacheRepository cacheRepository;
     private final CustomerService customerService;
 
-    public CustomerServiceRestAdapter(CustomerFactory customerFactory,
-                                      CustomerMapper mapper,
-                                      CustomerCacheRepository cacheRepository,
-                                      CustomerService customerService) {
+    public CustomerServiceRestAdapter(
+            CustomerFactory customerFactory,
+            CustomerMapper mapper,
+            CustomerCacheRepository cacheRepository,
+            CustomerService customerService) {
         this.customerFactory = customerFactory;
         this.mapper = mapper;
         this.cacheRepository = cacheRepository;
@@ -43,12 +44,18 @@ public class CustomerServiceRestAdapter {
     }
 
     public CustomerDto findById(UUID id) {
-        final CustomerDto cache = cacheRepository.getIfPresent(id);
+        final var idAsString = id.toString();
+        final CustomerDto cache = cacheRepository.getIfPresent(idAsString);
         if (cache != null) {
             return cache;
         }
         return customerService.findById(id)
-                .map(mapper::toDto)
+                .map(customer -> {
+                    var dto = mapper.toDto(customer);
+                    cacheRepository.putl2(idAsString, dto);
+                    cacheRepository.putl1(idAsString, dto);
+                    return dto;
+                })
                 .orElseThrow(() -> HttpProblem.valueOf(NOT_FOUND, "Customer not found"));
     }
 

@@ -4,7 +4,7 @@ import com.github.mangila.customer.data.CustomerEntity;
 import com.github.mangila.customer.domain.Customer;
 import com.github.mangila.customer.rest.cqrs.UpdateCustomerCommand;
 import com.github.mangila.customer.rest.dto.CustomerDto;
-import com.github.mangila.integration.csv.CustomerCsvRoute;
+import com.github.mangila.integration.csv.CustomerCsvRecord;
 import com.github.mangila.shared.JsonService;
 import com.github.mangila.shared.UuidFactory;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -71,7 +71,7 @@ public class CustomerMapper {
         return new Customer(id, name, address, email, phone, Collections.emptyList());
     }
 
-    public Customer toDomain(CustomerCsvRoute.CustomerCsv csvRecord) {
+    public Customer toDomain(CustomerCsvRecord csvRecord) {
         final var id = uuidFactory.create(csvRecord.getId());
         final var name = csvRecord.getName();
         final var address = jsonService.createObjectNode().put("street", csvRecord.getAddress());

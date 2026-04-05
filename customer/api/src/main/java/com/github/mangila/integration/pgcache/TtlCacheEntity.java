@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Entity(name = "TtlCache")
 @Table(name = "ttl_cache")
@@ -21,7 +22,8 @@ public class TtlCacheEntity {
     private Instant expiresAt;
 
     public static TtlCacheEntity of(String cacheKey, JsonNode value) {
-        return new TtlCacheEntity(cacheKey, value, Instant.now().plusSeconds(30));
+        var expiresAt = Instant.now().plus(2, ChronoUnit.HOURS);
+        return new TtlCacheEntity(cacheKey, value, expiresAt);
     }
 
     public TtlCacheEntity(String cacheKey, JsonNode value, Instant expiresAt) {
@@ -31,7 +33,7 @@ public class TtlCacheEntity {
     }
 
     public TtlCacheEntity() {
-        // do nothing
+        // do nothing, for Hibernate
     }
 
     public String getCacheKey() {
