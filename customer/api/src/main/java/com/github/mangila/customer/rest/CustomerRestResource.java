@@ -19,7 +19,6 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.slf4j.MDC;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -107,11 +106,11 @@ public class CustomerRestResource {
     @RunOnVirtualThread
     public RestResponse<?> scheduleDownload() {
         MDC.put("domain", "customer");
-        java.nio.file.Path fileName = restAdapter.scheduleDownload();
+        java.nio.file.Path path = restAdapter.scheduleDownload();
         return RestResponse.ResponseBuilder
                 .ok()
-                .header("Content-Disposition", "attachment; filename=\"" + fileName.getFileName() + "\"")
-                .entity(fileName)
+                .header("Content-Disposition", "attachment; filename='%s'".formatted(path.getFileName()))
+                .entity(path)
                 .build();
     }
 }
