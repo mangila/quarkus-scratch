@@ -1,6 +1,6 @@
 package com.github.mangila.integration.jobrunr.job;
 
-import com.github.mangila.integration.csv.CsvUploadRoute;
+import com.github.mangila.integration.csv.CsvDownloadRoute;
 import com.github.mangila.shared.exception.ApplicationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.camel.ProducerTemplate;
@@ -11,18 +11,18 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 @ApplicationScoped
-public class CsvFileUploadJobHandler implements JobRequestHandler<CsvFileUploadJobRequest> {
+public class CsvFileDownloadJobHandler implements JobRequestHandler<CsvFileDownloadJobRequest> {
 
-    private static final String ENDPOINT = "direct:%s".formatted(CsvUploadRoute.ROUTE_ID);
+    private static final String ENDPOINT = "direct:%s".formatted(CsvDownloadRoute.ROUTE_ID);
 
     private final ProducerTemplate producerTemplate;
 
-    public CsvFileUploadJobHandler(ProducerTemplate producerTemplate) {
+    public CsvFileDownloadJobHandler(ProducerTemplate producerTemplate) {
         this.producerTemplate = producerTemplate;
     }
 
     @Override
-    public void run(CsvFileUploadJobRequest jobRequest) throws Exception {
+    public void run(CsvFileDownloadJobRequest jobRequest) throws Exception {
         final var context = ThreadLocalJobContext.getJobContext();
         final var originalFileName = jobRequest.originalFileName();
         final var domain = jobRequest.domain();

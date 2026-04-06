@@ -31,10 +31,6 @@ public class CustomerCsvRecord {
     @NotBlank
     private String phone;
 
-    public CustomerCsvRecord() {
-
-    }
-
     public String getId() {
         return id;
     }

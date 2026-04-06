@@ -1,3 +1,7 @@
+### GET customers by page
+GET {{host}}/api/v1/customers?page=0&size=5
+Accept: application/json
+
 ### GET customer by ID
 GET {{host}}/api/v1/customers/{{customer_id}}
 Accept: application/json

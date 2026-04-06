@@ -3,11 +3,14 @@ package com.github.mangila.customer.shared;
 import com.github.mangila.customer.data.CustomerEntity;
 import com.github.mangila.customer.data.CustomerPostgresRepository;
 import com.github.mangila.customer.domain.Customer;
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,5 +59,15 @@ public class CustomerService {
     @Transactional
     public boolean delete(UUID id) {
         return postgresRepository.deleteById(id);
+    }
+
+    @Transactional
+    public List<Customer> findAll(Page page) {
+        return postgresRepository.findAll(Sort.by("name"))
+                .page(page)
+                .list()
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
     }
 }

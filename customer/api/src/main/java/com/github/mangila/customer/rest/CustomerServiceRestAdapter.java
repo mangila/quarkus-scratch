@@ -9,9 +9,11 @@ import com.github.mangila.customer.shared.CustomerFactory;
 import com.github.mangila.customer.shared.CustomerMapper;
 import com.github.mangila.customer.shared.CustomerService;
 import io.quarkiverse.resteasy.problem.HttpProblem;
+import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityNotFoundException;
 
+import java.util.List;
 import java.util.UUID;
 
 import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
@@ -79,5 +81,12 @@ public class CustomerServiceRestAdapter {
         if (!deleted) {
             throw HttpProblem.valueOf(NOT_FOUND, "Customer not found");
         }
+    }
+
+    public List<CustomerDto> findAll(Page page) {
+        return customerService.findAll(page)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 }

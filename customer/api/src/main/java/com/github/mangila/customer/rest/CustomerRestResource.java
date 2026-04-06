@@ -5,18 +5,23 @@ import com.github.mangila.customer.rest.cqrs.UpdateCustomerCommand;
 import com.github.mangila.customer.rest.dto.CustomerDto;
 import com.github.mangila.integration.pgevent.PgEventProducer;
 import com.github.mangila.shared.UuidFactory;
+import io.quarkus.panache.common.Page;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import org.jboss.resteasy.reactive.RestForm;
+import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.slf4j.MDC;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -39,42 +44,52 @@ public class CustomerRestResource {
     }
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
+    public RestResponse<List<CustomerDto>> findAll(@QueryParam("page") @DefaultValue("0") @PositiveOrZero int pageIndex,
+                                                   @QueryParam("size") @DefaultValue("20") @Positive @Max(50) int pageSize) {
+        MDC.put("domain", "customer");
+        Page page = Page.of(pageIndex, pageSize);
+        return RestResponse.ok(restAdapter.findAll(page));
+    }
+
+    @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public CustomerDto get(@PathParam("id") String id) {
+    public RestResponse<CustomerDto> get(@PathParam("id") String id) {
         final UUID uuid = uuidFactory.create(id);
         MDC.put("customer.id", uuid.toString());
-        return restAdapter.findById(uuid);
+        return RestResponse.ok(restAdapter.findById(uuid));
     }
+
 
     @POST
     @RunOnVirtualThread
-    public Response create(@Valid CreateCustomerCommand command, @Context UriInfo uriInfo) {
+    public RestResponse<?> create(@Valid CreateCustomerCommand command, @Context UriInfo uriInfo) {
         final UUID id = restAdapter.create(command);
         URI location = uriInfo.getAbsolutePathBuilder()
                 .path(id.toString())
                 .build();
-        return Response.created(location)
-                .build();
+        return RestResponse.created(location);
     }
 
     @PUT
     @RunOnVirtualThread
-    public Response update(@Valid UpdateCustomerCommand command) {
+    public RestResponse<?> update(@Valid UpdateCustomerCommand command) {
         MDC.put("customer.id", command.id().toString());
         restAdapter.update(command);
-        return Response.noContent().build();
+        return RestResponse.noContent();
     }
 
     @DELETE
     @Path("/{id}")
     @RunOnVirtualThread
-    public Response delete(@PathParam("id") String id) {
+    public RestResponse<?> delete(@PathParam("id") String id) {
         final UUID uuid = uuidFactory.create(id);
         MDC.put("customer.id", uuid.toString());
         restAdapter.delete(uuid);
-        return Response.noContent().build();
+        return RestResponse.noContent();
     }
 
     @POST
@@ -82,15 +97,23 @@ public class CustomerRestResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
-    public Response csv(@RestForm("csv") FileUpload file) {
+    public RestResponse<Map<String, UUID>> scheduleUpload(@RestForm("csv") FileUpload file) {
         MDC.put("domain", "customer");
         MDC.put("file.name", file.fileName());
         MDC.put("file.size", String.valueOf(file.size()));
         MDC.put("file.type", file.contentType());
         MDC.put("file.path", file.uploadedFile().toString());
-        UUID jobId = fileServiceRestAdapter.upload(file);
-        return Response.accepted()
-                .entity(Map.of("jobId", jobId))
-                .build();
+        UUID jobId = fileServiceRestAdapter.scheduleUpload(file);
+        return RestResponse.accepted(Map.of("jobId", jobId));
+    }
+
+    @GET
+    @Path("/csv")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RunOnVirtualThread
+    public RestResponse<Map<String, UUID>> scheduleDownload() {
+        MDC.put("domain", "customer");
+        UUID jobId = fileServiceRestAdapter.scheduleDownload();
+        return RestResponse.accepted(Map.of("jobId", jobId));
     }
 }

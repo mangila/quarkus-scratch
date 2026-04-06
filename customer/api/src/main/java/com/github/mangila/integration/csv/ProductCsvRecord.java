@@ -7,8 +7,10 @@ import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.hibernate.validator.constraints.URL;
 
-@CsvRecord(separator = ",", skipFirstLine = true)
+@CsvRecord(separator = ",", skipFirstLine = true, generateHeaderColumns = true)
 public class ProductCsvRecord {
+
+    public static final String CSV_HEADERS = "id,name,image_url,price";
 
     @DataField(pos = 1)
     @NotNull
@@ -18,9 +20,9 @@ public class ProductCsvRecord {
     @NotBlank
     private String name;
 
-    @DataField(pos = 3)
+    @DataField(pos = 3, name = "image_url")
     @URL
-    private String image_url;
+    private String imageUrl;
 
     @DataField(pos = 4)
     @Digits(integer = 10, fraction = 2)
@@ -35,12 +37,12 @@ public class ProductCsvRecord {
         this.price = price;
     }
 
-    public String getImage_url() {
-        return image_url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {

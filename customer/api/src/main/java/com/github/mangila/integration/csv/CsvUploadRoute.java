@@ -1,6 +1,7 @@
 package com.github.mangila.integration.csv;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.github.mangila.config.AppConfig;
 import com.github.mangila.integration.jobrunr.JobRunrScheduler;
 import com.github.mangila.integration.pgcache.TtlCacheRepository;
 import com.github.mangila.shared.JsonService;
@@ -10,33 +11,32 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.bean.validator.BeanValidationException;
 import org.apache.camel.model.dataformat.BindyType;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.MDC;
 import org.jobrunr.server.runner.ThreadLocalJobContext;
 
 import java.time.Duration;
 
 @ApplicationScoped
-public class CsvRoute extends RouteBuilder {
+public class CsvUploadRoute extends RouteBuilder {
 
-    public static final String ROUTE_ID = "csv-route";
+    public static final String ROUTE_ID = "csv-upload-route";
 
     private final TtlCacheRepository ttlCacheRepository;
     private final JsonService jsonService;
     private final String fileEndpoint;
     private final JobRunrScheduler scheduler;
 
-    public CsvRoute(TtlCacheRepository ttlCacheRepository,
-                    JsonService jsonService,
-                    @ConfigProperty(name = "quarkus.http.body.uploads-directory") String uploadsDirectory,
-                    JobRunrScheduler scheduler) {
+    public CsvUploadRoute(AppConfig.IoConfig ioConfig,
+                          TtlCacheRepository ttlCacheRepository,
+                          JsonService jsonService,
+                          JobRunrScheduler scheduler) {
         this.ttlCacheRepository = ttlCacheRepository;
         this.jsonService = jsonService;
         this.scheduler = scheduler;
         this.fileEndpoint = new StringBuilder(128)
                 // Uri
                 .append("file:")
-                .append(uploadsDirectory)
+                .append(ioConfig.uploadDirectory())
                 // Params
                 .append("?")
                 .append("fileName=${body}")
@@ -50,15 +50,15 @@ public class CsvRoute extends RouteBuilder {
         handleBeanValidationException();
         handleIllegalArgumentException();
         handleException();
-        onCompletion()
-                .onCompleteOnly()
-                .log("Completed processing: ${body.size} records");
         from("direct:%s".formatted(ROUTE_ID))
                 .routeId(ROUTE_ID)
-                .log(LoggingLevel.INFO, "Reading: ${header.original} - ${body}")
                 .pollEnrich()
                 .simple(fileEndpoint)
                 .timeout(5000)
+                .process(exchange -> {
+                    final var fileName = exchange.getMessage().getBody(String.class);
+                    MDC.put("fileName", fileName);
+                })
                 .choice()
                 .when(simple("${header.domain} == 'customer'"))
                 .unmarshal()
@@ -87,8 +87,10 @@ public class CsvRoute extends RouteBuilder {
                 })
                 .endChoice()
                 .otherwise()
-                .log(LoggingLevel.WARN, "Unknown domain: ${header.domain}")
-                .end();
+                .throwException(new IllegalArgumentException("Unknown domain: %s".formatted(header("domain"))))
+                .end()
+                .log("Completed processing: ${body.size} records")
+                .setBody(constant("OK"));
     }
 
     public void handleBeanValidationException() {

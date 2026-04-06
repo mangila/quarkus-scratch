@@ -17,7 +17,11 @@ public class CustomerFileServiceRestAdapter {
         this.csvService = csvService;
     }
 
-    public UUID upload(FileUpload file) {
+    public UUID scheduleUpload(FileUpload file) {
         return csvService.scheduleUpload(new CsvFileUpload(file, DomainKey.customer()));
+    }
+
+    public UUID scheduleDownload() {
+        return csvService.scheduleDownload(DomainKey.customer());
     }
 }

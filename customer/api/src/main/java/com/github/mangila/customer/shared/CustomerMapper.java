@@ -74,7 +74,8 @@ public class CustomerMapper {
     public Customer toDomain(CustomerCsvRecord csvRecord) {
         final var id = uuidFactory.create(csvRecord.getId());
         final var name = csvRecord.getName();
-        final var address = jsonService.createObjectNode().put("street", csvRecord.getAddress());
+        final var address = jsonService.createObjectNode()
+                .put("street", csvRecord.getAddress());
         final var email = csvRecord.getEmail();
         final var phone = csvRecord.getPhone();
         return new Customer(id, name, address, email, phone, Collections.emptyList());
