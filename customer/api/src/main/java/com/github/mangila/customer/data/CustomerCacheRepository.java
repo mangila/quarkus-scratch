@@ -20,7 +20,6 @@ import java.util.concurrent.CompletableFuture;
 @ApplicationScoped
 public class CustomerCacheRepository {
 
-
     private final JsonService jsonService;
     private final Cache cache;
     private final TtlCacheRepository ttlCacheRepository;

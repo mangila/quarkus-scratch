@@ -1,10 +1,9 @@
 package com.github.mangila.integration.jobrunr.job;
 
-import com.github.mangila.integration.csv.CsvRoute;
+import com.github.mangila.integration.csv.CsvRouteProducer;
+import com.github.mangila.integration.csv.CsvUploadRoute;
 import com.github.mangila.shared.exception.ApplicationException;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.impl.engine.DefaultProducerTemplate;
 import org.jobrunr.jobs.lambdas.JobRequestHandler;
 import org.jobrunr.server.runner.ThreadLocalJobContext;
 
@@ -14,14 +13,12 @@ import java.util.Map;
 @ApplicationScoped
 public class CsvFileUploadJobHandler implements JobRequestHandler<CsvFileUploadJobRequest> {
 
-    private static final String ENDPOINT = "direct:%s".formatted(CsvRoute.ROUTE_ID);
+    private static final String ENDPOINT = "direct:%s".formatted(CsvUploadRoute.ROUTE_ID);
 
-    private final ProducerTemplate producerTemplate;
+    private final CsvRouteProducer csvRouteProducer;
 
-    public CsvFileUploadJobHandler(ProducerTemplate producerTemplate) {
-        this.producerTemplate = new DefaultProducerTemplate(producerTemplate.getCamelContext());
-        this.producerTemplate.setDefaultEndpointUri(ENDPOINT);
-        this.producerTemplate.start();
+    public CsvFileUploadJobHandler(CsvRouteProducer csvRouteProducer) {
+        this.csvRouteProducer = csvRouteProducer;
     }
 
     @Override
@@ -33,7 +30,7 @@ public class CsvFileUploadJobHandler implements JobRequestHandler<CsvFileUploadJ
         final var fileName = path.getFileName().toString();
         final Map<String, Object> headers = Map.of("domain", domain, "original", originalFileName);
         try {
-            producerTemplate.sendBodyAndHeaders(fileName, headers);
+            var exchange = csvRouteProducer.upload(fileName, headers);
         } catch (Exception e) {
             throw new ApplicationException("Error uploading CSV file: %s".formatted(originalFileName), e);
         }

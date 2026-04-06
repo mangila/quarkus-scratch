@@ -1,13 +1,20 @@
 package com.github.mangila.config;
 
 import io.smallrye.config.ConfigMapping;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 
+import java.nio.file.Path;
 import java.util.List;
 
 @ConfigMapping(prefix = "app")
 public interface AppConfig {
+
+    @ConfigMapping(prefix = "app.io")
+    interface IoConfig {
+        Path uploadDirectory();
+
+        Path downloadDirectory();
+    }
 
     @ConfigMapping(prefix = "app.integration")
     interface IntegrationConfig {
@@ -16,12 +23,6 @@ public interface AppConfig {
         interface PgEvent {
             @Size(max = 3)
             List<String> channels();
-        }
-
-        @ConfigMapping(prefix = "app.integration.pokeapi")
-        interface PokeApi {
-            @Valid
-            Secret token();
         }
     }
 }

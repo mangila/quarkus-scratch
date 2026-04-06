@@ -5,6 +5,7 @@ import com.github.mangila.integration.csv.ProductCsvRecord;
 import com.github.mangila.integration.jobrunr.job.CsvFileUploadJobRequest;
 import com.github.mangila.integration.jobrunr.job.CustomerCsvJobRequest;
 import com.github.mangila.integration.jobrunr.job.ProductCsvJobRequest;
+import com.github.mangila.shared.model.CsvFileDownload;
 import com.github.mangila.shared.model.CsvFileUpload;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
