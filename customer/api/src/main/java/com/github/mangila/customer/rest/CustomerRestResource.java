@@ -20,9 +20,7 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.slf4j.MDC;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -107,16 +105,13 @@ public class CustomerRestResource {
     @Path("/csv")
     @Produces(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
-    public RestResponse<?> scheduleDownload() throws IOException {
+    public RestResponse<?> scheduleDownload() {
         MDC.put("domain", "customer");
         java.nio.file.Path fileName = restAdapter.scheduleDownload();
-        InputStream input = Files.newInputStream(fileName);
         return RestResponse.ResponseBuilder
                 .ok()
-                .header("Content-Type", MediaType.TEXT_PLAIN)
                 .header("Content-Disposition", "attachment; filename=\"" + fileName.getFileName() + "\"")
-                .header("Content-Length", String.valueOf(Files.size(fileName)))
-                .entity(input)
+                .entity(fileName)
                 .build();
     }
 }
