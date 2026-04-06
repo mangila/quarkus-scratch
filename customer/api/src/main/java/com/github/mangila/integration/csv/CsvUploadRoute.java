@@ -116,7 +116,7 @@ public class CsvUploadRoute extends RouteBuilder {
                     }
                     exchange.getMessage().setBody(errorJsonArray);
                 })
-                .log(LoggingLevel.DEBUG, "${exception.message} - ${body}");
+                .log(LoggingLevel.ERROR, "${exception.message} - ${body}");
     }
 
     private void handleIllegalArgumentException() {
@@ -135,7 +135,7 @@ public class CsvUploadRoute extends RouteBuilder {
                     }
                     exchange.getMessage().setBody(errorJsonArray);
                 })
-                .log(LoggingLevel.DEBUG, "${exception.message} - ${body}");
+                .log(LoggingLevel.ERROR, "${exception.message} - ${body}");
     }
 
     private void handleException() {

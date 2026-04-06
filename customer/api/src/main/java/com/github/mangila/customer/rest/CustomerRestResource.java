@@ -3,7 +3,6 @@ package com.github.mangila.customer.rest;
 import com.github.mangila.customer.rest.cqrs.CreateCustomerCommand;
 import com.github.mangila.customer.rest.cqrs.UpdateCustomerCommand;
 import com.github.mangila.customer.rest.dto.CustomerDto;
-import com.github.mangila.integration.pgevent.PgEventProducer;
 import com.github.mangila.shared.UuidFactory;
 import io.quarkus.panache.common.Page;
 import io.smallrye.common.annotation.RunOnVirtualThread;
@@ -20,7 +19,10 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.slf4j.MDC;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -28,19 +30,13 @@ import java.util.UUID;
 @Path("api/v1/customers")
 public class CustomerRestResource {
 
-    private final PgEventProducer pgEventProducer;
     private final UuidFactory uuidFactory;
     private final CustomerServiceRestAdapter restAdapter;
-    private final CustomerFileServiceRestAdapter fileServiceRestAdapter;
 
-    public CustomerRestResource(PgEventProducer pgEventProducer,
-                                UuidFactory uuidFactory,
-                                CustomerServiceRestAdapter customerServiceRestAdapter,
-                                CustomerFileServiceRestAdapter customerFileServiceRestAdapter) {
-        this.pgEventProducer = pgEventProducer;
+    public CustomerRestResource(UuidFactory uuidFactory,
+                                CustomerServiceRestAdapter customerServiceRestAdapter) {
         this.uuidFactory = uuidFactory;
         this.restAdapter = customerServiceRestAdapter;
-        this.fileServiceRestAdapter = customerFileServiceRestAdapter;
     }
 
     @GET
@@ -103,17 +99,24 @@ public class CustomerRestResource {
         MDC.put("file.size", String.valueOf(file.size()));
         MDC.put("file.type", file.contentType());
         MDC.put("file.path", file.uploadedFile().toString());
-        UUID jobId = fileServiceRestAdapter.scheduleUpload(file);
+        UUID jobId = restAdapter.scheduleUpload(file);
         return RestResponse.accepted(Map.of("jobId", jobId));
     }
 
     @GET
     @Path("/csv")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     @RunOnVirtualThread
-    public RestResponse<Map<String, UUID>> scheduleDownload() {
+    public RestResponse<?> scheduleDownload() throws IOException {
         MDC.put("domain", "customer");
-        UUID jobId = fileServiceRestAdapter.scheduleDownload();
-        return RestResponse.accepted(Map.of("jobId", jobId));
+        java.nio.file.Path fileName = restAdapter.scheduleDownload();
+        InputStream input = Files.newInputStream(fileName);
+        return RestResponse.ResponseBuilder
+                .ok()
+                .header("Content-Type", MediaType.TEXT_PLAIN)
+                .header("Content-Disposition", "attachment; filename=\"" + fileName.getFileName() + "\"")
+                .header("Content-Length", String.valueOf(Files.size(fileName)))
+                .entity(input)
+                .build();
     }
 }

@@ -2,7 +2,6 @@ package com.github.mangila.integration.jobrunr;
 
 import com.github.mangila.integration.csv.CustomerCsvRecord;
 import com.github.mangila.integration.csv.ProductCsvRecord;
-import com.github.mangila.integration.jobrunr.job.CsvFileDownloadJobRequest;
 import com.github.mangila.integration.jobrunr.job.CsvFileUploadJobRequest;
 import com.github.mangila.integration.jobrunr.job.CustomerCsvJobRequest;
 import com.github.mangila.integration.jobrunr.job.ProductCsvJobRequest;
@@ -61,19 +60,6 @@ public class JobRunrScheduler {
                 .withName("Upload: %s".formatted(originalFileName))
                 .withJobRequest(request)
                 .withLabels("upload", "csv", domain)
-                .withAmountOfRetries(0);
-        return scheduler.create(job).asUUID();
-    }
-
-    public UUID schedule(CsvFileDownload csvFileDownload, Duration duration) {
-        final var domain = csvFileDownload.domain().value();
-        Log.info("schedule csv file download");
-        final var request = new CsvFileDownloadJobRequest(domain);
-        final var job = JobBuilder.aJob()
-                .scheduleIn(duration)
-                .withName("Download: %s".formatted(domain))
-                .withJobRequest(request)
-                .withLabels("download", "csv", domain)
                 .withAmountOfRetries(0);
         return scheduler.create(job).asUUID();
     }

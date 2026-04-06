@@ -36,6 +36,10 @@ Content-Type: application/json
 ### DELETE customer
 DELETE {{host}}/api/v1/customers/{{customer_id}}
 
+### GET customers CSV file
+GET {{host}}/api/v1/customers/csv
+Content-Type: text/plain
+
 ### UPLOAD Customers CSV file
 POST {{host}}/api/v1/customers/csv
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW

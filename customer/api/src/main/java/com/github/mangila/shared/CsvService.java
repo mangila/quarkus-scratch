@@ -1,23 +1,23 @@
 package com.github.mangila.shared;
 
-import com.github.mangila.integration.csv.CsvDownloadRoute;
+import com.github.mangila.config.AppConfig;
+import com.github.mangila.integration.csv.CsvRouteProducer;
 import com.github.mangila.integration.csv.CustomerCsvRecord;
 import com.github.mangila.integration.csv.ProductCsvRecord;
 import com.github.mangila.integration.jobrunr.JobRunrScheduler;
 import com.github.mangila.shared.exception.ApplicationException;
-import com.github.mangila.shared.model.CsvFileDownload;
 import com.github.mangila.shared.model.CsvFileUpload;
 import com.github.mangila.shared.model.DomainKey;
 import io.github.mangila.ensure4j.Ensure;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.MediaType;
-import org.apache.camel.ProducerTemplate;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -26,14 +26,17 @@ import java.util.UUID;
 @ApplicationScoped
 public class CsvService {
 
-    private final ProducerTemplate producerTemplate;
+    private final AppConfig.IoConfig ioConfig;
+    private final CsvRouteProducer csvRouteProducer;
     private final JobRunrScheduler jobRunrScheduler;
     private final Map<DomainKey, String> domainKeyToCsvHeaders;
     private final List<String> supportedMediaTypes;
 
-    public CsvService(ProducerTemplate producerTemplate,
+    public CsvService(AppConfig.IoConfig ioConfig,
+                      CsvRouteProducer csvRouteProducer,
                       JobRunrScheduler jobRunrScheduler) {
-        this.producerTemplate = producerTemplate;
+        this.ioConfig = ioConfig;
+        this.csvRouteProducer = csvRouteProducer;
         this.jobRunrScheduler = jobRunrScheduler;
         this.domainKeyToCsvHeaders = Map.of(
                 DomainKey.customer(), CustomerCsvRecord.CSV_HEADERS,
@@ -43,8 +46,12 @@ public class CsvService {
         this.supportedMediaTypes = List.of(MediaType.TEXT_PLAIN);
     }
 
-    public UUID scheduleDownload(DomainKey domain) {
-        return jobRunrScheduler.schedule(new CsvFileDownload(domain), Duration.ofSeconds(1));
+    public Path download(DomainKey domain) {
+        final var fileName = System.nanoTime() + domain.value() + ".csv";
+        final var domainValue = domain.value();
+        Map<String, Object> headers = Map.of("fileName", fileName, "domain", domainValue);
+        csvRouteProducer.download("", headers);
+        return ioConfig.downloadDirectory().resolve(fileName);
     }
 
     public UUID scheduleUpload(CsvFileUpload csv) {
@@ -85,13 +92,5 @@ public class CsvService {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    public Path download(DomainKey domain) {
-        var s = producerTemplate.send("direct:%s".formatted(CsvDownloadRoute.ROUTE_ID), exchange -> {
-            exchange.getMessage()
-                    .setHeader("domain", domain.value());
-        });
-        return null;
     }
 }

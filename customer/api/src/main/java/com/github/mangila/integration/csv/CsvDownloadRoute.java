@@ -22,24 +22,26 @@ public class CsvDownloadRoute extends RouteBuilder {
     public void configure() throws Exception {
         from("direct:%s".formatted(ROUTE_ID))
                 .routeId(ROUTE_ID)
-                .log("Starting processing: ${header.domain}")
+                .log("Starting processing: ${header.fileName} - ${header.domain}")
                 .to("sql:select * from customer order by name?outputType=StreamList")
                 .split(body())
                 .streaming()
+                .log("Processing SQL row: ${body}")
                 .process(exchange -> {
-                    var map = exchange.getMessage().getBody(Map.class);
-                    var csv = new CustomerCsvRecord();
-                    csv.setId(String.valueOf(map.get("ID")));
-                    csv.setName(String.valueOf(map.get("NAME")));
-                    csv.setAddress(String.valueOf(map.get("ADDRESS")));
-                    csv.setEmail(String.valueOf(map.get("EMAIL")));
-                    csv.setPhone(String.valueOf(map.get("PHONE")));
+                    var row = exchange.getMessage()
+                            .getBody(Map.class);
+                    var csv = new CustomerCsvRecord(
+                            String.valueOf(row.get("ID")),
+                            String.valueOf(row.get("NAME")),
+                            String.valueOf(row.get("ADDRESS")),
+                            String.valueOf(row.get("EMAIL")),
+                            String.valueOf(row.get("PHONE"))
+                    );
                     exchange.getMessage().setBody(csv);
                 })
-                .log("Completed processing: ${body} records")
+                .log("Writing CSV row: ${body}")
                 .marshal()
                 .bindy(BindyType.Csv, CustomerCsvRecord.class)
-                .log("Writing customer csv row ${body}")
-                .to("file:%s?fileName=%s.csv&fileExist=Append".formatted(ioConfig.downloadDirectory(), "customers"));
+                .to("file:%s?fileName=${header.fileName}&fileExist=Append".formatted(ioConfig.downloadDirectory()));
     }
 }

@@ -8,11 +8,17 @@ import com.github.mangila.customer.rest.dto.CustomerDto;
 import com.github.mangila.customer.shared.CustomerFactory;
 import com.github.mangila.customer.shared.CustomerMapper;
 import com.github.mangila.customer.shared.CustomerService;
+import com.github.mangila.shared.CsvService;
+import com.github.mangila.shared.model.CsvFileUpload;
+import com.github.mangila.shared.model.DomainKey;
 import io.quarkiverse.resteasy.problem.HttpProblem;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.camel.Exchange;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,16 +39,19 @@ public class CustomerServiceRestAdapter {
     private final CustomerMapper mapper;
     private final CustomerCacheRepository cacheRepository;
     private final CustomerService customerService;
+    private final CsvService csvService;
 
     public CustomerServiceRestAdapter(
             CustomerFactory customerFactory,
             CustomerMapper mapper,
             CustomerCacheRepository cacheRepository,
-            CustomerService customerService) {
+            CustomerService customerService,
+            CsvService csvService) {
         this.customerFactory = customerFactory;
         this.mapper = mapper;
         this.cacheRepository = cacheRepository;
         this.customerService = customerService;
+        this.csvService = csvService;
     }
 
     public CustomerDto findById(UUID id) {
@@ -88,5 +97,13 @@ public class CustomerServiceRestAdapter {
                 .stream()
                 .map(mapper::toDto)
                 .toList();
+    }
+
+    public UUID scheduleUpload(FileUpload file) {
+        return csvService.scheduleUpload(new CsvFileUpload(file, DomainKey.customer()));
+    }
+
+    public Path scheduleDownload() {
+        return csvService.download(DomainKey.customer());
     }
 }
