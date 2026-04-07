@@ -32,6 +32,7 @@ public class GreetingResourceSpyTest {
                 .statusCode(200)
                 .body(is("Greetings!"));
         Mockito.verify(greetingService, Mockito.times(1)).greet();
+
     }
 
 }
