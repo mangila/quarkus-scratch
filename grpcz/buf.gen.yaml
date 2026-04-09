@@ -1,0 +1,18 @@
+# buf.gen.yaml
+version: v2
+clean: true
+plugins:
+  - remote: buf.build/protocolbuffers/java
+    out: srv1/main/java
+  - remote: buf.build/grpc/java
+    out: srv1/main/java
+  ####     heyyyy
+  - remote: buf.build/protocolbuffers/java
+    out: srv2/main/java
+  - remote: buf.build/grpc/java
+    out: srv2/main/java
+managed:
+  enabled: true
+  override:
+    - file_option: java_package_prefix
+      value: com.github.mangila
