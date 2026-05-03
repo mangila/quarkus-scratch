@@ -1,8 +1,7 @@
 package com.github.mangila.crud1.web;
 
-import com.github.mangila.crud1.domain.Person;
 import com.github.mangila.crud1.domain.PersonService;
-import io.quarkiverse.resteasy.problem.HttpProblem;
+import com.github.mangila.crud1.shared.PersonDomainException;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -24,14 +23,16 @@ public class PersonRestService {
     }
 
     public List<PersonDto> findPage(Page page) {
-        List<Person> persons = personService.findPage(page);
-        return personRestMapper.toDtos(persons);
+        return personService.findPage(page)
+                .stream()
+                .map(personRestMapper::toDto)
+                .toList();
     }
 
     public PersonDto findById(String id) {
         UUID uuid = UUID.fromString(id);
         return personService.findById(uuid)
                 .map(personRestMapper::toDto)
-                .orElseThrow(() -> HttpProblem.valueOf(Status.NOT_FOUND, "Person not found with id: %s".formatted(id)));
+                .orElseThrow(() -> new PersonDomainException("Person with id not found: %s".formatted(id), Status.NOT_FOUND));
     }
 }
