@@ -1,6 +1,7 @@
 package com.github.mangila.crud1.domain;
 
 import com.github.mangila.crud1.domain.cqrs.CreatePersonCommand;
+import com.github.mangila.crud1.domain.model.Id;
 import com.github.mangila.crud1.shared.UuidFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -18,7 +19,7 @@ public class PersonFactory {
     public Person create(CreatePersonCommand command) {
         final UUID id = uuidFactory.create();
         return new Person(
-                id,
+                Id.of(id),
                 command.name(),
                 command.birthDate(),
                 command.email(),

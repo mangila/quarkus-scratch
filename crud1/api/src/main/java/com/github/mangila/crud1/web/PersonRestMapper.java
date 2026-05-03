@@ -55,7 +55,7 @@ public class PersonRestMapper {
         final UUID id = uuidFactory.from(dto.id());
         final JsonNode properties = objectMapper.valueToTree(dto.properties());
         return new Person(
-                id,
+                Id.of(id),
                 Name.of(dto.name()),
                 BirthDate.of(dto.birthDate()),
                 Email.of(dto.email()),

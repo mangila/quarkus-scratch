@@ -3,10 +3,8 @@ package com.github.mangila.crud1.domain;
 import com.github.mangila.crud1.domain.model.*;
 import io.github.mangila.ensure4j.Ensure;
 
-import java.util.UUID;
-
 public record Person(
-        UUID id,
+        Id id,
         Name name,
         BirthDate birthDate,
         Email email,

@@ -9,7 +9,7 @@ public class PersonMapper {
 
     public Person toDomain(PersonEntity entity) {
         return new Person(
-                entity.getId(),
+                Id.of(entity.getId()),
                 Name.of(entity.getName()),
                 BirthDate.of(entity.getBirthDate()),
                 Email.of(entity.getEmail()),
@@ -20,7 +20,7 @@ public class PersonMapper {
 
     public PersonEntity toEntity(Person domain) {
         return new PersonEntity(
-                domain.id(),
+                domain.id().value(),
                 domain.name().value(),
                 domain.birthDate().value(),
                 domain.email().value(),
