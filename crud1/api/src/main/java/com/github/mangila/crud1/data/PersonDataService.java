@@ -41,7 +41,7 @@ public class PersonDataService {
     @Transactional
     public void update(PersonEntity entityToUpdate) throws EntityNotFoundException {
         final PersonEntity managed = personPostgresRepository.findByIdOptional(entityToUpdate.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Person not found with id: %s".formatted(entityToUpdate.getId())));
+                .orElseThrow(EntityNotFoundException::new);
         managed.setName(entityToUpdate.getName());
         managed.setBirthDate(entityToUpdate.getBirthDate());
         managed.setEmail(entityToUpdate.getEmail());

@@ -12,10 +12,12 @@ public class PersonHttpProblemException extends HttpProblem {
     }
 
     private static Builder defaultMessage(String message, Response.Status status) {
+        final String title = status.getReasonPhrase();
+        final int statusCode = status.getStatusCode();
         return builder()
                 .withType(URI.create("about:blank"))
-                .withTitle(status.getReasonPhrase())
+                .withTitle(title)
                 .withDetail(message)
-                .withStatus(status.getStatusCode());
+                .withStatus(statusCode);
     }
 }

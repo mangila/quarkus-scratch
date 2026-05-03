@@ -15,17 +15,8 @@ public class UuidFactory {
         return UUID.randomUUID();
     }
 
-    public UUID from(String id) throws ApplicationException {
-        return fromStringOrThrow(id);
+    public UUID from(String id) {
+        Ensure.notNull(id, "UUID cannot be null");
+        return UUID.fromString(id);
     }
-
-    private static UUID fromStringOrThrow(String id) {
-        Ensure.notNull(id, () -> new ApplicationException("UUID cannot be null"));
-        try {
-            return UUID.fromString(id);
-        } catch (IllegalArgumentException e) {
-            throw new ApplicationException(e.getMessage(), e);
-        }
-    }
-
 }

@@ -65,10 +65,10 @@ public class PersonEntity {
         // do nothing, for ORM
     }
 
-    public PersonEntity(UUID id, LocalDate birthDate, String name, String email, String phone, JsonNode properties) {
+    public PersonEntity(UUID id, String name, LocalDate birthDate, String email, String phone, JsonNode properties) {
         this.id = id;
-        this.birthDate = birthDate;
         this.name = name;
+        this.birthDate = birthDate;
         this.email = email;
         this.phone = phone;
         this.properties = properties;

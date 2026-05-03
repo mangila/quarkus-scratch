@@ -3,7 +3,7 @@ package com.github.mangila.crud1.domain;
 import com.github.mangila.crud1.data.PersonDataService;
 import com.github.mangila.crud1.data.PersonEntity;
 import com.github.mangila.crud1.domain.cqrs.CreatePersonCommand;
-import com.github.mangila.crud1.shared.PersonException;
+import com.github.mangila.crud1.shared.ApplicationException;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityNotFoundException;
@@ -46,12 +46,12 @@ public class PersonService {
         return id;
     }
 
-    public void update(Person person) throws PersonException {
+    public void update(Person person) throws ApplicationException {
         final PersonEntity entity = personMapper.toEntity(person);
         try {
             personDataService.update(entity);
         } catch (EntityNotFoundException e) {
-            throw new PersonException(e.getMessage(), e);
+            throw new ApplicationException(e);
         }
     }
 }

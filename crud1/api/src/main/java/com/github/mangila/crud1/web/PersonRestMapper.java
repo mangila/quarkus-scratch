@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.crud1.domain.Person;
 import com.github.mangila.crud1.domain.cqrs.CreatePersonCommand;
+import com.github.mangila.crud1.domain.model.*;
 import com.github.mangila.crud1.shared.UuidFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -25,16 +26,16 @@ public class PersonRestMapper {
 
     public PersonDto toDto(Person person) {
         final Map<String, Object> properties = objectMapper.convertValue(
-                person.properties(),
+                person.properties().value(),
                 new TypeReference<>() {
                 }
         );
         return new PersonDto(
                 person.id().toString(),
-                person.birthDate(),
-                person.name(),
-                person.email(),
-                person.phone(),
+                person.name().value(),
+                person.birthDate().value(),
+                person.email().value(),
+                person.phone().value(),
                 properties
         );
     }
@@ -42,11 +43,11 @@ public class PersonRestMapper {
     public CreatePersonCommand toDomain(CreatePersonRequest request) {
         final JsonNode properties = objectMapper.valueToTree(request.properties());
         return new CreatePersonCommand(
-                request.birthDate(),
-                request.name(),
-                request.email(),
-                request.phone(),
-                properties
+                Name.of(request.name()),
+                BirthDate.of(request.birthDate()),
+                Email.of(request.email()),
+                Phone.of(request.phone()),
+                Properties.of(properties)
         );
     }
 
@@ -55,11 +56,11 @@ public class PersonRestMapper {
         final JsonNode properties = objectMapper.valueToTree(dto.properties());
         return new Person(
                 id,
-                dto.name(),
-                dto.birthDate(),
-                dto.email(),
-                dto.phone(),
-                properties
+                Name.of(dto.name()),
+                BirthDate.of(dto.birthDate()),
+                Email.of(dto.email()),
+                Phone.of(dto.phone()),
+                Properties.of(properties)
         );
     }
 }
