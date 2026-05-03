@@ -7,10 +7,10 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import tools.jackson.databind.JsonNode;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.UUID;
 
 @Entity(name = "Person")
@@ -46,7 +46,7 @@ public class PersonEntity {
     @Column(nullable = false,
             columnDefinition = "JSONB"
     )
-    private Map<String, String> properties;
+    private JsonNode properties;
 
     @NotAudited
     @CreationTimestamp
@@ -104,11 +104,11 @@ public class PersonEntity {
         this.phone = phone;
     }
 
-    public Map<String, String> getProperties() {
+    public JsonNode getProperties() {
         return properties;
     }
 
-    public void setProperties(Map<String, String> properties) {
+    public void setProperties(JsonNode properties) {
         this.properties = properties;
     }
 

@@ -3,6 +3,7 @@ package com.github.mangila.crud1.domain;
 import com.github.mangila.crud1.shared.PersonDomainException;
 import io.github.mangila.ensure4j.Ensure;
 import io.github.mangila.ensure4j.ops.EnsureStringOps;
+import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -12,7 +13,8 @@ public record Person(
         String name,
         LocalDate birthDate,
         String email,
-        String phone
+        String phone,
+        JsonNode properties
 ) {
     private static final EnsureStringOps ENSURE_STRING_OPS = Ensure.strings();
 
@@ -27,5 +29,7 @@ public record Person(
         }
         ENSURE_STRING_OPS.notBlank(email, () -> new PersonDomainException("email cannot be blank"));
         ENSURE_STRING_OPS.notBlank(phone, () -> new PersonDomainException("phone phone cannot be blank"));
+        Ensure.notNull(properties, () -> new PersonDomainException("properties cannot be null"));
+        Ensure.isTrue(properties.isObject(), () -> new PersonDomainException("properties must be an object"));
     }
 }
