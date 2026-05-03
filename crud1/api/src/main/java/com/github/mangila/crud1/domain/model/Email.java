@@ -5,14 +5,13 @@ import io.github.mangila.ensure4j.ops.EnsureStringOps;
 
 public record Email(String value) {
 
-    private static final EnsureStringOps ENSURE_STRING_OPS = Ensure.strings();
+  private static final EnsureStringOps ENSURE_STRING_OPS = Ensure.strings();
 
-    public Email {
-        ENSURE_STRING_OPS.notBlank(value, "email cannot be null or blank");
-    }
+  public Email {
+    ENSURE_STRING_OPS.notBlank(value, "email cannot be null or blank");
+  }
 
-    public static Email of(String value) {
-        return new Email(value);
-    }
-
+  public static Email of(String value) {
+    return new Email(value);
+  }
 }

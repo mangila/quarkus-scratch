@@ -10,3 +10,10 @@ repos:
         files: ^crud1/api/pom.xml$
         require_serial: true
         pass_filenames: false
+      - id: maven-fmt
+        name: Maven Fmt
+        entry: mvn
+        args: [ "-f", "crud1/api/pom.xml", "fmt:check" ]
+        language: system
+        require_serial: true
+        pass_filenames: false
