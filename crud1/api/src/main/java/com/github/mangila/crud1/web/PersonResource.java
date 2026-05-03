@@ -9,6 +9,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.hibernate.validator.constraints.UUID;
 import org.jboss.resteasy.reactive.RestResponse;
+import org.slf4j.MDC;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class PersonResource {
     @Produces(MediaType.APPLICATION_JSON)
     @RunOnVirtualThread
     public RestResponse<PersonDto> findById(@PathParam("id") @UUID String id) {
+        MDC.put("personId", id);
         return RestResponse.ok(personRestService.findById(id));
     }
 
