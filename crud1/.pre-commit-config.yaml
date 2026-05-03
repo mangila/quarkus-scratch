@@ -2,8 +2,11 @@ fail_fast: false
 repos:
   - repo: local
     hooks:
-      - id: api-test
-        name: Api test
-        entry: mvn -f api/pom.xml sortpom:sort
+      - id: maven-sortpom-verify
+        name: Maven Sort POM Verify
+        entry: mvn
+        args: [ "-f", "crud1/api/pom.xml", "sortpom:verify" ]
         language: system
-        files: ^api/pom.xml$
+        files: ^crud1/api/pom.xml$
+        require_serial: true
+        pass_filenames: false
