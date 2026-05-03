@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import org.hibernate.validator.constraints.UUID;
-import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 public record PersonDto(
         @UUID String id,
@@ -15,6 +15,6 @@ public record PersonDto(
         @NotBlank String name,
         @NotBlank @Email String email,
         @NotBlank String phone,
-        @NotNull JsonNode properties
+        @NotNull Map<String, Object> properties
 ) {
 }
