@@ -141,7 +141,6 @@
         <configuration>
           <createBackupFile>false</createBackupFile>
           <endWithNewline>true</endWithNewline>
-          <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
           <sortProperties>true</sortProperties>
           <sortDependencies>scope,groupId,artifactId</sortDependencies>
           <sortPlugins>groupId,artifactId</sortPlugins>
