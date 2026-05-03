@@ -7,10 +7,6 @@ import java.net.URI;
 
 public class PersonHttpProblemException extends HttpProblem {
 
-    public PersonHttpProblemException(String message) {
-        super(defaultMessage(message, Response.Status.BAD_REQUEST));
-    }
-
     public PersonHttpProblemException(String message, Response.Status status) {
         super(defaultMessage(message, status));
     }

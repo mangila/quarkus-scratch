@@ -1,6 +1,9 @@
 package com.github.mangila.crud1.web;
 
+import com.github.mangila.crud1.domain.Person;
 import com.github.mangila.crud1.domain.PersonService;
+import com.github.mangila.crud1.domain.cqrs.CreatePersonCommand;
+import com.github.mangila.crud1.shared.PersonException;
 import com.github.mangila.crud1.shared.PersonHttpProblemException;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -34,5 +37,20 @@ public class PersonRestService {
         return personService.findById(uuid)
                 .map(personRestMapper::toDto)
                 .orElseThrow(() -> new PersonHttpProblemException("Person with id not found: %s".formatted(id), Status.NOT_FOUND));
+    }
+
+    public UUID create(CreatePersonRequest request) {
+        final CreatePersonCommand command = personRestMapper.toDomain(request);
+        final UUID id = personService.create(command);
+        return id;
+    }
+
+    public void update(PersonDto dto) {
+        final Person person = personRestMapper.toDomain(dto);
+        try {
+            personService.update(person);
+        } catch (PersonException e) {
+            throw new PersonHttpProblemException(e.getMessage(), Status.NOT_FOUND);
+        }
     }
 }

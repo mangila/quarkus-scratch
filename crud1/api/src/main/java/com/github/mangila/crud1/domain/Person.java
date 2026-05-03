@@ -1,9 +1,9 @@
 package com.github.mangila.crud1.domain;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.mangila.crud1.shared.PersonException;
 import io.github.mangila.ensure4j.Ensure;
 import io.github.mangila.ensure4j.ops.EnsureStringOps;
-import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDate;
 import java.util.UUID;

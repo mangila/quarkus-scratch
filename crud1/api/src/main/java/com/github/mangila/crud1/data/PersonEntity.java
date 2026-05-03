@@ -1,5 +1,6 @@
 package com.github.mangila.crud1.data;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,7 +8,6 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
-import tools.jackson.databind.JsonNode;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -19,6 +19,7 @@ import java.util.UUID;
 public class PersonEntity {
 
     @Id
+    @Column(nullable = false, updatable = false)
     private UUID id;
 
     @Column(nullable = false,
@@ -62,6 +63,15 @@ public class PersonEntity {
 
     public PersonEntity() {
         // do nothing, for ORM
+    }
+
+    public PersonEntity(UUID id, LocalDate birthDate, String name, String email, String phone, JsonNode properties) {
+        this.id = id;
+        this.birthDate = birthDate;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.properties = properties;
     }
 
     public UUID getId() {
