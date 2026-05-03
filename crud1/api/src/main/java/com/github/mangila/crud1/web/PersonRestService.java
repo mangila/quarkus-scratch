@@ -1,7 +1,7 @@
 package com.github.mangila.crud1.web;
 
 import com.github.mangila.crud1.domain.PersonService;
-import com.github.mangila.crud1.shared.PersonDomainException;
+import com.github.mangila.crud1.shared.PersonHttpProblemException;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -33,6 +33,6 @@ public class PersonRestService {
         UUID uuid = UUID.fromString(id);
         return personService.findById(uuid)
                 .map(personRestMapper::toDto)
-                .orElseThrow(() -> new PersonDomainException("Person with id not found: %s".formatted(id), Status.NOT_FOUND));
+                .orElseThrow(() -> new PersonHttpProblemException("Person with id not found: %s".formatted(id), Status.NOT_FOUND));
     }
 }

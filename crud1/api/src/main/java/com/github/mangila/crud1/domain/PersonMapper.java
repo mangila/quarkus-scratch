@@ -6,7 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 
 @ApplicationScoped
-public class PersonDomainMapper {
+public class PersonMapper {
 
     public List<Person> toDomains(List<PersonEntity> entities) {
         return null;

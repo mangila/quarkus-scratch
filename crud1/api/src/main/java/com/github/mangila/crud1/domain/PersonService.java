@@ -12,22 +12,22 @@ import java.util.UUID;
 @ApplicationScoped
 public class PersonService {
 
-    private final PersonDomainMapper personDomainMapper;
+    private final PersonMapper personMapper;
     private final PersonDataService personDataService;
 
-    public PersonService(PersonDomainMapper personDomainMapper,
+    public PersonService(PersonMapper personMapper,
                          PersonDataService personDataService) {
-        this.personDomainMapper = personDomainMapper;
+        this.personMapper = personMapper;
         this.personDataService = personDataService;
     }
 
     public List<Person> findPage(Page page) {
         final List<PersonEntity> entities = personDataService.findPage(page);
-        return personDomainMapper.toDomains(entities);
+        return personMapper.toDomains(entities);
     }
 
     public Optional<Person> findById(UUID id) {
         return personDataService.findById(id)
-                .map(personDomainMapper::toDomain);
+                .map(personMapper::toDomain);
     }
 }

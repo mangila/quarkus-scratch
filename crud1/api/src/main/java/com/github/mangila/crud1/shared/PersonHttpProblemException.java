@@ -5,13 +5,13 @@ import jakarta.ws.rs.core.Response;
 
 import java.net.URI;
 
-public class PersonDomainException extends HttpProblem {
+public class PersonHttpProblemException extends HttpProblem {
 
-    public PersonDomainException(String message) {
+    public PersonHttpProblemException(String message) {
         super(defaultMessage(message, Response.Status.BAD_REQUEST));
     }
 
-    public PersonDomainException(String message, Response.Status status) {
+    public PersonHttpProblemException(String message, Response.Status status) {
         super(defaultMessage(message, status));
     }
 
