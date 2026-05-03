@@ -1,0 +1,9 @@
+fail_fast: false
+repos:
+  - repo: local
+    hooks:
+      - id: api-test
+        name: Api test
+        entry: mvn -f api/pom.xml sortpom:sort
+        language: system
+        files: ^api/pom.xml$
