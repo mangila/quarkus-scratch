@@ -30,8 +30,8 @@ public class PersonRestService {
 
     public PersonDto findById(String id) {
         UUID uuid = UUID.fromString(id);
-        Person person = personService.findById(uuid)
+        return personService.findById(uuid)
+                .map(personRestMapper::toDto)
                 .orElseThrow(() -> HttpProblem.valueOf(Status.NOT_FOUND, "Person not found with id: %s".formatted(id)));
-        return personRestMapper.toDto(person);
     }
 }
