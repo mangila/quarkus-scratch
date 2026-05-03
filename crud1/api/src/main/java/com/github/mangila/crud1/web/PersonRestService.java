@@ -5,6 +5,7 @@ import com.github.mangila.crud1.domain.PersonService;
 import com.github.mangila.crud1.domain.cqrs.CreatePersonCommand;
 import com.github.mangila.crud1.shared.PersonException;
 import com.github.mangila.crud1.shared.PersonHttpProblemException;
+import com.github.mangila.crud1.shared.UuidFactory;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -16,11 +17,14 @@ import static jakarta.ws.rs.core.Response.Status;
 @ApplicationScoped
 public class PersonRestService {
 
+    private final UuidFactory uuidFactory;
     private final PersonRestMapper personRestMapper;
     private final PersonService personService;
 
-    public PersonRestService(PersonRestMapper personRestMapper,
+    public PersonRestService(UuidFactory uuidFactory,
+                             PersonRestMapper personRestMapper,
                              PersonService personService) {
+        this.uuidFactory = uuidFactory;
         this.personRestMapper = personRestMapper;
         this.personService = personService;
     }
@@ -33,7 +37,7 @@ public class PersonRestService {
     }
 
     public PersonDto findById(String id) {
-        UUID uuid = UUID.fromString(id);
+        UUID uuid = uuidFactory.from(id);
         return personService.findById(uuid)
                 .map(personRestMapper::toDto)
                 .orElseThrow(() -> new PersonHttpProblemException("Person with id not found: %s".formatted(id), Status.NOT_FOUND));
