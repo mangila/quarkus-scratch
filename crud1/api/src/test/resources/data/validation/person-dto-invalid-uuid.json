@@ -1,0 +1,8 @@
+{
+  "id": "not-a-uuid",
+  "name": "John Doe",
+  "birthDate": "1990-01-01",
+  "email": "test@example.com",
+  "phone": "+123456789",
+  "properties": {}
+}
