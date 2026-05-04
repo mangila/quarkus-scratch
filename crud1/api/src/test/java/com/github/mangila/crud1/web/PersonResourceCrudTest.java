@@ -103,5 +103,12 @@ class PersonResourceCrudTest {
         .then()
         .statusCode(404)
         .header("X-TRACE-ID", Matchers.notNullValue());
+
+    given()
+        .when()
+        .get("api/v1/persons/{id}", id)
+        .then()
+        .statusCode(404)
+        .header("X-TRACE-ID", Matchers.notNullValue());
   }
 }

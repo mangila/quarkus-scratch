@@ -21,16 +21,17 @@ public class PersonResourceValidationTest {
 
     @Test
     void shouldValidateUuidPath() {
-      String id = "not an uuid";
+      final int statusCode = 422;
+      final String id = "not an uuid";
       given()
           .when()
           .pathParam("id", id)
           .get("api/v1/persons/{id}")
           .then()
-          .statusCode(400)
+          .statusCode(statusCode)
           .header("X-TRACE-ID", Matchers.notNullValue())
-          .body("status", Matchers.equalTo(400))
-          .body("title", Matchers.equalTo("Bad Request"))
+          .body("status", Matchers.equalTo(statusCode))
+          .body("title", Matchers.equalTo("Constraint violation"))
           .body("traceId", Matchers.notNullValue())
           .body("violations", Matchers.hasSize(1));
     }
@@ -41,6 +42,7 @@ public class PersonResourceValidationTest {
   class FindPage {
     @Test
     void pageNumberMustBePositiveOrZero() {
+      final int statusCode = 422;
       int pageNumber = -1;
       given()
           .when()
@@ -48,10 +50,10 @@ public class PersonResourceValidationTest {
           .queryParam("size", 10)
           .get("api/v1/persons")
           .then()
-          .statusCode(400)
+          .statusCode(statusCode)
           .header("X-TRACE-ID", Matchers.notNullValue())
-          .body("status", Matchers.equalTo(400))
-          .body("title", Matchers.equalTo("Bad Request"))
+          .body("status", Matchers.equalTo(statusCode))
+          .body("title", Matchers.equalTo("Constraint violation"))
           .body("traceId", Matchers.notNullValue())
           .body("violations", Matchers.hasSize(1));
       pageNumber = 0;
@@ -67,34 +69,36 @@ public class PersonResourceValidationTest {
 
     @Test
     void pageSizeMustBePositive() {
-      int pageSize = -1;
+      final int statusCode = 422;
+      final int pageSize = -1;
       given()
           .when()
           .queryParam("page", 1)
           .queryParam("size", pageSize)
           .get("api/v1/persons")
           .then()
-          .statusCode(400)
+          .statusCode(statusCode)
           .header("X-TRACE-ID", Matchers.notNullValue())
-          .body("status", Matchers.equalTo(400))
-          .body("title", Matchers.equalTo("Bad Request"))
+          .body("status", Matchers.equalTo(statusCode))
+          .body("title", Matchers.equalTo("Constraint violation"))
           .body("traceId", Matchers.notNullValue())
           .body("violations", Matchers.hasSize(1));
     }
 
     @Test
     void pageSizeMax50() {
-      int pageSize = 51;
+      final int statusCode = 422;
+      final int pageSize = 51;
       given()
           .when()
           .queryParam("page", 1)
           .queryParam("size", pageSize)
           .get("api/v1/persons")
           .then()
-          .statusCode(400)
+          .statusCode(statusCode)
           .header("X-TRACE-ID", Matchers.notNullValue())
-          .body("status", Matchers.equalTo(400))
-          .body("title", Matchers.equalTo("Bad Request"))
+          .body("status", Matchers.equalTo(statusCode))
+          .body("title", Matchers.equalTo("Constraint violation"))
           .body("traceId", Matchers.notNullValue())
           .body("violations", Matchers.hasSize(1));
     }
@@ -114,6 +118,7 @@ public class PersonResourceValidationTest {
           "data/validation/person-create-null-properties.json",
         })
     void shouldValidateCreatePersonRequest(String resourceName) {
+      final int statusCode = 422;
       final String body = TestResourceUtils.getTestResource(resourceName);
       given()
           .body(body)
@@ -121,10 +126,10 @@ public class PersonResourceValidationTest {
           .when()
           .post("api/v1/persons")
           .then()
-          .statusCode(400)
+          .statusCode(statusCode)
           .header("X-TRACE-ID", Matchers.notNullValue())
-          .body("status", Matchers.equalTo(400))
-          .body("title", Matchers.equalTo("Bad Request"))
+          .body("status", Matchers.equalTo(statusCode))
+          .body("title", Matchers.equalTo("Constraint violation"))
           .body("traceId", Matchers.notNullValue());
     }
   }
@@ -142,6 +147,7 @@ public class PersonResourceValidationTest {
           "data/validation/person-dto-name-too-short.json",
         })
     void shouldValidatePersonDto(String resourceName) {
+      final int statusCode = 422;
       final String body = TestResourceUtils.getTestResource(resourceName);
       given()
           .body(body)
@@ -149,10 +155,10 @@ public class PersonResourceValidationTest {
           .when()
           .put("api/v1/persons")
           .then()
-          .statusCode(400)
+          .statusCode(statusCode)
           .header("X-TRACE-ID", Matchers.notNullValue())
-          .body("status", Matchers.equalTo(400))
-          .body("title", Matchers.equalTo("Bad Request"))
+          .body("status", Matchers.equalTo(statusCode))
+          .body("title", Matchers.equalTo("Constraint violation"))
           .body("traceId", Matchers.notNullValue());
     }
   }
@@ -162,16 +168,17 @@ public class PersonResourceValidationTest {
   class Delete {
     @Test
     void shouldValidateUuidPath() {
-      String id = "not an uuid";
+      final int statusCode = 422;
+      final String id = "not an uuid";
       given()
           .when()
           .pathParam("id", id)
           .delete("api/v1/persons/{id}")
           .then()
-          .statusCode(400)
+          .statusCode(statusCode)
           .header("X-TRACE-ID", Matchers.notNullValue())
-          .body("status", Matchers.equalTo(400))
-          .body("title", Matchers.equalTo("Bad Request"))
+          .body("status", Matchers.equalTo(statusCode))
+          .body("title", Matchers.equalTo("Constraint violation"))
           .body("traceId", Matchers.notNullValue())
           .body("violations", Matchers.hasSize(1));
     }
