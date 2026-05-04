@@ -1,0 +1,9 @@
+{
+  "name": "John Doe",
+  "birthDate": "1994-10-12",
+  "email": "john.doe@example.com",
+  "phone": "+123456789",
+  "properties": {
+    "city": "Stockholm"
+  }
+}

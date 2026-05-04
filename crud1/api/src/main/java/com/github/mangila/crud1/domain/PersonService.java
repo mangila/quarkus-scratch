@@ -48,4 +48,12 @@ public class PersonService {
       throw new ApplicationException(e);
     }
   }
+
+  public void delete(UUID uuid) throws ApplicationException {
+    try {
+      personDataService.delete(uuid);
+    } catch (EntityNotFoundException e) {
+      throw new ApplicationException(e);
+    }
+  }
 }

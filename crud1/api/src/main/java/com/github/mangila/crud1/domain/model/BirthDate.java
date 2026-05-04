@@ -8,8 +8,8 @@ public record BirthDate(LocalDate value) {
   public BirthDate {
     // TODO: ensure4j does not support date time api yet
     Ensure.notNull(value, "birth date cannot be null");
-    final boolean isAfter = value.isAfter(LocalDate.now());
-    Ensure.isTrue(isAfter, "birth date cannot be in the future");
+    final boolean isBefore = value.isBefore(LocalDate.now());
+    Ensure.isTrue(isBefore, "birth date cannot be in the future");
   }
 
   public static BirthDate of(LocalDate value) {

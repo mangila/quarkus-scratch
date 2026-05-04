@@ -47,4 +47,12 @@ public class PersonDataService {
     managed.setPhone(entityToUpdate.getPhone());
     managed.setProperties(entityToUpdate.getProperties());
   }
+
+  @Transactional
+  public void delete(UUID uuid) throws EntityNotFoundException {
+    final boolean deleted = personPostgresRepository.deleteById(uuid);
+    if (!deleted) {
+      throw new EntityNotFoundException();
+    }
+  }
 }

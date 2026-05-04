@@ -1,7 +1,5 @@
 package com.github.mangila.crud1.web;
 
-import static jakarta.ws.rs.core.Response.Status;
-
 import com.github.mangila.crud1.domain.Person;
 import com.github.mangila.crud1.domain.PersonService;
 import com.github.mangila.crud1.domain.cqrs.CreatePersonCommand;
@@ -38,10 +36,7 @@ public class PersonRestService {
     return personService
         .findById(uuid)
         .map(personRestMapper::toDto)
-        .orElseThrow(
-            () ->
-                new PersonHttpProblemException(
-                    "Person with id not found: %s".formatted(id), Status.NOT_FOUND));
+        .orElseThrow(() -> PersonHttpProblemException.notFound(uuid));
   }
 
   public UUID create(CreatePersonRequest request) {
@@ -55,8 +50,16 @@ public class PersonRestService {
     try {
       personService.update(person);
     } catch (ApplicationException e) {
-      throw new PersonHttpProblemException(
-          "Person with id not found: %s".formatted(dto.id()), Status.NOT_FOUND);
+      throw PersonHttpProblemException.notFound(dto.id());
+    }
+  }
+
+  public void delete(String id) {
+    final UUID uuid = uuidFactory.from(id);
+    try {
+      personService.delete(uuid);
+    } catch (ApplicationException e) {
+      throw PersonHttpProblemException.notFound(uuid);
     }
   }
 }

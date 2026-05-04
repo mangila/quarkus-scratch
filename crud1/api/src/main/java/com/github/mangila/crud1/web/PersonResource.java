@@ -16,7 +16,6 @@ import java.net.URI;
 import java.util.List;
 import org.hibernate.validator.constraints.UUID;
 import org.jboss.resteasy.reactive.RestResponse;
-import org.slf4j.MDC;
 
 @Path("/api/v1/persons")
 public class PersonResource {
@@ -43,7 +42,6 @@ public class PersonResource {
   @Produces(MediaType.APPLICATION_JSON)
   @RunOnVirtualThread
   public RestResponse<PersonDto> findById(@PathParam("id") @UUID String id) {
-    MDC.put("personId", id);
     final PersonDto dto = personRestService.findById(id);
     return RestResponse.ok(dto);
   }
@@ -62,6 +60,14 @@ public class PersonResource {
   @RunOnVirtualThread
   public RestResponse<Void> update(@Valid PersonDto dto) {
     personRestService.update(dto);
+    return RestResponse.noContent();
+  }
+
+  @Path("/{id}")
+  @DELETE
+  @RunOnVirtualThread
+  public RestResponse<Void> delete(@PathParam("id") @UUID String id) {
+    personRestService.delete(id);
     return RestResponse.noContent();
   }
 }

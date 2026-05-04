@@ -3,7 +3,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.mangila</groupId>
-  <artifactId>api</artifactId>
+  <artifactId>crud1</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>quarkus</packaging>
 
@@ -15,7 +15,7 @@
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <quarkus.platform.version>3.35.1</quarkus.platform.version>
-    <skipITs>true</skipITs>
+    <skipITs>false</skipITs>
     <surefire-plugin.version>3.5.4</surefire-plugin.version>
   </properties>
 
@@ -41,11 +41,6 @@
       <groupId>io.hypersistence</groupId>
       <artifactId>hypersistence-utils-hibernate-71</artifactId>
       <version>3.15.2</version>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkiverse.hibernatetypes</groupId>
-      <artifactId>quarkus-hibernate-types</artifactId>
-      <version>2.2.0</version>
     </dependency>
     <dependency>
       <groupId>io.quarkiverse.resteasy-problem</groupId>
@@ -105,9 +100,20 @@
       <artifactId>quarkus-smallrye-openapi</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>26.1.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.jobrunr</groupId>
       <artifactId>quarkus-jobrunr</artifactId>
       <version>8.5.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5</artifactId>
+      <version>1.4.2</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -115,8 +121,19 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-junit5-component</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.javacrumbs.json-unit</groupId>
+      <artifactId>json-unit-assertj</artifactId>
+      <version>5.1.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>

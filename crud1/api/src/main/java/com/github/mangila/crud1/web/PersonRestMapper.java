@@ -28,7 +28,7 @@ public class PersonRestMapper {
     final Map<String, Object> properties =
         objectMapper.convertValue(person.properties().value(), new TypeReference<>() {});
     return new PersonDto(
-        person.id().toString(),
+        person.id().value().toString(),
         person.name().value(),
         person.birthDate().value(),
         person.email().value(),
