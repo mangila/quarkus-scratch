@@ -1,3 +1,8 @@
+experimental_monorepo_root = true
+
+[settings]
+experimental = true
+
 [tools]
 maven = "3.9.12"
 python = "3.14.4"
@@ -5,20 +10,6 @@ python = "3.14.4"
 [env]
 _.python.venv = ".venv"
 
-[tasks.verify-format-crud1]
-description = "Verify POM sorting and code formatting in crud1 api module"
-run = [
-    "mvn -f crud1/api/pom.xml sortpom:verify",
-    "mvn -f crud1/api/pom.xml fmt:check",
-]
-
-[tasks.format-crud1]
-description = "Format POM sorting and code formatting in crud1 api module"
-run = [
-    "mvn -f crud1/api/pom.xml sortpom:sort",
-    "mvn -f crud1/api/pom.xml fmt:format",
-]
-
 [tasks.megalint]
-description = "Megalint the whole repository"
+description = "Megalint with Java flavor"
 run = "docker run --rm -v $(pwd):/tmp/lint:rw oxsecurity/megalinter-java"

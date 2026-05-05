@@ -5,7 +5,7 @@ repos:
     hooks:
       - id: verify-crud1-api-module
         name: Run mise task to verify crud1
-        entry: mise run verify-format-crud1
+        entry: mise run //crud1:mvn-verify-format
         language: system
         files: ^crud1/api
         require_serial: true

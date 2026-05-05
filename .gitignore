@@ -28,6 +28,7 @@ release.properties
 .settings/
 bin/
 
+# Megalinter
 megalinter-reports/
 reports/
 
