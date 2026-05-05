@@ -1,2 +1,0 @@
-### GET job status with metadata
-GET {{host}}/api/v1/jobrunr/status/{{job_id}}

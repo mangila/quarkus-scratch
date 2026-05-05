@@ -1,4 +1,0 @@
-[tools]
-java = "graalvm-community-25.0.2"
-quarkus = "3.32.4"
-buf = "1.67"
