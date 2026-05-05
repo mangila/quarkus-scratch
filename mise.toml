@@ -5,7 +5,7 @@ python = "3.14.4"
 [env]
 _.python.venv = ".venv"
 
-[tasks.verify-crud1]
+[tasks.verify-format-crud1]
 description = "Verify POM sorting and code formatting in crud1 api module"
 run = [
     "mvn -f crud1/api/pom.xml sortpom:verify",
@@ -19,6 +19,6 @@ run = [
     "mvn -f crud1/api/pom.xml fmt:format",
 ]
 
-[tasks.lint]
-description = "Run MegaLinter locally using Docker"
-run = "docker run --rm -v $(pwd):/tmp/lint:rw oxsecurity/megalinter-java:v9.4.0"
+[tasks.megalint]
+description = "Megalint the whole repository"
+run = "docker run --rm -v $(pwd):/tmp/lint:rw oxsecurity/megalinter-java"

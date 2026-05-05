@@ -16,12 +16,12 @@ FAIL_IF_MISSING_LINTER_IN_FLAVOR: true
 ENABLE_LINTERS:
   - JAVA_CHECKSTYLE
   - JAVA_PMD
+  - SQL_SQLFLUFF
   - YAML_YAMLLINT
   - MARKDOWN_MARKDOWNLINT
-  - SQL_SQLFLUFF
 
+JAVA_CHECKSTYLE_CONFIG_FILE: megalinter-config/.google-checks.xml
 JAVA_PMD_CONFIG_FILE: megalinter-config/.pmd-ruleset.xml
 SQL_SQLFLUFF_CONFIG_FILE: megalinter-config/.sqlfluff
-
-# Exclude generated/IDE/build directories
+# Exclude generated/IDE/build/report directories
 FILTER_REGEX_EXCLUDE: (target/|build/|.quarkus/|.venv/|.idea/|.git/)

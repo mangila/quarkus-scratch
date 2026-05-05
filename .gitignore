@@ -29,6 +29,7 @@ release.properties
 bin/
 
 megalinter-reports/
+reports/
 
 # NetBeans
 nb-configuration.xml
