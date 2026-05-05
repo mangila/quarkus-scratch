@@ -1,0 +1,27 @@
+# MegaLinter configuration file
+# More info at https://megalinter.io
+---
+# Configuration documentation: https://megalinter.io/latest/configuration/
+# Linters documentation: https://megalinter.io/latest/descriptors/
+
+# All available variables are described in documentation
+# https://megalinter.io/latest/configuration/#all-available-variables
+APPLY_FIXES: all
+VALIDATE_ALL_CODEBASE: true
+PRINT_ALL_FILES: true
+SHOW_ELAPSED_TIME: true
+PARALLEL: true
+
+FAIL_IF_MISSING_LINTER_IN_FLAVOR: true
+ENABLE_LINTERS:
+  - JAVA_CHECKSTYLE
+  - JAVA_PMD
+  - YAML_YAMLLINT
+  - MARKDOWN_MARKDOWNLINT
+  - SQL_SQLFLUFF
+
+JAVA_PMD_CONFIG_FILE: megalinter-config/.pmd-ruleset.xml
+SQL_SQLFLUFF_CONFIG_FILE: megalinter-config/.sqlfluff
+
+# Exclude generated/IDE/build directories
+FILTER_REGEX_EXCLUDE: (target/|build/|.quarkus/|.venv/|.idea/|.git/)

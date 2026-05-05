@@ -28,11 +28,7 @@ release.properties
 .settings/
 bin/
 
-# IntelliJ
-.idea
-*.ipr
-*.iml
-*.iws
+megalinter-reports/
 
 # NetBeans
 nb-configuration.xml

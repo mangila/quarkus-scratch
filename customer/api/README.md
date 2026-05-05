@@ -10,7 +10,7 @@ C.R.U.U.D.D REST API for managing customer.
 - REST API endpoints for managing customer data
 - Background job processing with Jobrunr
 - Integration with PostgreSQL database
-- Integration with Camel - http://localhost:9000/q/camel/dev-console
+- Integration with Camel - <http://localhost:9000/q/camel/dev-console>
 
 ## Native build
 

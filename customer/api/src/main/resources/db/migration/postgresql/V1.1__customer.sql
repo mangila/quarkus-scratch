@@ -1,30 +1,30 @@
-create table customer
+CREATE TABLE customer
 (
-    id         UUID PRIMARY KEY NOT NULL,
-    name       TEXT             NOT NULL,
-    address    JSONB            NOT NULL,
-    email      TEXT             NOT NULL UNIQUE,
-    phone      TEXT             NOT NULL,
-    orders     JSONB            NOT NULL,
-    created_at TIMESTAMPTZ      NOT NULL,
-    updated_at TIMESTAMPTZ      NOT NULL,
-    version    BIGINT           NOT NULL
+    id UUID PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    address JSONB NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    phone TEXT NOT NULL,
+    orders JSONB NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    version BIGINT NOT NULL
 );
 
-create table customer_audit
+CREATE TABLE customer_audit
 (
-    REV        integer not null,
-    REVTYPE    smallint,
-    updated_at timestamp(6) with time zone,
-    id         uuid    not null,
-    email      TEXT,
-    name       TEXT,
-    phone      TEXT,
-    address    JSONB,
-    primary key (REV, id)
+    rev INTEGER NOT NULL,
+    revtype SMALLINT,
+    updated_at TIMESTAMP(6) WITH TIME ZONE,
+    id UUID NOT NULL,
+    email TEXT,
+    name TEXT,
+    phone TEXT,
+    address JSONB,
+    PRIMARY KEY (rev, id)
 );
 
-alter table if exists customer_audit
-    add constraint FK2tmkstrlk54gpmyy7ajwhq32j
-        foreign key (REV)
-            references REVINFO;
+ALTER TABLE IF EXISTS customer_audit
+ADD CONSTRAINT fk2tmkstrlk54gpmyy7ajwhq32j
+FOREIGN KEY (rev)
+REFERENCES revinfo;

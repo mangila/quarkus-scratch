@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION fn_cache_evict() RETURNS trigger AS
+CREATE OR REPLACE FUNCTION fn_cache_evict() RETURNS TRIGGER AS
 $$
 DECLARE
     var_id      UUID := NEW.id;

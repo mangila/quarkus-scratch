@@ -3,7 +3,7 @@ package com.github.mangila.crud1.web;
 import static io.restassured.RestAssured.given;
 
 import com.github.mangila.crud1.TestResourceUtils;
-import com.github.mangila.crud1.web.model.PersonDto;
+import com.github.mangila.crud1.person.web.model.PersonDto;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import java.net.URI;

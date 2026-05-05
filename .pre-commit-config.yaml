@@ -1,3 +1,4 @@
+---
 fail_fast: false
 repos:
   - repo: local
@@ -7,5 +8,12 @@ repos:
         entry: mise run verify-crud1
         language: system
         files: ^crud1/api
+        require_serial: true
+        pass_filenames: false
+      - id: verify-crud2-api-module
+        name: Run mise task to verify crud2
+        entry: mise run verify-crud2
+        language: system
+        files: ^crud2/api
         require_serial: true
         pass_filenames: false

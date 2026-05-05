@@ -1,32 +1,32 @@
-create table person
+CREATE TABLE person
 (
-    birth_date DATE   not null,
-    created_at timestamp(6) with time zone,
-    updated_at timestamp(6) with time zone,
-    version    bigint not null,
-    id         uuid   not null,
-    email      TEXT   not null unique,
-    name       TEXT   not null,
-    phone      TEXT   not null,
-    properties JSONB  not null,
-    primary key (id)
+    id UUID NOT NULL,
+    person_name TEXT NOT NULL,
+    birth_date DATE NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    phone TEXT NOT NULL,
+    properties JSONB NOT NULL,
+    rev_version BIGINT NOT NULL,
+    created_at TIMESTAMP(6) WITH TIME ZONE,
+    updated_at TIMESTAMP(6) WITH TIME ZONE,
+    PRIMARY KEY (id)
 );
 
-create table person_audit
+CREATE TABLE person_audit
 (
-    REV        integer not null,
-    REVTYPE    smallint,
+    rev INTEGER NOT NULL,
+    revtype SMALLINT,
+    id UUID NOT NULL,
+    person_name TEXT,
     birth_date DATE,
-    updated_at timestamp(6) with time zone,
-    id         uuid    not null,
-    email      TEXT,
-    name       TEXT,
-    phone      TEXT,
+    email TEXT,
+    phone TEXT,
     properties JSONB,
-    primary key (REV, id)
+    updated_at TIMESTAMP(6) WITH TIME ZONE,
+    PRIMARY KEY (rev, id)
 );
 
-alter table if exists person_audit
-    add constraint FKbhx7sqiw4trc9x7kuc0j5neq5
-        foreign key (REV)
-            references REVINFO;
+ALTER TABLE IF EXISTS person_audit
+ADD CONSTRAINT fkbhx7sqiw4trc9x7kuc0j5neq5
+FOREIGN KEY (rev)
+REFERENCES revinfo;
