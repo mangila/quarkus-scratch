@@ -2,8 +2,8 @@ package com.github.mangila.crud1.person.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.mangila.crud1.person.TestPersonBuilder;
-import com.github.mangila.crud1.person.TestPersonEntityBuilder;
+import com.github.mangila.crud1.person.PersonBuilder;
+import com.github.mangila.crud1.person.PersonEntityBuilder;
 import com.github.mangila.crud1.person.data.PersonEntity;
 import io.quarkus.test.component.QuarkusComponentTest;
 import jakarta.inject.Inject;
@@ -16,7 +16,7 @@ class PersonMapperTest {
 
   @Test
   void shouldMapToEntity() {
-    final Person person = TestPersonBuilder.defaultBuild();
+    final Person person = PersonBuilder.defaultBuild();
     final PersonEntity entity = mapper.toEntity(person);
     assertThat(entity)
         .isNotNull()
@@ -34,7 +34,7 @@ class PersonMapperTest {
 
   @Test
   void shouldMapToDomain() {
-    final PersonEntity entity = TestPersonEntityBuilder.defaultBuild();
+    final PersonEntity entity = PersonEntityBuilder.defaultBuild();
     final Person person = mapper.toDomain(entity);
     assertThat(person)
         .isNotNull()

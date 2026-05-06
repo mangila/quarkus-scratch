@@ -2,11 +2,12 @@ package com.github.mangila.crud1.person;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.mangila.crud1.person.data.PersonEntity;
+import com.github.mangila.crud1.person.domain.Person;
+import com.github.mangila.crud1.person.domain.model.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class TestPersonEntityBuilder {
+public final class PersonBuilder {
 
   public static final UUID NIL_UUID = new UUID(0L, 0L);
 
@@ -19,49 +20,48 @@ public class TestPersonEntityBuilder {
   private String phone;
   private ObjectNode properties;
 
-  public TestPersonEntityBuilder id(UUID id) {
+  public PersonBuilder id(UUID id) {
     this.id = id;
     return this;
   }
 
-  public TestPersonEntityBuilder name(String name) {
+  public PersonBuilder name(String name) {
     this.name = name;
     return this;
   }
 
-  public TestPersonEntityBuilder birthDate(LocalDate birthDate) {
+  public PersonBuilder birthDate(LocalDate birthDate) {
     this.birthDate = birthDate;
     return this;
   }
 
-  public TestPersonEntityBuilder email(String email) {
+  public PersonBuilder email(String email) {
     this.email = email;
     return this;
   }
 
-  public TestPersonEntityBuilder phone(String phone) {
+  public PersonBuilder phone(String phone) {
     this.phone = phone;
     return this;
   }
 
-  public TestPersonEntityBuilder properties(ObjectNode properties) {
+  public PersonBuilder properties(ObjectNode properties) {
     this.properties = properties;
     return this;
   }
 
-  public PersonEntity build() {
-    PersonEntity entity = new PersonEntity();
-    entity.setId(this.id);
-    entity.setName(this.name);
-    entity.setBirthDate(this.birthDate);
-    entity.setEmail(this.email);
-    entity.setPhone(this.phone);
-    entity.setProperties(this.properties);
-    return entity;
+  public Person build() {
+    Id id = new Id(this.id);
+    Name name = new Name(this.name);
+    BirthDate birthDate = new BirthDate(this.birthDate);
+    Email email = new Email(this.email);
+    Phone phone = new Phone(this.phone);
+    Properties properties = new Properties(this.properties);
+    return new Person(id, name, birthDate, email, phone, properties);
   }
 
-  public static PersonEntity defaultBuild() {
-    return new TestPersonEntityBuilder()
+  public static Person defaultBuild() {
+    return new PersonBuilder()
         .id(NIL_UUID)
         .name("John")
         .birthDate(LocalDate.of(1994, 10, 12))

@@ -3,7 +3,7 @@ package com.github.mangila.crud1.person.web;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.mangila.crud1.ResourceUtils;
-import com.github.mangila.crud1.person.TestPersonBuilder;
+import com.github.mangila.crud1.person.PersonBuilder;
 import com.github.mangila.crud1.person.domain.Person;
 import com.github.mangila.crud1.person.domain.cqrs.CreatePersonCommand;
 import com.github.mangila.crud1.person.web.model.CreatePersonRequest;
@@ -21,7 +21,7 @@ class PersonRestMapperTest {
 
   @Test
   void shouldMapToDto() {
-    final Person person = TestPersonBuilder.defaultBuild();
+    final Person person = PersonBuilder.defaultBuild();
     final PersonDto dto = mapper.toDto(person);
     assertThat(dto)
         .isNotNull()
