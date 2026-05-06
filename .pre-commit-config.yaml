@@ -10,7 +10,7 @@ repos:
         files: ^crud1/api
         require_serial: true
         pass_filenames: false
-        stages: [ pre-commit ]
+        stages: [pre-commit]
       - id: maven-test-crud1-api-module
         name: Maven Test Crud1
         entry: mise run //crud1:mvn-test
@@ -18,4 +18,4 @@ repos:
         files: ^crud1/api
         require_serial: true
         pass_filenames: false
-        stages: [ pre-push ]
+        stages: [pre-push]

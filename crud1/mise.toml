@@ -11,13 +11,13 @@ run = [
 ]
 
 [tasks.mvn-validate]
-description = "Maven test in api module"
+description = "Maven Validate goal in api module"
 run = [
     "mvn -f api/pom.xml validate",
 ]
 
 [tasks.mvn-test]
-description = "Maven test in api module"
+description = "Maven Test goal in api module"
 run = [
     "mvn -f api/pom.xml test",
 ]
