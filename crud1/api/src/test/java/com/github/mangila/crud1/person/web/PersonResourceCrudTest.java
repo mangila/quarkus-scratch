@@ -1,4 +1,4 @@
-package com.github.mangila.crud1.web;
+package com.github.mangila.crud1.person.web;
 
 import static io.restassured.RestAssured.given;
 
@@ -24,7 +24,7 @@ class PersonResourceCrudTest {
   }
 
   private URI create() {
-    final String body = TestResourceUtils.getTestResource("data/person-create.json");
+    final String body = TestResourceUtils.getTestResource("data/person-create-request.json");
     var location =
         given()
             .contentType(ContentType.JSON)
@@ -33,7 +33,7 @@ class PersonResourceCrudTest {
             .post("api/v1/persons")
             .then()
             .statusCode(201)
-            .header("X-TRACE-ID", Matchers.notNullValue())
+            .header(TraceWebFilter.TRACE_ID_HEADER, Matchers.notNullValue())
             .extract()
             .header("Location");
 
@@ -46,7 +46,8 @@ class PersonResourceCrudTest {
         .get(location.toString())
         .then()
         .statusCode(200)
-        .header("X-TRACE-ID", Matchers.notNullValue())
+        .header(TraceWebFilter.TRACE_ID_HEADER, Matchers.notNullValue())
+        .body("id", Matchers.notNullValue())
         .body("name", Matchers.equalTo("John Doe"))
         .body("birthDate", Matchers.equalTo("1994-10-12"))
         .body("email", Matchers.equalTo("john.doe@example.com"))
@@ -74,13 +75,14 @@ class PersonResourceCrudTest {
         .put("api/v1/persons")
         .then()
         .statusCode(204)
-        .header("X-TRACE-ID", Matchers.notNullValue());
+        .header(TraceWebFilter.TRACE_ID_HEADER, Matchers.notNullValue());
 
     given()
         .when()
         .get("api/v1/persons/{id}", id)
         .then()
         .statusCode(200)
+        .header(TraceWebFilter.TRACE_ID_HEADER, Matchers.notNullValue())
         .body("id", Matchers.equalTo(id))
         .body("name", Matchers.equalTo("John Updated"))
         .body("birthDate", Matchers.equalTo("1994-10-12"))
@@ -95,20 +97,20 @@ class PersonResourceCrudTest {
         .delete("api/v1/persons/{id}", id)
         .then()
         .statusCode(204)
-        .header("X-TRACE-ID", Matchers.notNullValue());
+        .header(TraceWebFilter.TRACE_ID_HEADER, Matchers.notNullValue());
 
     given()
         .when()
         .delete("api/v1/persons/{id}", id)
         .then()
         .statusCode(404)
-        .header("X-TRACE-ID", Matchers.notNullValue());
+        .header(TraceWebFilter.TRACE_ID_HEADER, Matchers.notNullValue());
 
     given()
         .when()
         .get("api/v1/persons/{id}", id)
         .then()
         .statusCode(404)
-        .header("X-TRACE-ID", Matchers.notNullValue());
+        .header(TraceWebFilter.TRACE_ID_HEADER, Matchers.notNullValue());
   }
 }

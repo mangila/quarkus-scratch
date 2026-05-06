@@ -1,4 +1,4 @@
-package com.github.mangila.crud1.web;
+package com.github.mangila.crud1.person.web;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 

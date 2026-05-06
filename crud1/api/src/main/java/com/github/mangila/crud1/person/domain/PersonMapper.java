@@ -3,8 +3,10 @@ package com.github.mangila.crud1.person.domain;
 import com.github.mangila.crud1.person.data.PersonEntity;
 import com.github.mangila.crud1.person.domain.model.*;
 import jakarta.enterprise.context.ApplicationScoped;
+import org.jspecify.annotations.NullMarked;
 
 @ApplicationScoped
+@NullMarked
 public class PersonMapper {
 
   public Person toDomain(PersonEntity entity) {

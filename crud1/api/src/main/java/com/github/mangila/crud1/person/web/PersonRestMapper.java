@@ -12,8 +12,10 @@ import com.github.mangila.crud1.shared.UuidFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Map;
 import java.util.UUID;
+import org.jspecify.annotations.NullMarked;
 
 @ApplicationScoped
+@NullMarked
 public class PersonRestMapper {
 
   private final UuidFactory uuidFactory;
