@@ -36,8 +36,7 @@ public class PersonService {
   public UUID create(CreatePersonCommand command) {
     final Person person = personFactory.create(command);
     final PersonEntity entity = personMapper.toEntity(person);
-    final UUID id = personDataService.persist(entity);
-    return id;
+    return personDataService.persist(entity);
   }
 
   public void update(Person person) throws ApplicationException {

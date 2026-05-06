@@ -40,8 +40,7 @@ public class PersonRestService {
 
   public UUID create(CreatePersonRequest request) {
     final CreatePersonCommand command = personRestMapper.toDomain(request);
-    final UUID id = personService.create(command);
-    return id;
+    return personService.create(command);
   }
 
   public void update(PersonDto dto) {

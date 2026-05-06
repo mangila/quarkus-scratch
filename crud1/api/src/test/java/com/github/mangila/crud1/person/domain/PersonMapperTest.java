@@ -15,7 +15,7 @@ class PersonMapperTest {
   @Inject PersonMapper mapper;
 
   @Test
-  void toEntity() {
+  void shouldMapToEntity() {
     final Person person = TestPersonBuilder.defaultBuild();
     final PersonEntity entity = mapper.toEntity(person);
     assertThat(entity)
@@ -33,7 +33,7 @@ class PersonMapperTest {
   }
 
   @Test
-  void toDomain() {
+  void shouldMapToDomain() {
     final PersonEntity entity = TestPersonEntityBuilder.defaultBuild();
     final Person person = mapper.toDomain(entity);
     assertThat(person)

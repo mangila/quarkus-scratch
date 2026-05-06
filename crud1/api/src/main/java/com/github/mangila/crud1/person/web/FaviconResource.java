@@ -8,12 +8,12 @@ import jakarta.ws.rs.core.Response;
 @Path("/favicon.ico")
 public class FaviconResource {
 
-  private static final int _24_HOURS = 86400;
+  private static final int TWENTY_FOUR_HOURS = 86_400;
 
   @GET
   public Response favicon() {
     final CacheControl cacheControl = new CacheControl();
-    cacheControl.setMaxAge(_24_HOURS);
+    cacheControl.setMaxAge(TWENTY_FOUR_HOURS);
     return Response.noContent().cacheControl(cacheControl).build();
   }
 }

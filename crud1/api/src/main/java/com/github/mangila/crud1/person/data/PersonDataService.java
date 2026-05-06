@@ -20,7 +20,7 @@ public class PersonDataService {
 
   @Transactional
   public List<PersonEntity> findPage(Page page) {
-    Sort sort = Sort.by("name");
+    final Sort sort = Sort.by("name");
     return personPostgresRepository.findAll(sort).page(page).list();
   }
 

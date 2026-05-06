@@ -2,7 +2,7 @@ package com.github.mangila.crud1.person.web;
 
 import static io.restassured.RestAssured.given;
 
-import com.github.mangila.crud1.TestResourceUtils;
+import com.github.mangila.crud1.ResourceUtils;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.hamcrest.Matchers;
@@ -116,7 +116,7 @@ public class PersonResourceValidationTest {
           "data/validation/person-create-null-properties.json",
         })
     void shouldValidateCreatePersonRequest(String resourceName) {
-      final String body = TestResourceUtils.getTestResource(resourceName);
+      final String body = ResourceUtils.getTestResource(resourceName);
       given()
           .body(body)
           .contentType(ContentType.JSON)
@@ -144,7 +144,7 @@ public class PersonResourceValidationTest {
           "data/validation/person-dto-name-too-short.json",
         })
     void shouldValidatePersonDto(String resourceName) {
-      final String body = TestResourceUtils.getTestResource(resourceName);
+      final String body = ResourceUtils.getTestResource(resourceName);
       given()
           .body(body)
           .contentType(ContentType.JSON)

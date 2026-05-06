@@ -2,7 +2,7 @@ package com.github.mangila.crud1.person.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.mangila.crud1.TestResourceUtils;
+import com.github.mangila.crud1.ResourceUtils;
 import com.github.mangila.crud1.person.TestPersonBuilder;
 import com.github.mangila.crud1.person.domain.Person;
 import com.github.mangila.crud1.person.domain.cqrs.CreatePersonCommand;
@@ -20,7 +20,7 @@ class PersonRestMapperTest {
   @Inject PersonRestMapper mapper;
 
   @Test
-  void testToDto() {
+  void shouldMapToDto() {
     final Person person = TestPersonBuilder.defaultBuild();
     final PersonDto dto = mapper.toDto(person);
     assertThat(dto)
@@ -29,9 +29,8 @@ class PersonRestMapperTest {
   }
 
   @Test
-  void testToDomainPerson() {
-    final PersonDto dto =
-        TestResourceUtils.getTestResourceAs("data/person-dto.json", PersonDto.class);
+  void shouldMapToDomain() {
+    final PersonDto dto = ResourceUtils.getTestResourceAs("data/person-dto.json", PersonDto.class);
     final Person person = mapper.toDomain(dto);
     assertThat(person)
         .isNotNull()
@@ -39,9 +38,9 @@ class PersonRestMapperTest {
   }
 
   @Test
-  void testToDomainCreateRequest() {
+  void shouldMapToCommand() {
     final CreatePersonRequest request =
-        TestResourceUtils.getTestResourceAs(
+        ResourceUtils.getTestResourceAs(
             "data/person-create-request.json", CreatePersonRequest.class);
     final CreatePersonCommand command = mapper.toDomain(request);
     assertThat(command)

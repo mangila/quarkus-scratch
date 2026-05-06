@@ -4,8 +4,8 @@ repos:
   - repo: local
     hooks:
       - id: verify-crud1-api-module
-        name: Run mise task to verify crud1
-        entry: mise run //crud1:mvn-verify-format
+        name: Run sub mise task to Maven verify crud1
+        entry: mise run //crud1:mvn-test
         language: system
         files: ^crud1/api
         require_serial: true

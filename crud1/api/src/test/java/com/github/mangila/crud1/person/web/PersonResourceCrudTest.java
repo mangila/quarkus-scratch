@@ -2,7 +2,7 @@ package com.github.mangila.crud1.person.web;
 
 import static io.restassured.RestAssured.given;
 
-import com.github.mangila.crud1.TestResourceUtils;
+import com.github.mangila.crud1.ResourceUtils;
 import com.github.mangila.crud1.person.web.model.PersonDto;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
@@ -24,7 +24,7 @@ class PersonResourceCrudTest {
   }
 
   private URI create() {
-    final String body = TestResourceUtils.getTestResource("data/person-create-request.json");
+    final String body = ResourceUtils.getTestResource("data/person-create-request.json");
     var location =
         given()
             .contentType(ContentType.JSON)
