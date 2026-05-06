@@ -15,3 +15,9 @@ run = [
     "mvn -f api/pom.xml sortpom:sort",
     "mvn -f api/pom.xml fmt:format",
 ]
+
+[tasks.api-k6]
+description = "Run k6 tests in api module"
+run = [
+    "k6 run k6/read-write-api-k6-test.js"
+]

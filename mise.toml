@@ -1,7 +1,7 @@
 experimental_monorepo_root = true
 
 [monorepo]
-config_roots = ["crud1/*"]
+config_roots = ["crud1"]
 
 [settings]
 experimental = true
@@ -9,6 +9,7 @@ experimental = true
 [tools]
 maven = "3.9.12"
 python = "3.14.4"
+k6 = "1.7.1"
 
 [env]
 _.python.venv = ".venv"
