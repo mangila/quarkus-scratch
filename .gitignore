@@ -1,6 +1,9 @@
 # Quarkus CLI
 .quarkus
 
+# Sonar
+.scannerwork/
+
 # IntelliJ
 .idea
 *.ipr

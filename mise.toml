@@ -10,10 +10,19 @@ experimental = true
 maven = "3.9.12"
 python = "3.14.4"
 k6 = "1.7.1"
+sonar-scanner-cli = "8.1.0.6389"
 
 [env]
 _.python.venv = ".venv"
+SONAR_HOST_URL = "http://localhost:9050"
+SONAR_USERNAME = "admin"
+# note: need to change pw at first login
+SONAR_PASSWORD = "admin1"
 
 [tasks.megalint]
 description = "Megalint with Java flavor"
 run = "docker run --rm -v $(pwd):/tmp/lint:rw oxsecurity/megalinter-java"
+
+[tasks.sonarqube]
+description = "Start SonarQube server on port 9050"
+run = "docker run --rm -p 9050:9000 sonarqube:lts-community"

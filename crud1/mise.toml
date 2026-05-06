@@ -22,6 +22,19 @@ run = [
     "mvn -f api/pom.xml test",
 ]
 
+[tasks."sonar:scan"]
+description = "Run SonarQube analysis with JaCoCo coverage"
+run = """
+sonar-scanner \
+  -Dsonar.projectKey=my_project \
+  -Dsonar.sources=api/src/main/java \
+  -Dsonar.java.binaries=api/target/classes \
+  -Dsonar.host.url=$SONAR_HOST_URL \
+  -Dsonar.login=$SONAR_USERNAME \
+  -Dsonar.password=$SONAR_PASSWORD \
+  -Dsonar.coverage.jacoco.xmlReportPaths=api/target/jacoco-report/jacoco.xml \
+"""
+
 [tasks.api-k6]
 description = "Run k6 tests in api module"
 run = [
