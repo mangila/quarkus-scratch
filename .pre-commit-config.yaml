@@ -12,7 +12,7 @@ repos:
         pass_filenames: false
         stages: [ pre-commit ]
       - id: maven-test-crud1-api-module
-        name: TMaven Test Crud1
+        name: Maven Test Crud1
         entry: mise run //crud1:mvn-test
         language: system
         files: ^crud1/api
