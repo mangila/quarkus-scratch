@@ -1,12 +1,19 @@
 [tools]
 java = "graalvm-community-25.0.2"
 quarkus = "3.35.1"
+node = "24.15.0"
 
 [tasks.mvn-format]
 description = "Format POM sorting and code formatting in api module"
 run = [
     "mvn -f api/pom.xml sortpom:sort",
     "mvn -f api/pom.xml fmt:format",
+]
+
+[tasks.mvn-validate]
+description = "Maven test in api module"
+run = [
+    "mvn -f api/pom.xml validate",
 ]
 
 [tasks.mvn-test]

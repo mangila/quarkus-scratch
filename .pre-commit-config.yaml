@@ -3,10 +3,19 @@ fail_fast: false
 repos:
   - repo: local
     hooks:
-      - id: verify-crud1-api-module
-        name: Run sub mise task to Maven verify crud1
+      - id: maven-validate-crud1-api-module
+        name: Maven Validate Crud1
+        entry: mise run //crud1:mvn-validate
+        language: system
+        files: ^crud1/api
+        require_serial: true
+        pass_filenames: false
+        stages: [ pre-commit ]
+      - id: maven-test-crud1-api-module
+        name: TMaven Test Crud1
         entry: mise run //crud1:mvn-test
         language: system
         files: ^crud1/api
         require_serial: true
         pass_filenames: false
+        stages: [ pre-push ]
