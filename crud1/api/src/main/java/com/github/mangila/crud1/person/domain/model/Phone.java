@@ -19,13 +19,12 @@ public record Phone(String number, String region, String type) {
     number = PhoneNumberUtil.normalizeDigitsOnly(number);
     region = region.toUpperCase();
     type = type.toUpperCase();
-    Phonenumber.PhoneNumber parsed = null;
     try {
-      parsed = PHONE_NUMBER_UTIL.parse(number, region);
+      final Phonenumber.PhoneNumber parsed = PHONE_NUMBER_UTIL.parse(number, region);
+      number = PHONE_NUMBER_UTIL.format(parsed, PhoneNumberUtil.PhoneNumberFormat.E164);
     } catch (NumberParseException e) {
       throw new ApplicationException(e);
     }
-    number = PHONE_NUMBER_UTIL.format(parsed, PhoneNumberUtil.PhoneNumberFormat.E164);
   }
 
   public static Phone of(String number, String regionCode, String type) {

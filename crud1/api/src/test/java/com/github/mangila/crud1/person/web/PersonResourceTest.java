@@ -19,7 +19,7 @@ class PersonResourceTest {
   @Test
   void shouldCreateAndDelete() {
     final URI location = create("test.email123@example.com");
-    final String id = location.getPath().substring(location.getPath().lastIndexOf("/") + 1);
+    final String id = location.getPath().substring(location.getPath().lastIndexOf('/') + 1);
     given()
         .when()
         .delete("api/v1/persons/{id}", id)
@@ -31,7 +31,7 @@ class PersonResourceTest {
   @Test
   void shouldCreateAndUpdate() {
     final URI location = create("test.email123@example.com");
-    final String id = location.getPath().substring(location.getPath().lastIndexOf("/") + 1);
+    final String id = location.getPath().substring(location.getPath().lastIndexOf('/') + 1);
     final String expectedEmail = "another.test.emai123@example.com";
     final PersonDto dto = new PersonDtoBuilder().id(id).email(expectedEmail).build();
     given()

@@ -22,6 +22,8 @@
         <exclude name="OnlyOneReturn"/>
         <exclude name="CommentDefaultAccessModifier"/>
         <exclude name="CallSuperInConstructor"/>
+        <exclude name="UseExplicitTypes"/>
+        <exclude name="UnnecessaryImport"/>
     </rule>
 
     <!-- Design -->
@@ -32,7 +34,9 @@
     </rule>
 
     <!-- Documentation -->
-    <rule ref="category/java/documentation.xml"/>
+    <rule ref="category/java/documentation.xml">
+        <exclude name="CommentRequired"/>
+    </rule>
 
     <!-- Error Prone -->
     <rule ref="category/java/errorprone.xml"/>

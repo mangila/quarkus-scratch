@@ -26,7 +26,7 @@ public final class PhoneCollectionMapper implements Mapper<JsonNode, PhoneCollec
 
   @Override
   public PhoneCollection toDomain(JsonNode phones) {
-    List<Phone> p = objectMapper.convertValue(phones, new TypeReference<>() {});
+    final List<Phone> p = objectMapper.convertValue(phones, new TypeReference<>() {});
     return new PhoneCollection(p);
   }
 }
