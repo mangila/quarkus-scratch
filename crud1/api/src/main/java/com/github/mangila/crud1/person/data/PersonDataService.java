@@ -44,7 +44,7 @@ public class PersonDataService {
     managed.setName(entityToUpdate.getName());
     managed.setBirthDate(entityToUpdate.getBirthDate());
     managed.setEmail(entityToUpdate.getEmail());
-    managed.setPhone(entityToUpdate.getPhone());
+    managed.setPhones(entityToUpdate.getPhones());
     managed.setProperties(entityToUpdate.getProperties());
   }
 

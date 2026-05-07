@@ -1,14 +1,15 @@
 package com.github.mangila.crud1.person;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.crud1.person.data.PersonEntity;
+import com.github.mangila.crud1.person.domain.model.Id;
+import com.github.mangila.crud1.person.domain.model.Phone;
 import java.time.LocalDate;
 import java.util.UUID;
 
 public final class PersonEntityBuilder {
-
-  public static final UUID NIL_UUID = new UUID(0L, 0L);
 
   private static final ObjectMapper MAPPER = new ObjectMapper().findAndRegisterModules();
 
@@ -16,7 +17,7 @@ public final class PersonEntityBuilder {
   private String name;
   private LocalDate birthDate;
   private String email;
-  private String phone;
+  private final ArrayNode phones = MAPPER.createArrayNode();
   private ObjectNode properties;
 
   public PersonEntityBuilder id(UUID id) {
@@ -39,8 +40,12 @@ public final class PersonEntityBuilder {
     return this;
   }
 
-  public PersonEntityBuilder phone(String phone) {
-    this.phone = phone;
+  public PersonEntityBuilder addPhone(Phone phone) {
+    final ObjectNode node = MAPPER.createObjectNode();
+    node.put("number", phone.number());
+    node.put("region", phone.region());
+    node.put("type", phone.type());
+    this.phones.add(node);
     return this;
   }
 
@@ -55,18 +60,18 @@ public final class PersonEntityBuilder {
     entity.setName(this.name);
     entity.setBirthDate(this.birthDate);
     entity.setEmail(this.email);
-    entity.setPhone(this.phone);
+    entity.setPhones(this.phones);
     entity.setProperties(this.properties);
     return entity;
   }
 
   public static PersonEntity defaultBuild() {
     return new PersonEntityBuilder()
-        .id(NIL_UUID)
+        .id(Id.nil().value())
         .name("John")
         .birthDate(LocalDate.of(1994, 10, 12))
         .email("john@email.com")
-        .phone("0736791310")
+        .addPhone(Phone.of("0736791310", "SE", "mobile"))
         .properties(MAPPER.createObjectNode().put("city", "Stockholm"))
         .build();
   }

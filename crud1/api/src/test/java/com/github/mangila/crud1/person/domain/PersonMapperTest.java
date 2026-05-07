@@ -5,11 +5,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.github.mangila.crud1.person.PersonBuilder;
 import com.github.mangila.crud1.person.PersonEntityBuilder;
 import com.github.mangila.crud1.person.data.PersonEntity;
+import com.github.mangila.crud1.person.domain.mapper.*;
+import io.quarkus.jackson.runtime.ObjectMapperProducer;
 import io.quarkus.test.component.QuarkusComponentTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
-@QuarkusComponentTest
+@QuarkusComponentTest(
+    value = {
+      IdMapper.class,
+      NameMapper.class,
+      BirthDateMapper.class,
+      EmailMapper.class,
+      PhoneCollectionMapper.class,
+      PropertiesMapper.class,
+      ObjectMapperProducer.class
+    })
 class PersonMapperTest {
 
   @Inject PersonMapper mapper;
@@ -25,7 +36,7 @@ class PersonMapperTest {
             "name",
             "birthDate",
             "email",
-            "phone",
+            "phones",
             "properties",
             "createdAt",
             "updatedAt",
@@ -39,6 +50,6 @@ class PersonMapperTest {
     assertThat(person)
         .isNotNull()
         .hasNoNullFieldsOrProperties()
-        .hasOnlyFields("id", "name", "birthDate", "email", "phone", "properties");
+        .hasOnlyFields("id", "name", "birthDate", "email", "phones", "properties");
   }
 }

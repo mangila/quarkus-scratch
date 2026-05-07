@@ -9,15 +9,13 @@ import java.util.UUID;
 
 public final class PersonBuilder {
 
-  public static final UUID NIL_UUID = new UUID(0L, 0L);
-
   private static final ObjectMapper MAPPER = new ObjectMapper().findAndRegisterModules();
 
   private UUID id;
   private String name;
   private LocalDate birthDate;
   private String email;
-  private String phone;
+  private final PhoneCollection phones = PhoneCollection.newInstance();
   private ObjectNode properties;
 
   public PersonBuilder id(UUID id) {
@@ -40,8 +38,8 @@ public final class PersonBuilder {
     return this;
   }
 
-  public PersonBuilder phone(String phone) {
-    this.phone = phone;
+  public PersonBuilder addPhone(Phone phone) {
+    this.phones.add(phone);
     return this;
   }
 
@@ -51,22 +49,23 @@ public final class PersonBuilder {
   }
 
   public Person build() {
-    Id id = new Id(this.id);
-    Name name = new Name(this.name);
-    BirthDate birthDate = new BirthDate(this.birthDate);
-    Email email = new Email(this.email);
-    Phone phone = new Phone(this.phone);
-    Properties properties = new Properties(this.properties);
-    return new Person(id, name, birthDate, email, phone, properties);
+    return new Person(
+        Id.of(this.id),
+        Name.of(this.name),
+        BirthDate.of(this.birthDate),
+        Email.of(this.email),
+        phones,
+        Properties.of(this.properties));
   }
 
   public static Person defaultBuild() {
+    final var phone = Phone.of("0736791310", "SE", "mobile");
     return new PersonBuilder()
-        .id(NIL_UUID)
+        .id(Id.nil().value())
         .name("John")
         .birthDate(LocalDate.of(1994, 10, 12))
         .email("john@email.com")
-        .phone("0736791310")
+        .addPhone(phone)
         .properties(MAPPER.createObjectNode().put("city", "Stockholm"))
         .build();
   }

@@ -1,8 +1,16 @@
 {
-  "id": "not-a-uuid",
+  "id": "not a valid uuid",
   "name": "John Doe",
-  "birthDate": "1990-01-01",
-  "email": "test@example.com",
-  "phone": "+123456789",
-  "properties": {}
+  "birthDate": "1994-10-12",
+  "email": "john.doe@example.com",
+  "phones": [
+    {
+      "number": "0736791310",
+      "region": "SE",
+      "type": "mobile"
+    }
+  ],
+  "properties": {
+    "city": "Stockholm"
+  }
 }

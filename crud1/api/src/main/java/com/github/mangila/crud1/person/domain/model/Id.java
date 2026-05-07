@@ -15,6 +15,10 @@ public record Id(UUID value) {
     return new Id(value);
   }
 
+  public static Id nil() {
+    return new Id(NIL_UUID);
+  }
+
   public boolean isNil() {
     return NIL_UUID.equals(value);
   }

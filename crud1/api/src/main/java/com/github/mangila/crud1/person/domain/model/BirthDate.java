@@ -2,6 +2,7 @@ package com.github.mangila.crud1.person.domain.model;
 
 import io.github.mangila.ensure4j.Ensure;
 import java.time.LocalDate;
+import java.time.Period;
 
 public record BirthDate(LocalDate value) {
 
@@ -14,5 +15,9 @@ public record BirthDate(LocalDate value) {
 
   public static BirthDate of(LocalDate value) {
     return new BirthDate(value);
+  }
+
+  public int age() {
+    return Period.between(value, LocalDate.now()).getYears();
   }
 }

@@ -14,4 +14,8 @@ public record Email(String value) {
   public static Email of(String value) {
     return new Email(value);
   }
+
+  public boolean isGmail() {
+    return value.endsWith("@gmail.com");
+  }
 }

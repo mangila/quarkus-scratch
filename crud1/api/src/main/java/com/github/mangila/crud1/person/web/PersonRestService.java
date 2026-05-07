@@ -3,10 +3,13 @@ package com.github.mangila.crud1.person.web;
 import com.github.mangila.crud1.person.domain.Person;
 import com.github.mangila.crud1.person.domain.PersonService;
 import com.github.mangila.crud1.person.domain.cqrs.CreatePersonCommand;
+import com.github.mangila.crud1.person.domain.model.Id;
+import com.github.mangila.crud1.person.web.mapper.CreatePersonRestMapper;
+import com.github.mangila.crud1.person.web.mapper.IdRestMapper;
+import com.github.mangila.crud1.person.web.mapper.PersonRestMapper;
 import com.github.mangila.crud1.person.web.model.CreatePersonRequest;
 import com.github.mangila.crud1.person.web.model.PersonDto;
 import com.github.mangila.crud1.shared.ApplicationException;
-import com.github.mangila.crud1.shared.UuidFactory;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
@@ -15,13 +18,18 @@ import java.util.UUID;
 @ApplicationScoped
 public class PersonRestService {
 
-  private final UuidFactory uuidFactory;
+  private final IdRestMapper idRestMapper;
+  private final CreatePersonRestMapper createPersonRestMapper;
   private final PersonRestMapper personRestMapper;
   private final PersonService personService;
 
   public PersonRestService(
-      UuidFactory uuidFactory, PersonRestMapper personRestMapper, PersonService personService) {
-    this.uuidFactory = uuidFactory;
+      IdRestMapper idRestMapper,
+      CreatePersonRestMapper createPersonRestMapper,
+      PersonRestMapper personRestMapper,
+      PersonService personService) {
+    this.idRestMapper = idRestMapper;
+    this.createPersonRestMapper = createPersonRestMapper;
     this.personRestMapper = personRestMapper;
     this.personService = personService;
   }
@@ -31,15 +39,15 @@ public class PersonRestService {
   }
 
   public PersonDto findById(String id) {
-    final UUID uuid = uuidFactory.from(id);
+    final Id domainId = idRestMapper.toDomain(id);
     return personService
-        .findById(uuid)
+        .findById(domainId)
         .map(personRestMapper::toDto)
-        .orElseThrow(() -> PersonHttpProblemException.notFound(uuid));
+        .orElseThrow(() -> PersonHttpProblemException.notFound(id));
   }
 
   public UUID create(CreatePersonRequest request) {
-    final CreatePersonCommand command = personRestMapper.toDomain(request);
+    final CreatePersonCommand command = createPersonRestMapper.toDomain(request);
     return personService.create(command);
   }
 
@@ -47,17 +55,17 @@ public class PersonRestService {
     final Person person = personRestMapper.toDomain(dto);
     try {
       personService.update(person);
-    } catch (ApplicationException e) {
+    } catch (ApplicationException _) {
       throw PersonHttpProblemException.notFound(dto.id());
     }
   }
 
   public void delete(String id) {
-    final UUID uuid = uuidFactory.from(id);
+    final Id domainId = idRestMapper.toDomain(id);
     try {
-      personService.delete(uuid);
-    } catch (ApplicationException e) {
-      throw PersonHttpProblemException.notFound(uuid);
+      personService.delete(domainId);
+    } catch (ApplicationException _) {
+      throw PersonHttpProblemException.notFound(id);
     }
   }
 }

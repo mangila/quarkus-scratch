@@ -1,8 +1,0 @@
-{
-  "id": "not-a-uuid",
-  "name": "A",
-  "birthDate": "2099-01-01",
-  "email": "invalid-email",
-  "phone": "",
-  "properties": null
-}

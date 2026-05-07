@@ -1,0 +1,21 @@
+package com.github.mangila.crud1.person.domain.mapper;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.mangila.crud1.person.domain.model.Properties;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.jspecify.annotations.NullMarked;
+
+@ApplicationScoped
+@NullMarked
+public final class PropertiesMapper implements Mapper<JsonNode, Properties> {
+
+  @Override
+  public JsonNode toEntity(Properties properties) {
+    return properties.value();
+  }
+
+  @Override
+  public Properties toDomain(JsonNode jsonNode) {
+    return Properties.of(jsonNode);
+  }
+}

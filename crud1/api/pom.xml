@@ -34,6 +34,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.googlecode.libphonenumber</groupId>
+      <artifactId>libphonenumber</artifactId>
+      <version>9.0.29</version>
+    </dependency>
+    <dependency>
       <groupId>io.github.mangila</groupId>
       <artifactId>ensure4j</artifactId>
       <version>3.0.2</version>
@@ -108,11 +113,6 @@
       <groupId>org.jetbrains</groupId>
       <artifactId>annotations</artifactId>
       <version>26.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jobrunr</groupId>
-      <artifactId>quarkus-jobrunr</artifactId>
-      <version>8.5.2</version>
     </dependency>
     <dependency>
       <groupId>com.tngtech.archunit</groupId>

@@ -3,6 +3,8 @@ package com.github.mangila.crud1.person.domain;
 import com.github.mangila.crud1.person.data.PersonDataService;
 import com.github.mangila.crud1.person.data.PersonEntity;
 import com.github.mangila.crud1.person.domain.cqrs.CreatePersonCommand;
+import com.github.mangila.crud1.person.domain.mapper.PersonMapper;
+import com.github.mangila.crud1.person.domain.model.Id;
 import com.github.mangila.crud1.shared.ApplicationException;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -29,8 +31,9 @@ public class PersonService {
     return personDataService.findPage(page).stream().map(personMapper::toDomain).toList();
   }
 
-  public Optional<Person> findById(UUID id) {
-    return personDataService.findById(id).map(personMapper::toDomain);
+  public Optional<Person> findById(Id id) {
+    final UUID uuid = id.value();
+    return personDataService.findById(uuid).map(personMapper::toDomain);
   }
 
   public UUID create(CreatePersonCommand command) {
@@ -48,8 +51,9 @@ public class PersonService {
     }
   }
 
-  public void delete(UUID uuid) throws ApplicationException {
+  public void delete(Id id) throws ApplicationException {
     try {
+      final UUID uuid = id.value();
       personDataService.delete(uuid);
     } catch (EntityNotFoundException e) {
       throw new ApplicationException(e);

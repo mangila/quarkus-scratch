@@ -1,8 +1,16 @@
 {
   "id": "123e4567-e89b-12d3-a456-426614174000",
   "name": "J",
-  "birthDate": "1990-01-01",
-  "email": "test@example.com",
-  "phone": "+123456789",
-  "properties": {}
+  "birthDate": "1994-10-12",
+  "email": "john.doe@example.com",
+  "phones": [
+    {
+      "number": "0736791310",
+      "region": "SE",
+      "type": "mobile"
+    }
+  ],
+  "properties": {
+    "city": "Stockholm"
+  }
 }

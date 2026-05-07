@@ -11,9 +11,17 @@ repos:
         require_serial: true
         pass_filenames: false
         stages: [pre-commit]
-      - id: maven-test-crud1-api-module
-        name: Maven Test Crud1
-        entry: mise run //crud1:mvn-test
+      - id: maven-verify-crud1-api-module
+        name: Maven Verify Crud1
+        entry: mise run //crud1:mvn-verify
+        language: system
+        files: ^crud1/api
+        require_serial: true
+        pass_filenames: false
+        stages: [pre-push]
+      - id: sonar-scan-crud1-api-module
+        name: Sonar Scan Crud1
+        entry: mise run //crud1:sonar:scan
         language: system
         files: ^crud1/api
         require_serial: true

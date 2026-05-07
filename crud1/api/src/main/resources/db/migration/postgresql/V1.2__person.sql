@@ -4,8 +4,8 @@ CREATE TABLE person
     person_name TEXT NOT NULL,
     birth_date DATE NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    phone TEXT NOT NULL,
-    properties JSONB NOT NULL,
+    phones JSONB NOT NULL,
+    person_properties JSONB NOT NULL,
     rev_version BIGINT NOT NULL,
     created_at TIMESTAMP(6) WITH TIME ZONE,
     updated_at TIMESTAMP(6) WITH TIME ZONE,
@@ -20,8 +20,8 @@ CREATE TABLE person_audit
     person_name TEXT,
     birth_date DATE,
     email TEXT,
-    phone TEXT,
-    properties JSONB,
+    phones JSONB,
+    person_properties JSONB,
     updated_at TIMESTAMP(6) WITH TIME ZONE,
     PRIMARY KEY (rev, id)
 );

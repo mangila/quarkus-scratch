@@ -24,7 +24,7 @@ public class PersonFactory {
         command.name(),
         command.birthDate(),
         command.email(),
-        command.phone(),
+        command.phones(),
         command.properties());
   }
 }

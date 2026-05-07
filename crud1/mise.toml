@@ -16,23 +16,20 @@ run = [
     "mvn -f api/pom.xml validate",
 ]
 
-[tasks.mvn-test]
-description = "Maven Test goal in api module"
+[tasks.mvn-verify]
+description = "Maven Verify goal in api module"
 run = [
-    "mvn -f api/pom.xml test",
+    "mvn -f api/pom.xml verify",
 ]
 
 [tasks."sonar:scan"]
-description = "Run SonarQube analysis with JaCoCo coverage"
+description = "Run SonarQube analysis with JaCoCo coverage in api module"
+dir = "api"
 run = """
 sonar-scanner \
-  -Dsonar.projectKey=my_project \
-  -Dsonar.sources=api/src/main/java \
-  -Dsonar.java.binaries=api/target/classes \
   -Dsonar.host.url=$SONAR_HOST_URL \
   -Dsonar.login=$SONAR_USERNAME \
   -Dsonar.password=$SONAR_PASSWORD \
-  -Dsonar.coverage.jacoco.xmlReportPaths=api/target/jacoco-report/jacoco.xml \
 """
 
 [tasks.api-k6]

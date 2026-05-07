@@ -2,7 +2,13 @@
   "name": "John Doe",
   "birthDate": "1994-10-12",
   "email": "john.doe@example.com",
-  "phone": "+123456789",
+  "phones": [
+    {
+      "number": "0736791310",
+      "region": "SE",
+      "type": "mobile"
+    }
+  ],
   "properties": {
     "city": "Stockholm"
   }

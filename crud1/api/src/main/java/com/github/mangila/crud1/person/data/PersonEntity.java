@@ -30,11 +30,12 @@ public class PersonEntity {
   @Column(nullable = false, unique = true, columnDefinition = "TEXT")
   private String email;
 
-  @Column(nullable = false, columnDefinition = "TEXT")
-  private String phone;
-
   @Type(JsonType.class)
   @Column(nullable = false, columnDefinition = "JSONB")
+  private JsonNode phones;
+
+  @Type(JsonType.class)
+  @Column(nullable = false, name = "person_properties", columnDefinition = "JSONB")
   private JsonNode properties;
 
   @NotAudited
@@ -55,12 +56,17 @@ public class PersonEntity {
   }
 
   public PersonEntity(
-      UUID id, String name, LocalDate birthDate, String email, String phone, JsonNode properties) {
+      UUID id,
+      String name,
+      LocalDate birthDate,
+      String email,
+      JsonNode phones,
+      JsonNode properties) {
     this.id = id;
     this.name = name;
     this.birthDate = birthDate;
     this.email = email;
-    this.phone = phone;
+    this.phones = phones;
     this.properties = properties;
   }
 
@@ -96,12 +102,12 @@ public class PersonEntity {
     this.email = email;
   }
 
-  public String getPhone() {
-    return phone;
+  public JsonNode getPhones() {
+    return phones;
   }
 
-  public void setPhone(String phone) {
-    this.phone = phone;
+  public void setPhones(JsonNode phone) {
+    this.phones = phone;
   }
 
   public JsonNode getProperties() {

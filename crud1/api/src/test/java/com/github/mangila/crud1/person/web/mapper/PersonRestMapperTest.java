@@ -1,12 +1,10 @@
-package com.github.mangila.crud1.person.web;
+package com.github.mangila.crud1.person.web.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.mangila.crud1.ResourceUtils;
 import com.github.mangila.crud1.person.PersonBuilder;
 import com.github.mangila.crud1.person.domain.Person;
-import com.github.mangila.crud1.person.domain.cqrs.CreatePersonCommand;
-import com.github.mangila.crud1.person.web.model.CreatePersonRequest;
 import com.github.mangila.crud1.person.web.model.PersonDto;
 import com.github.mangila.crud1.shared.UuidFactory;
 import io.quarkus.jackson.runtime.ObjectMapperProducer;
@@ -14,7 +12,17 @@ import io.quarkus.test.component.QuarkusComponentTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
-@QuarkusComponentTest(value = {UuidFactory.class, ObjectMapperProducer.class})
+@QuarkusComponentTest(
+    value = {
+      UuidFactory.class,
+      IdRestMapper.class,
+      NameRestMapper.class,
+      BirthDateRestMapper.class,
+      EmailRestMapper.class,
+      PhoneCollectionRestMapper.class,
+      PropertiesRestMapper.class,
+      ObjectMapperProducer.class
+    })
 class PersonRestMapperTest {
 
   @Inject PersonRestMapper mapper;
@@ -25,7 +33,8 @@ class PersonRestMapperTest {
     final PersonDto dto = mapper.toDto(person);
     assertThat(dto)
         .isNotNull()
-        .hasOnlyFields("id", "name", "birthDate", "email", "phone", "properties");
+        .hasNoNullFieldsOrProperties()
+        .hasOnlyFields("id", "name", "birthDate", "email", "phones", "properties");
   }
 
   @Test
@@ -34,17 +43,7 @@ class PersonRestMapperTest {
     final Person person = mapper.toDomain(dto);
     assertThat(person)
         .isNotNull()
-        .hasOnlyFields("id", "name", "birthDate", "email", "phone", "properties");
-  }
-
-  @Test
-  void shouldMapToCommand() {
-    final CreatePersonRequest request =
-        ResourceUtils.getTestResourceAs(
-            "data/person-create-request.json", CreatePersonRequest.class);
-    final CreatePersonCommand command = mapper.toDomain(request);
-    assertThat(command)
-        .isNotNull()
-        .hasOnlyFields("name", "birthDate", "email", "phone", "properties");
+        .hasNoNullFieldsOrProperties()
+        .hasOnlyFields("id", "name", "birthDate", "email", "phones", "properties");
   }
 }
