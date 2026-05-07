@@ -1,20 +1,19 @@
 package com.github.mangila.crud1.person;
 
+import com.github.mangila.crud1.person.web.model.CreatePersonRequest;
 import com.github.mangila.crud1.person.web.model.PersonDto;
 import com.github.mangila.crud1.person.web.model.PhoneDto;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class PersonDtoBuilder {
 
-  private String id;
-  private String name;
-  private LocalDate birthDate;
-  private String email;
+  private String id = new UUID(0L, 0L).toString();
+  private String name = "John Doe";
+  private LocalDate birthDate = LocalDate.of(1993, 12, 10);
+  private String email = "john.doe@example.com";
   private final List<PhoneDto> phones = new ArrayList<>();
-  private Map<String, String> properties;
+  private final Map<String, String> properties = new HashMap<>();
 
   public PersonDtoBuilder id(String id) {
     this.id = id;
@@ -41,8 +40,8 @@ public final class PersonDtoBuilder {
     return this;
   }
 
-  public PersonDtoBuilder properties(Map<String, String> properties) {
-    this.properties = properties;
+  public PersonDtoBuilder addProperty(String key, String value) {
+    this.properties.put(key, value);
     return this;
   }
 
@@ -51,15 +50,16 @@ public final class PersonDtoBuilder {
         this.id, this.name, this.birthDate, this.email, this.phones, this.properties);
   }
 
+  public CreatePersonRequest toCreatePersonRequest() {
+    final var phone = new PhoneDto("0736791310", "SE", "mobile");
+    addPhone(phone);
+    addProperty("city", "Stockholm");
+    return new CreatePersonRequest(
+        this.name, this.birthDate, this.email, this.phones, this.properties);
+  }
+
   public static PersonDto defaultBuild(String id) {
     final var phone = new PhoneDto("0736791310", "SE", "mobile");
-    return new PersonDtoBuilder()
-        .id(id)
-        .name("John")
-        .birthDate(LocalDate.of(1993, 12, 10))
-        .email("john@email.com")
-        .addPhone(phone)
-        .properties(Map.of("city", "Sundsvall"))
-        .build();
+    return new PersonDtoBuilder().id(id).addPhone(phone).addProperty("city", "Sundsvall").build();
   }
 }

@@ -46,7 +46,7 @@ class PersonResourceValidationTest {
             .asString();
     assertThatJson(jsonBody)
         .isObject()
-        .containsOnlyKeys("instance", "detail", "status", "title", "traceId")
+        .containsOnlyKeys(INSTANCE_KEY, "detail", STATUS_KEY, TITLE_KEY, TRACE_ID_KEY)
         .containsEntry(STATUS_KEY, 404)
         .containsEntry(TITLE_KEY, "Not Found")
         .containsEntry(INSTANCE_KEY, "/api/v1")
