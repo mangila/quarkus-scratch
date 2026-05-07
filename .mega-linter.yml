@@ -20,8 +20,8 @@ ENABLE_LINTERS:
   - YAML_YAMLLINT
   - MARKDOWN_MARKDOWNLINT
 
-JAVA_CHECKSTYLE_CONFIG_FILE: megalinter-config/.google-checks.xml
-JAVA_PMD_CONFIG_FILE: megalinter-config/.pmd-ruleset.xml
-SQL_SQLFLUFF_CONFIG_FILE: megalinter-config/.sqlfluff
+JAVA_CHECKSTYLE_CONFIG_FILE: megalinter-config/google-checks.xml
+JAVA_PMD_CONFIG_FILE: megalinter-config/pmd-ruleset.xml
+SQL_SQLFLUFF_CONFIG_FILE: megalinter-config/sqlfluff
 # Exclude generated/IDE/build/report directories
 FILTER_REGEX_EXCLUDE: (target/|build/|.quarkus/|.venv/|.idea/|.git/)
