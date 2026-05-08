@@ -3,27 +3,27 @@ fail_fast: false
 repos:
   - repo: local
     hooks:
-      - id: maven-validate-crud1-api-module
-        name: Maven Validate Crud1
-        entry: mise run //crud1:mvn-validate
+      - id: maven-validate-web1-api-module
+        name: Maven Validate Web1
+        entry: mise run //web1:mvn-validate
         language: system
-        files: ^crud1/api
+        files: ^web1/api
         require_serial: true
         pass_filenames: false
         stages: [pre-commit]
-      - id: maven-verify-crud1-api-module
-        name: Maven Verify Crud1
-        entry: mise run //crud1:mvn-verify
+      - id: maven-verify-web1-api-module
+        name: Maven Verify Web1
+        entry: mise run //web1:mvn-verify
         language: system
-        files: ^crud1/api
+        files: ^web1/api
         require_serial: true
         pass_filenames: false
         stages: [pre-push]
-      - id: sonar-scan-crud1-api-module
-        name: Sonar Scan Crud1
-        entry: mise run //crud1:sonar:scan
+      - id: sonar-scan-web1-api-module
+        name: Sonar Scan Web1
+        entry: mise run //web1:sonar:scan
         language: system
-        files: ^crud1/api
+        files: ^web1/api
         require_serial: true
         pass_filenames: false
         stages: [pre-push]
