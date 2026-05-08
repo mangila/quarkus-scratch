@@ -16,15 +16,17 @@ public record Phone(String number, String region, String type) {
     ENSURE_STRING_OPS.notBlank(number, "phone cannot be null or blank");
     ENSURE_STRING_OPS.notBlank(region, "region cannot be null or blank");
     ENSURE_STRING_OPS.notBlank(type, "type cannot be null or blank");
-    number = PhoneNumberUtil.normalizeDigitsOnly(number);
     region = region.toUpperCase();
     type = type.toUpperCase();
+    number = PhoneNumberUtil.normalizeDigitsOnly(number);
+    Phonenumber.PhoneNumber parsed;
     try {
-      final Phonenumber.PhoneNumber parsed = PHONE_NUMBER_UTIL.parse(number, region);
-      number = PHONE_NUMBER_UTIL.format(parsed, PhoneNumberUtil.PhoneNumberFormat.E164);
+      parsed = PHONE_NUMBER_UTIL.parse(number, region);
     } catch (NumberParseException e) {
       throw new ApplicationException(e);
     }
+    Ensure.isTrue(PHONE_NUMBER_UTIL.isValidNumber(parsed), "phone number is not valid");
+    number = PHONE_NUMBER_UTIL.format(parsed, PhoneNumberUtil.PhoneNumberFormat.E164);
   }
 
   public static Phone of(String number, String regionCode, String type) {

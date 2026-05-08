@@ -1,14 +1,24 @@
 package com.github.mangila.crud1.person.domain.model;
 
+import io.github.mangila.ensure4j.Ensure;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public record PhoneCollection(List<Phone> value) {
 
-  public static final PhoneCollection EMPTY = new PhoneCollection(List.of());
+  private static final PhoneCollection EMPTY = new PhoneCollection(Collections.emptyList());
+
+  public PhoneCollection {
+    Ensure.notNull(value, "collection cannot be null");
+  }
 
   public static PhoneCollection newInstance() {
     return new PhoneCollection(new ArrayList<>());
+  }
+
+  public static PhoneCollection empty() {
+    return EMPTY;
   }
 
   public void add(Phone phone) {
