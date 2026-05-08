@@ -6,10 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.crud1.person.domain.model.Properties;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Map;
-import org.jspecify.annotations.NullMarked;
 
 @ApplicationScoped
-@NullMarked
 public final class PropertiesRestMapper implements RestMapper<Properties, Map<String, String>> {
 
   private final ObjectMapper objectMapper;

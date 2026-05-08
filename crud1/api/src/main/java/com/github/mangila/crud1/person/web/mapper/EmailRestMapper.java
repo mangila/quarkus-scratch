@@ -2,10 +2,8 @@ package com.github.mangila.crud1.person.web.mapper;
 
 import com.github.mangila.crud1.person.domain.model.Email;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jspecify.annotations.NullMarked;
 
 @ApplicationScoped
-@NullMarked
 public final class EmailRestMapper implements RestMapper<Email, String> {
 
   @Override

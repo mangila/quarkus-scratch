@@ -3,10 +3,8 @@ package com.github.mangila.crud1.person.web.mapper;
 import com.github.mangila.crud1.person.domain.cqrs.CreatePersonCommand;
 import com.github.mangila.crud1.person.web.model.CreatePersonRequest;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jspecify.annotations.NullMarked;
 
 @ApplicationScoped
-@NullMarked
 public final class CreatePersonRestMapper
     implements RestMapper<CreatePersonCommand, CreatePersonRequest> {
 

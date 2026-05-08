@@ -7,10 +7,8 @@ import com.github.mangila.crud1.person.domain.model.Phone;
 import com.github.mangila.crud1.person.domain.model.PhoneCollection;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
-import org.jspecify.annotations.NullMarked;
 
 @ApplicationScoped
-@NullMarked
 public final class PhoneCollectionMapper implements Mapper<JsonNode, PhoneCollection> {
 
   private final ObjectMapper objectMapper;

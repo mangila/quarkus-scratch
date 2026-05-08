@@ -3,10 +3,8 @@ package com.github.mangila.crud1.person.domain.mapper;
 import com.github.mangila.crud1.person.domain.model.Id;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.UUID;
-import org.jspecify.annotations.NullMarked;
 
 @ApplicationScoped
-@NullMarked
 public final class IdMapper implements Mapper<UUID, Id> {
 
   @Override

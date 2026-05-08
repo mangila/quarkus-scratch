@@ -4,10 +4,8 @@ import com.github.mangila.crud1.person.domain.model.Id;
 import com.github.mangila.crud1.shared.UuidFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.UUID;
-import org.jspecify.annotations.NullMarked;
 
 @ApplicationScoped
-@NullMarked
 public final class IdRestMapper implements RestMapper<Id, String> {
 
   private final UuidFactory uuidFactory;

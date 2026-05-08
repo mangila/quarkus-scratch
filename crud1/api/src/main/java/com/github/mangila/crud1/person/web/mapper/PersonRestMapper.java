@@ -3,10 +3,8 @@ package com.github.mangila.crud1.person.web.mapper;
 import com.github.mangila.crud1.person.domain.Person;
 import com.github.mangila.crud1.person.web.model.PersonDto;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jspecify.annotations.NullMarked;
 
 @ApplicationScoped
-@NullMarked
 public final class PersonRestMapper implements RestMapper<Person, PersonDto> {
 
   private final IdRestMapper idRestMapper;
