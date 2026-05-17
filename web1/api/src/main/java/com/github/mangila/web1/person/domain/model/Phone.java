@@ -5,17 +5,15 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import io.github.mangila.ensure4j.Ensure;
-import io.github.mangila.ensure4j.ops.EnsureStringOps;
 
 public record Phone(String number, String region, String type) {
 
-  private static final EnsureStringOps ENSURE_STRING_OPS = Ensure.strings();
   private static final PhoneNumberUtil PHONE_NUMBER_UTIL = PhoneNumberUtil.getInstance();
 
   public Phone {
-    ENSURE_STRING_OPS.notBlank(number, "phone cannot be null or blank");
-    ENSURE_STRING_OPS.notBlank(region, "region cannot be null or blank");
-    ENSURE_STRING_OPS.notBlank(type, "type cannot be null or blank");
+    Ensure.notBlank(number, "phone cannot be null or blank");
+    Ensure.notBlank(region, "region cannot be null or blank");
+    Ensure.notBlank(type, "type cannot be null or blank");
     region = region.toUpperCase();
     type = type.toUpperCase();
     number = PhoneNumberUtil.normalizeDigitsOnly(number);

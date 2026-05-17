@@ -32,8 +32,9 @@ sonar-scanner \
   -Dsonar.password=$SONAR_PASSWORD \
 """
 
-[tasks.api-k6]
+[tasks.tests-k6]
 description = "Run k6 tests in api module"
+dir = "tests/k6"
 run = [
-    "k6 run k6/read-write-api-k6-test.js"
+    "k6 run read-write-api-k6-test.js"
 ]
