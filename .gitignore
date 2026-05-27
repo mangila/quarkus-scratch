@@ -32,7 +32,7 @@ release.properties
 bin/
 
 # Megalinter
-megalinter-reports/
+web1/megalinter-reports/
 reports/
 
 # NetBeans

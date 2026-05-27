@@ -2,6 +2,8 @@
 java = "graalvm-community-25.0.2"
 quarkus = "3.35.1"
 node = "24.15.0"
+k6 = "1.7.1"
+sonar-scanner-cli = "8.1.0.6389"
 
 [tasks.mvn-format]
 description = "Format POM sorting and code formatting in api module"
@@ -22,6 +24,27 @@ run = [
     "mvn -f api/pom.xml verify",
 ]
 
+[tasks.tests-k6]
+description = "Run k6 tests in api module"
+dir = "tests/k6"
+run = [
+    "k6 run read-write-api-k6-test.js"
+]
+
+[env]
+SONAR_HOST_URL = "http://localhost:9050"
+SONAR_USERNAME = "admin"
+# note: need to change pw at first login
+SONAR_PASSWORD = "admin1"
+
+[tasks.megalint]
+description = "Megalint with Java flavor"
+run = "docker run --rm -v $(pwd):/tmp/lint:rw oxsecurity/megalinter-java"
+
+[tasks.sonarqube]
+description = "Start SonarQube server on port 9050"
+run = "docker run --rm -p 9050:9000 sonarqube:lts-community"
+
 [tasks."sonar:scan"]
 description = "Run SonarQube analysis with JaCoCo coverage in api module"
 dir = "api"
@@ -31,10 +54,3 @@ sonar-scanner \
   -Dsonar.login=$SONAR_USERNAME \
   -Dsonar.password=$SONAR_PASSWORD \
 """
-
-[tasks.tests-k6]
-description = "Run k6 tests in api module"
-dir = "tests/k6"
-run = [
-    "k6 run read-write-api-k6-test.js"
-]
