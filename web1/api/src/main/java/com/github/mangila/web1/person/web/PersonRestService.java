@@ -1,6 +1,7 @@
 package com.github.mangila.web1.person.web;
 
 import com.github.mangila.web1.person.domain.Person;
+import com.github.mangila.web1.person.domain.PersonException;
 import com.github.mangila.web1.person.domain.PersonService;
 import com.github.mangila.web1.person.domain.cqrs.CreatePersonCommand;
 import com.github.mangila.web1.person.domain.model.Id;
@@ -9,7 +10,6 @@ import com.github.mangila.web1.person.web.mapper.IdRestMapper;
 import com.github.mangila.web1.person.web.mapper.PersonRestMapper;
 import com.github.mangila.web1.person.web.model.CreatePersonRequest;
 import com.github.mangila.web1.person.web.model.PersonDto;
-import com.github.mangila.web1.shared.ApplicationException;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
@@ -55,7 +55,7 @@ public class PersonRestService {
     final Person person = personRestMapper.toDomain(dto);
     try {
       personService.update(person);
-    } catch (ApplicationException _) {
+    } catch (PersonException _) {
       throw PersonHttpProblemException.notFound(dto.id());
     }
   }
@@ -64,7 +64,7 @@ public class PersonRestService {
     final Id domainId = idRestMapper.toDomain(id);
     try {
       personService.delete(domainId);
-    } catch (ApplicationException _) {
+    } catch (PersonException _) {
       throw PersonHttpProblemException.notFound(id);
     }
   }

@@ -1,6 +1,6 @@
 package com.github.mangila.web1.person.domain.model;
 
-import com.github.mangila.web1.shared.ApplicationException;
+import com.github.mangila.web1.person.domain.PersonException;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
@@ -21,7 +21,7 @@ public record Phone(String number, String region, String type) {
     try {
       parsed = PHONE_NUMBER_UTIL.parse(number, region);
     } catch (NumberParseException e) {
-      throw new ApplicationException(e);
+      throw new PersonException(e);
     }
     Ensure.isTrue(PHONE_NUMBER_UTIL.isValidNumber(parsed), "phone number is not valid");
     number = PHONE_NUMBER_UTIL.format(parsed, PhoneNumberUtil.PhoneNumberFormat.E164);

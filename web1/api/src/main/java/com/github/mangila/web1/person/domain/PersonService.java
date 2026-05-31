@@ -5,7 +5,6 @@ import com.github.mangila.web1.person.data.PersonEntity;
 import com.github.mangila.web1.person.domain.cqrs.CreatePersonCommand;
 import com.github.mangila.web1.person.domain.mapper.PersonMapper;
 import com.github.mangila.web1.person.domain.model.Id;
-import com.github.mangila.web1.shared.ApplicationException;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityNotFoundException;
@@ -42,21 +41,21 @@ public class PersonService {
     return personDataService.persist(entity);
   }
 
-  public void update(Person person) throws ApplicationException {
+  public void update(Person person) throws PersonException {
     final PersonEntity entity = personMapper.toEntity(person);
     try {
       personDataService.update(entity);
     } catch (EntityNotFoundException e) {
-      throw new ApplicationException(e);
+      throw new PersonException(e);
     }
   }
 
-  public void delete(Id id) throws ApplicationException {
+  public void delete(Id id) throws PersonException {
     try {
       final UUID uuid = id.value();
       personDataService.delete(uuid);
     } catch (EntityNotFoundException e) {
-      throw new ApplicationException(e);
+      throw new PersonException(e);
     }
   }
 }

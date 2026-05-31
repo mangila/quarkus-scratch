@@ -5,10 +5,8 @@ import com.github.mangila.web1.person.domain.model.Id;
 import com.github.mangila.web1.shared.UuidFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.UUID;
-import org.jspecify.annotations.NullMarked;
 
 @ApplicationScoped
-@NullMarked
 public class PersonFactory {
 
   private final UuidFactory uuidFactory;
