@@ -10,5 +10,5 @@ public record CreatePersonRequest(
     @NotBlank @Size(min = 2, max = 32) String name,
     @PastOrPresent LocalDate birthDate,
     @NotBlank @Email String email,
-    @NotNull @Valid List<PhoneDto> phones,
+    @NotNull List<@Valid PhoneDto> phones,
     @NotNull Map<String, String> properties) {}
