@@ -15,7 +15,7 @@ public class PersonFactory {
     this.uuidFactory = uuidFactory;
   }
 
-  public Person create(CreatePersonCommand command) {
+  public Person newInstance(CreatePersonCommand command) {
     final UUID id = uuidFactory.create();
     return new Person(
         Id.newInstance(id),

@@ -21,7 +21,7 @@ public record BirthDate(LocalDate value) {
     return Period.between(value, LocalDate.now()).getYears();
   }
 
-  private static Instant asInstant(LocalDate date) {
+  public Instant asInstant(LocalDate date) {
     return date.atStartOfDay().atZone(ZoneOffset.UTC).toInstant();
   }
 }

@@ -4,8 +4,7 @@ import java.io.Serial;
 
 public class PersonException extends RuntimeException {
 
-  @Serial
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   public PersonException(String message) {
     super(message);

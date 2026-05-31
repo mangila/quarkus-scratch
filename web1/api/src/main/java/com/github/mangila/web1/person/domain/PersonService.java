@@ -36,7 +36,7 @@ public class PersonService {
   }
 
   public UUID create(CreatePersonCommand command) {
-    final Person person = personFactory.create(command);
+    final Person person = personFactory.newInstance(command);
     final PersonEntity entity = personMapper.toEntity(person);
     return personDataService.persist(entity);
   }
