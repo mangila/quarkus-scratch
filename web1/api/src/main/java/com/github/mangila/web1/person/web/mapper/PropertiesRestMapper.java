@@ -19,7 +19,7 @@ public final class PropertiesRestMapper implements RestMapper<Properties, Map<St
   @Override
   public Properties toDomain(Map<String, String> propertiesAsMap) {
     final JsonNode properties = objectMapper.valueToTree(propertiesAsMap);
-    return Properties.of(properties);
+    return Properties.newInstance(properties);
   }
 
   @Override

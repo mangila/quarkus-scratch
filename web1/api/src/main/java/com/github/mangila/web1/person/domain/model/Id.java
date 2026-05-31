@@ -11,7 +11,7 @@ public record Id(UUID value) {
     Ensure.notNull(value, "id cannot be null");
   }
 
-  public static Id of(UUID value) {
+  public static Id newInstance(UUID value) {
     return new Id(value);
   }
 

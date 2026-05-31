@@ -1,11 +1,8 @@
 # MegaLinter configuration file
 # More info at https://megalinter.io
----
 # Configuration documentation: https://megalinter.io/latest/configuration/
 # Linters documentation: https://megalinter.io/latest/descriptors/
-
-# All available variables are described in documentation
-# https://megalinter.io/latest/configuration/#all-available-variables
+---
 APPLY_FIXES: all
 VALIDATE_ALL_CODEBASE: true
 PRINT_ALL_FILES: true
@@ -23,5 +20,13 @@ ENABLE_LINTERS:
 JAVA_CHECKSTYLE_CONFIG_FILE: megalinter-config/google-checks.xml
 JAVA_PMD_CONFIG_FILE: megalinter-config/pmd-ruleset.xml
 SQL_SQLFLUFF_CONFIG_FILE: megalinter-config/sqlfluff
+
 # Exclude generated/IDE/build/report directories
 FILTER_REGEX_EXCLUDE: (target/|build/|.quarkus/|.venv/|.idea/|.git/)
+
+# Reporting
+LOG_LEVEL: INFO
+CONSOLE_REPORTER: true
+OUTPUT_DETAIL: detailed
+# Human-readable reports
+MARKDOWN_SUMMARY_REPORTER: true

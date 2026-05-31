@@ -50,16 +50,16 @@ public final class PersonBuilder {
 
   public Person build() {
     return new Person(
-        Id.of(this.id),
-        Name.of(this.name),
-        BirthDate.of(this.birthDate),
-        Email.of(this.email),
+        Id.newInstance(this.id),
+        Name.newInstance(this.name),
+        BirthDate.newInstance(this.birthDate),
+        Email.newInstance(this.email),
         phones,
-        Properties.of(this.properties));
+        Properties.newInstance(this.properties));
   }
 
   public static Person defaultBuild() {
-    final var phone = Phone.of("0736791310", "SE", "mobile");
+    final var phone = Phone.newInstance("0736791310", "SE", "mobile");
     return new PersonBuilder()
         .id(Id.nil().value())
         .name("John")

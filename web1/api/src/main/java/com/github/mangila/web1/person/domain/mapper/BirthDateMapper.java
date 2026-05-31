@@ -14,6 +14,6 @@ public final class BirthDateMapper implements Mapper<LocalDate, BirthDate> {
 
   @Override
   public BirthDate toDomain(LocalDate localDate) {
-    return BirthDate.of(localDate);
+    return BirthDate.newInstance(localDate);
   }
 }

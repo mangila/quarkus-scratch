@@ -8,7 +8,7 @@ public final class EmailRestMapper implements RestMapper<Email, String> {
 
   @Override
   public Email toDomain(String s) {
-    return Email.of(s);
+    return Email.newInstance(s);
   }
 
   @Override

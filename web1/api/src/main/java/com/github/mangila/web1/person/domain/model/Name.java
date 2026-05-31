@@ -10,7 +10,7 @@ public record Name(String value) {
     Ensure.maxLength(value, 32, "name cannot be longer than 32 characters");
   }
 
-  public static Name of(String value) {
+  public static Name newInstance(String value) {
     return new Name(value);
   }
 }

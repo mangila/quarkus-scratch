@@ -8,7 +8,7 @@ class PhoneTest {
 
   @Test
   void testPhoneCreation() {
-    Phone phone = Phone.of("0736791310", "sE", "mobile");
+    Phone phone = Phone.newInstance("0736791310", "sE", "mobile");
     assertThat(phone)
         .isNotNull()
         .extracting("number", "region", "type")

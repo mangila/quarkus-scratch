@@ -18,7 +18,7 @@ public class PersonFactory {
   public Person create(CreatePersonCommand command) {
     final UUID id = uuidFactory.create();
     return new Person(
-        Id.of(id),
+        Id.newInstance(id),
         command.name(),
         command.birthDate(),
         command.email(),

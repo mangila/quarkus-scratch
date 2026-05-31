@@ -71,7 +71,7 @@ public final class PersonEntityBuilder {
         .name("John")
         .birthDate(LocalDate.of(1994, 10, 12))
         .email("john@email.com")
-        .addPhone(Phone.of("0736791310", "SE", "mobile"))
+        .addPhone(Phone.newInstance("0736791310", "SE", "mobile"))
         .properties(MAPPER.createObjectNode().put("city", "Stockholm"))
         .build();
   }

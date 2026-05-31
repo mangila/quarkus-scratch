@@ -16,7 +16,7 @@ class PropertiesTest {
     final var objectNode = OBJECT_MAPPER.createObjectNode();
     assertThatCode(
             () -> {
-              final Properties _ = Properties.of(objectNode);
+              final Properties _ = Properties.newInstance(objectNode);
             })
         .doesNotThrowAnyException();
   }
@@ -25,7 +25,7 @@ class PropertiesTest {
   void testPropertiesCreationWithNull() {
     assertThatThrownBy(
             () -> {
-              final Properties _ = Properties.of(null);
+              final Properties _ = Properties.newInstance(null);
             })
         .isInstanceOf(EnsureException.class);
   }
@@ -35,7 +35,7 @@ class PropertiesTest {
     final var jsonArray = OBJECT_MAPPER.createArrayNode();
     assertThatThrownBy(
             () -> {
-              final Properties _ = Properties.of(jsonArray);
+              final Properties _ = Properties.newInstance(jsonArray);
             })
         .isInstanceOf(EnsureException.class);
   }

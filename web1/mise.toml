@@ -39,7 +39,7 @@ SONAR_PASSWORD = "admin1"
 
 [tasks.megalint]
 description = "Megalint with Java flavor"
-run = "docker run --rm -v $(pwd):/tmp/lint:rw oxsecurity/megalinter-java"
+run = "docker run --rm -v $(pwd):/tmp/lint:rw docker.io/oxsecurity/megalinter-java"
 
 [tasks.sonarqube]
 description = "Start SonarQube server on port 9050"

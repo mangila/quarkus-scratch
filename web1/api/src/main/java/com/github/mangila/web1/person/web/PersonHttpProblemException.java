@@ -3,7 +3,6 @@ package com.github.mangila.web1.person.web;
 import io.quarkiverse.resteasy.problem.HttpProblem;
 import jakarta.ws.rs.core.Response;
 import java.net.URI;
-import java.util.UUID;
 
 public class PersonHttpProblemException extends HttpProblem {
 
@@ -13,11 +12,6 @@ public class PersonHttpProblemException extends HttpProblem {
 
   public PersonHttpProblemException(String message, Response.Status status) {
     super(defaultMessage(message, status));
-  }
-
-  public static PersonHttpProblemException notFound(UUID id) {
-    final String message = NOT_FOUND_ERROR_MESSAGE_FORMAT.formatted(id);
-    return new PersonHttpProblemException(message, Response.Status.NOT_FOUND);
   }
 
   public static PersonHttpProblemException notFound(String id) {

@@ -8,7 +8,7 @@ public final class NameRestMapper implements RestMapper<Name, String> {
 
   @Override
   public Name toDomain(String s) {
-    return Name.of(s);
+    return Name.newInstance(s);
   }
 
   @Override

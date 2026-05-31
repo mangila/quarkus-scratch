@@ -6,6 +6,8 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import io.github.mangila.ensure4j.Ensure;
 
+import java.util.Locale;
+
 public record Phone(String number, String region, String type) {
 
   private static final PhoneNumberUtil PHONE_NUMBER_UTIL = PhoneNumberUtil.getInstance();
@@ -14,10 +16,10 @@ public record Phone(String number, String region, String type) {
     Ensure.notBlank(number, "phone cannot be null or blank");
     Ensure.notBlank(region, "region cannot be null or blank");
     Ensure.notBlank(type, "type cannot be null or blank");
-    region = region.toUpperCase();
-    type = type.toUpperCase();
+    region = region.toUpperCase(Locale.ROOT);
+    type = type.toUpperCase(Locale.ROOT);
     number = PhoneNumberUtil.normalizeDigitsOnly(number);
-    Phonenumber.PhoneNumber parsed;
+    final Phonenumber.PhoneNumber parsed;
     try {
       parsed = PHONE_NUMBER_UTIL.parse(number, region);
     } catch (NumberParseException e) {
@@ -27,11 +29,8 @@ public record Phone(String number, String region, String type) {
     number = PHONE_NUMBER_UTIL.format(parsed, PhoneNumberUtil.PhoneNumberFormat.E164);
   }
 
-  public static Phone of(String number, String regionCode, String type) {
+  public static Phone newInstance(String number, String regionCode, String type) {
     return new Phone(number, regionCode, type);
   }
 
-  public Phonenumber.PhoneNumber asPhoneNumber() throws NumberParseException {
-    return PHONE_NUMBER_UTIL.parse(number, region);
-  }
 }

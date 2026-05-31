@@ -14,6 +14,6 @@ public final class IdMapper implements Mapper<UUID, Id> {
 
   @Override
   public Id toDomain(UUID uuid) {
-    return Id.of(uuid);
+    return Id.newInstance(uuid);
   }
 }

@@ -15,7 +15,7 @@ class BirthDateTest {
   @Test
   void testGetAge() {
     final var date = LocalDate.of(1993, 12, 1);
-    final BirthDate birthDate = BirthDate.of(date);
+    final BirthDate birthDate = BirthDate.newInstance(date);
     assertThat(birthDate.age()).isEqualTo(32);
   }
 
@@ -23,7 +23,7 @@ class BirthDateTest {
   void testBirthDatePastOrPresent() {
     final var instant = Instant.now().plus(24, ChronoUnit.DAYS);
     final var date = instant.atOffset(ZoneOffset.UTC).toLocalDate();
-    assertThatThrownBy(() -> BirthDate.of(date))
+    assertThatThrownBy(() -> BirthDate.newInstance(date))
         .isInstanceOf(EnsureException.class)
         .hasMessage("birth date cannot be in the future");
   }

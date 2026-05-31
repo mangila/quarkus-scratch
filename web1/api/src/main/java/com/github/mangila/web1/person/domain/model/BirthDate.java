@@ -13,7 +13,7 @@ public record BirthDate(LocalDate value) {
     Ensure.pastOrPresent(asInstant(value), Instant.now(), "birth date cannot be in the future");
   }
 
-  public static BirthDate of(LocalDate value) {
+  public static BirthDate newInstance(LocalDate value) {
     return new BirthDate(value);
   }
 

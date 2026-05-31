@@ -16,7 +16,7 @@ class PhoneCollectionTest {
   @Test
   void testPhoneCollectionAddition() {
     PhoneCollection collection = PhoneCollection.newInstance();
-    collection.add(Phone.of("0736791310", "SE", "mobile"));
+    collection.add(Phone.newInstance("0736791310", "SE", "mobile"));
     assertThat(collection.value()).isNotNull().isNotEmpty();
   }
 
@@ -24,7 +24,7 @@ class PhoneCollectionTest {
   void testEmptyPhoneCollection() {
     PhoneCollection collection = PhoneCollection.empty();
     assertThat(collection.value()).isNotNull().isEmpty();
-    final Phone phone = Phone.of("0736791310", "SE", "mobile");
+    final Phone phone = Phone.newInstance("0736791310", "SE", "mobile");
     assertThatThrownBy(() -> collection.add(phone))
         .isInstanceOf(UnsupportedOperationException.class);
   }

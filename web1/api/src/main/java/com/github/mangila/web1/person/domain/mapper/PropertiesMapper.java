@@ -14,6 +14,6 @@ public final class PropertiesMapper implements Mapper<JsonNode, Properties> {
 
   @Override
   public Properties toDomain(JsonNode jsonNode) {
-    return Properties.of(jsonNode);
+    return Properties.newInstance(jsonNode);
   }
 }

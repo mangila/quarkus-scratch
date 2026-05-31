@@ -17,7 +17,7 @@ public final class IdRestMapper implements RestMapper<Id, String> {
   @Override
   public Id toDomain(String s) {
     final UUID uuid = uuidFactory.from(s);
-    return Id.of(uuid);
+    return Id.newInstance(uuid);
   }
 
   @Override

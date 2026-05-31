@@ -9,7 +9,7 @@ public final class BirthDateRestMapper implements RestMapper<BirthDate, LocalDat
 
   @Override
   public BirthDate toDomain(LocalDate localDate) {
-    return BirthDate.of(localDate);
+    return BirthDate.newInstance(localDate);
   }
 
   @Override

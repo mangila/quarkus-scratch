@@ -9,14 +9,14 @@ class EmailTest {
   @Test
   void testIsGmail() {
     final String emailString = "test@gmail.com";
-    final Email email = Email.of(emailString);
+    final Email email = Email.newInstance(emailString);
     assertThat(email.isGmail()).isTrue();
   }
 
   @Test
   void testIsGmailFalse() {
     final String emailString = "test@yahoo.com";
-    final Email email = Email.of(emailString);
+    final Email email = Email.newInstance(emailString);
     assertThat(email.isGmail()).isFalse();
   }
 }

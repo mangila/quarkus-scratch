@@ -13,6 +13,6 @@ public final class EmailMapper implements Mapper<String, Email> {
 
   @Override
   public Email toDomain(String s) {
-    return Email.of(s);
+    return Email.newInstance(s);
   }
 }

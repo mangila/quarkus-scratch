@@ -10,7 +10,7 @@ public record Properties(JsonNode value) {
     Ensure.isTrue(value.isObject(), "properties must be an object");
   }
 
-  public static Properties of(JsonNode value) {
+  public static Properties newInstance(JsonNode value) {
     return new Properties(value);
   }
 }
