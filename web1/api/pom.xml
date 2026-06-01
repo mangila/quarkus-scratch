@@ -60,7 +60,6 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-cache</artifactId>
-      <version>3.36.0</version>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
