@@ -1,5 +1,6 @@
 package com.github.mangila.web1.person.data;
 
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,9 +20,16 @@ public class PersonDataService {
   }
 
   @Transactional
-  public List<PersonEntity> findPage(Page page) {
+  public PersonEntityPage findPage(Page page) {
     final Sort sort = Sort.by("name").and("email");
-    return personPostgresRepository.findAll(sort).page(page).list();
+    final PanacheQuery<PersonEntity> query = personPostgresRepository.findAll(sort);
+    query.page(page);
+    final List<PersonEntity> content = query.list();
+    final long count = query.count();
+    final int pageCount = query.pageCount();
+    final boolean hasNextPage = query.hasNextPage();
+    final boolean hasPreviousPage = query.hasPreviousPage();
+    return new PersonEntityPage(content, count, pageCount, hasNextPage, hasPreviousPage);
   }
 
   @Transactional

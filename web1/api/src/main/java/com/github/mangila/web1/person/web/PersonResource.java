@@ -2,6 +2,7 @@ package com.github.mangila.web1.person.web;
 
 import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import com.github.mangila.web1.person.web.model.PersonDto;
+import com.github.mangila.web1.person.web.model.PersonDtoPage;
 import io.quarkus.panache.common.Page;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.validation.Valid;
@@ -13,7 +14,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.List;
 import org.hibernate.validator.constraints.UUID;
 import org.jboss.resteasy.reactive.RestResponse;
 
@@ -29,12 +29,12 @@ public class PersonResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @RunOnVirtualThread
-  public RestResponse<List<PersonDto>> findPage(
+  public RestResponse<PersonDtoPage> findPage(
       @QueryParam("page") @DefaultValue("0") @PositiveOrZero int pageIndex,
       @QueryParam("size") @DefaultValue("20") @Positive @Max(50) int pageSize) {
     final Page page = Page.of(pageIndex, pageSize);
-    final List<PersonDto> dtos = personRestService.findPage(page);
-    return RestResponse.ok(dtos);
+    final PersonDtoPage dtoPage = personRestService.findPage(page);
+    return RestResponse.ok(dtoPage);
   }
 
   @Path("/{id}")

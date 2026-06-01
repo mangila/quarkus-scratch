@@ -97,7 +97,7 @@ class PersonResourceTest {
 
   @Test
   void shouldReadPage() {
-    IntStream.range(1, 11)
+    IntStream.range(1, 51)
         .forEach(
             i -> {
               final PersonCreateRequest request =
@@ -118,7 +118,16 @@ class PersonResourceTest {
             .extract()
             .body()
             .asString();
-    assertThatJson(jsonBody).isArray().hasSize(10);
+    assertThatJson(jsonBody)
+        .isObject()
+        .containsOnlyKeys("content", "totalCount", "pageCount", "hasNextPage", "hasPreviousPage")
+        .containsEntry("pageCount", 5)
+        .containsEntry("totalCount", 50)
+        .containsEntry("hasNextPage", true)
+        .containsEntry("hasPreviousPage", false)
+        .node("content")
+        .isArray()
+        .hasSize(10);
   }
 
   private String create(PersonCreateRequest request) {

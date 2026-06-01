@@ -2,6 +2,7 @@ package com.github.mangila.web1.person.domain;
 
 import com.github.mangila.web1.person.data.PersonDataService;
 import com.github.mangila.web1.person.data.PersonEntity;
+import com.github.mangila.web1.person.data.PersonEntityPage;
 import com.github.mangila.web1.person.domain.cqrs.CreatePersonCommand;
 import com.github.mangila.web1.person.domain.mapper.PersonMapper;
 import com.github.mangila.web1.person.domain.model.Id;
@@ -26,8 +27,15 @@ public class PersonService {
     this.personDataService = personDataService;
   }
 
-  public List<Person> findPage(Page page) {
-    return personDataService.findPage(page).stream().map(personMapper::toDomain).toList();
+  public PersonPage findPage(Page page) {
+    final PersonEntityPage entityPage = personDataService.findPage(page);
+    final List<Person> persons = entityPage.content().stream().map(personMapper::toDomain).toList();
+    return new PersonPage(
+        persons,
+        entityPage.totalCount(),
+        entityPage.pageCount(),
+        entityPage.hasNextPage(),
+        entityPage.hasPreviousPage());
   }
 
   public Optional<Person> findById(Id id) {

@@ -2,6 +2,7 @@ package com.github.mangila.web1.person.web;
 
 import com.github.mangila.web1.person.domain.Person;
 import com.github.mangila.web1.person.domain.PersonException;
+import com.github.mangila.web1.person.domain.PersonPage;
 import com.github.mangila.web1.person.domain.PersonService;
 import com.github.mangila.web1.person.domain.cqrs.CreatePersonCommand;
 import com.github.mangila.web1.person.domain.model.Id;
@@ -10,6 +11,7 @@ import com.github.mangila.web1.person.web.mapper.IdRestMapper;
 import com.github.mangila.web1.person.web.mapper.PersonRestMapper;
 import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import com.github.mangila.web1.person.web.model.PersonDto;
+import com.github.mangila.web1.person.web.model.PersonDtoPage;
 import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheKey;
 import io.quarkus.cache.CacheResult;
@@ -37,8 +39,16 @@ public class PersonRestService {
     this.personService = personService;
   }
 
-  public List<PersonDto> findPage(Page page) {
-    return personService.findPage(page).stream().map(personRestMapper::toDto).toList();
+  public PersonDtoPage findPage(Page page) {
+    final PersonPage entityPage = personService.findPage(page);
+    final List<PersonDto> personDtos =
+        entityPage.content().stream().map(personRestMapper::toDto).toList();
+    return new PersonDtoPage(
+        personDtos,
+        entityPage.totalCount(),
+        entityPage.pageCount(),
+        entityPage.hasNextPage(),
+        entityPage.hasPreviousPage());
   }
 
   @CacheResult(cacheName = "persons")
