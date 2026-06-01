@@ -17,6 +17,10 @@ public record PhoneCollection(List<Phone> value) {
     return new PhoneCollection(new ArrayList<>());
   }
 
+  public static PhoneCollection newInstance(List<Phone> phones) {
+    return new PhoneCollection(new ArrayList<>(phones));
+  }
+
   public static PhoneCollection empty() {
     return EMPTY;
   }

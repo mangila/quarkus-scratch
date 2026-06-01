@@ -1,0 +1,16 @@
+{
+  "id": "c303282d-f2e6-43ca-a04f-350798191493",
+  "name": "",
+  "birthDate": "1994-10-12",
+  "email": "john.doe@example.com",
+  "phones": [
+    {
+      "number": "0736791310",
+      "region": "SE",
+      "type": "mobile"
+    }
+  ],
+  "properties": {
+    "city": "Stockholm"
+  }
+}

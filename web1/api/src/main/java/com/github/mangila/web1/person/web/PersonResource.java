@@ -1,6 +1,6 @@
 package com.github.mangila.web1.person.web;
 
-import com.github.mangila.web1.person.web.model.CreatePersonRequest;
+import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import com.github.mangila.web1.person.web.model.PersonDto;
 import io.quarkus.panache.common.Page;
 import io.smallrye.common.annotation.RunOnVirtualThread;
@@ -49,7 +49,7 @@ public class PersonResource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @RunOnVirtualThread
-  public RestResponse<Void> create(@Valid CreatePersonRequest request, @Context UriInfo uriInfo) {
+  public RestResponse<Void> create(@Valid PersonCreateRequest request, @Context UriInfo uriInfo) {
     final java.util.UUID id = personRestService.create(request);
     final URI location = uriInfo.getAbsolutePathBuilder().path(id.toString()).build();
     return RestResponse.created(location);

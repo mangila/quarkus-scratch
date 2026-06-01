@@ -27,7 +27,7 @@ class PersonMapperTest {
 
   @Test
   void shouldMapToEntity() {
-    final Person person = PersonBuilder.defaultBuild();
+    final Person person = new PersonBuilder().build();
     final PersonEntity entity = mapper.toEntity(person);
     assertThat(entity)
         .isNotNull()
@@ -45,7 +45,7 @@ class PersonMapperTest {
 
   @Test
   void shouldMapToDomain() {
-    final PersonEntity entity = PersonEntityBuilder.defaultBuild();
+    final PersonEntity entity = new PersonEntityBuilder().build();
     final Person person = mapper.toDomain(entity);
     assertThat(person)
         .isNotNull()

@@ -3,9 +3,9 @@ package com.github.mangila.web1.person.web.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.github.mangila.web1.ResourceUtils;
+import com.github.mangila.web1.person.PersonCreateRequestBuilder;
 import com.github.mangila.web1.person.domain.cqrs.CreatePersonCommand;
-import com.github.mangila.web1.person.web.model.CreatePersonRequest;
+import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import com.github.mangila.web1.shared.UuidFactory;
 import io.quarkus.jackson.runtime.ObjectMapperProducer;
 import io.quarkus.test.component.QuarkusComponentTest;
@@ -28,9 +28,7 @@ class CreatePersonRestMapperTest {
 
   @Test
   void testToDomain() {
-    final CreatePersonRequest request =
-        ResourceUtils.getTestResourceAs(
-            "data/person-create-request.json", CreatePersonRequest.class);
+    final PersonCreateRequest request = new PersonCreateRequestBuilder().build();
     final CreatePersonCommand command = mapper.toDomain(request);
     assertThat(command)
         .isNotNull()

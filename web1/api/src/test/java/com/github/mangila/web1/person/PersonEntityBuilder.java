@@ -4,21 +4,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.mangila.web1.person.data.PersonEntity;
-import com.github.mangila.web1.person.domain.model.Id;
 import com.github.mangila.web1.person.domain.model.Phone;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.UUID;
 
 public final class PersonEntityBuilder {
 
   private static final ObjectMapper MAPPER = new ObjectMapper().findAndRegisterModules();
 
-  private UUID id;
-  private String name;
-  private LocalDate birthDate;
-  private String email;
-  private final ArrayNode phones = MAPPER.createArrayNode();
-  private ObjectNode properties;
+  private UUID id = new UUID(0L, 0L);
+  private String name = "John Doe";
+  private LocalDate birthDate = LocalDate.of(1993, 12, 10);
+  private String email = "john.doe@example.com";
+  private final ArrayNode phones =
+      MAPPER
+          .createArrayNode()
+          .add(
+              MAPPER
+                  .createObjectNode()
+                  .put("number", "0736791310")
+                  .put("region", "SE")
+                  .put("type", "mobile"));
+  private final ObjectNode properties = MAPPER.createObjectNode().put("city", "Stockholm");
 
   public PersonEntityBuilder id(UUID id) {
     this.id = id;
@@ -49,8 +57,9 @@ public final class PersonEntityBuilder {
     return this;
   }
 
-  public PersonEntityBuilder properties(ObjectNode properties) {
-    this.properties = properties;
+  public PersonEntityBuilder properties(Map<String, Object> properties) {
+    final ObjectNode node = MAPPER.valueToTree(properties);
+    this.properties.setAll(node);
     return this;
   }
 
@@ -63,16 +72,5 @@ public final class PersonEntityBuilder {
     entity.setPhones(this.phones);
     entity.setProperties(this.properties);
     return entity;
-  }
-
-  public static PersonEntity defaultBuild() {
-    return new PersonEntityBuilder()
-        .id(Id.nil().value())
-        .name("John")
-        .birthDate(LocalDate.of(1994, 10, 12))
-        .email("john@email.com")
-        .addPhone(Phone.newInstance("0736791310", "SE", "mobile"))
-        .properties(MAPPER.createObjectNode().put("city", "Stockholm"))
-        .build();
   }
 }

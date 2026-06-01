@@ -2,8 +2,8 @@ package com.github.mangila.web1.person.web.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.mangila.web1.ResourceUtils;
 import com.github.mangila.web1.person.PersonBuilder;
+import com.github.mangila.web1.person.PersonDtoBuilder;
 import com.github.mangila.web1.person.domain.Person;
 import com.github.mangila.web1.person.web.model.PersonDto;
 import com.github.mangila.web1.shared.UuidFactory;
@@ -29,7 +29,7 @@ class PersonRestMapperTest {
 
   @Test
   void shouldMapToDto() {
-    final Person person = PersonBuilder.defaultBuild();
+    final Person person = new PersonBuilder().build();
     final PersonDto dto = mapper.toDto(person);
     assertThat(dto)
         .isNotNull()
@@ -39,7 +39,7 @@ class PersonRestMapperTest {
 
   @Test
   void shouldMapToDomain() {
-    final PersonDto dto = ResourceUtils.getTestResourceAs("data/person-dto.json", PersonDto.class);
+    final PersonDto dto = new PersonDtoBuilder().build();
     final Person person = mapper.toDomain(dto);
     assertThat(person)
         .isNotNull()

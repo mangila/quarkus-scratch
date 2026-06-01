@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-public record CreatePersonRequest(
+public record PersonCreateRequest(
     @NotBlank @Size(min = 2, max = 32) String name,
     @PastOrPresent LocalDate birthDate,
     @NotBlank @Email String email,

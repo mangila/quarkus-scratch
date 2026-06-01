@@ -6,11 +6,11 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 
-public final class ResourceUtils {
+public final class TestResourcesUtils {
 
   private static final ObjectMapper MAPPER = new ObjectMapper().findAndRegisterModules();
 
-  private ResourceUtils() {
+  private TestResourcesUtils() {
     throw new UnsupportedOperationException("Utility class, cannot be instantiated");
   }
 

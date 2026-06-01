@@ -55,4 +55,9 @@ public class PersonDataService {
       throw new EntityNotFoundException();
     }
   }
+
+  @Transactional
+  public long count() {
+    return personPostgresRepository.count();
+  }
 }

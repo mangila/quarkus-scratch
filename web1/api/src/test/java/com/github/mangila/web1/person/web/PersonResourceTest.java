@@ -4,102 +4,33 @@ import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.hamcrest.Matchers.notNullValue;
 
+import com.github.mangila.web1.person.PersonCreateRequestBuilder;
 import com.github.mangila.web1.person.PersonDtoBuilder;
-import com.github.mangila.web1.person.web.model.CreatePersonRequest;
+import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import com.github.mangila.web1.person.web.model.PersonDto;
+import com.github.mangila.web1.person.web.model.PhoneDto;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import java.net.URI;
+import java.time.LocalDate;
 import java.util.stream.IntStream;
+import org.jboss.resteasy.reactive.RestResponse;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 class PersonResourceTest {
 
   @Test
-  void shouldCreateAndDelete() {
-    final URI location = create("test.email123@example.com");
-    final String id = location.getPath().substring(location.getPath().lastIndexOf('/') + 1);
-    given()
-        .when()
-        .delete("api/v1/persons/{id}", id)
-        .then()
-        .header(TraceWebFilter.TRACE_ID_HEADER, notNullValue())
-        .statusCode(204);
-  }
-
-  @Test
-  void shouldCreateAndUpdate() {
-    final URI location = create("test.email123@example.com");
-    final String id = location.getPath().substring(location.getPath().lastIndexOf('/') + 1);
-    final String expectedEmail = "another.test.emai123@example.com";
-    final PersonDto dto = new PersonDtoBuilder().id(id).email(expectedEmail).build();
-    given()
-        .when()
-        .contentType(ContentType.JSON)
-        .body(dto)
-        .put("api/v1/persons")
-        .then()
-        .header(TraceWebFilter.TRACE_ID_HEADER, notNullValue())
-        .statusCode(204);
-    final String jsonBody =
-        given()
-            .when()
-            .get("api/v1/persons/{id}", id)
-            .then()
-            .statusCode(200)
-            .extract()
-            .body()
-            .asString();
-    assertThatJson(jsonBody)
-        .isObject()
-        .containsEntry("id", id)
-        .containsEntry("email", expectedEmail);
-  }
-
-  @Test
-  void shouldReadPage() {
-    IntStream.range(1, 11)
-        .forEach(
-            i -> {
-              final CreatePersonRequest request =
-                  new PersonDtoBuilder()
-                      .email("john.doe%d@example.com".formatted(i))
-                      .toCreatePersonRequest();
-              given()
-                  .contentType(ContentType.JSON)
-                  .body(request)
-                  .when()
-                  .post("api/v1/persons")
-                  .then()
-                  .statusCode(201);
-            });
-    final String jsonBody =
-        given()
-            .when()
-            .param("page", 0)
-            .param("size", 10)
-            .get("api/v1/persons")
-            .then()
-            .statusCode(200)
-            .header(TraceWebFilter.TRACE_ID_HEADER, notNullValue())
-            .extract()
-            .body()
-            .asString();
-    assertThatJson(jsonBody).isArray().hasSize(10);
-  }
-
-  @Test
   void shouldCreateAndRead() {
-    final URI location = create("test.email@example.com");
-    final String jsonBody =
-        given().when().get(location.toString()).then().statusCode(200).extract().body().asString();
+    final String email = "test.create@example.com";
+    final PersonCreateRequest request = new PersonCreateRequestBuilder().email(email).build();
+    final String id = create(request);
+    final String jsonBody = read(id);
     assertThatJson(jsonBody)
         .isObject()
         .containsOnlyKeys("id", "name", "birthDate", "email", "phones", "properties")
         .containsEntry("name", "John Doe")
         .containsEntry("birthDate", "1993-12-10")
-        .containsEntry("email", "test.email@example.com");
+        .containsEntry("email", email);
     assertThatJson(jsonBody).node("phones").isArray().hasSize(1);
     assertThatJson(jsonBody)
         .node("phones[0]")
@@ -111,18 +42,109 @@ class PersonResourceTest {
     assertThatJson(jsonBody).node("properties").isObject().containsEntry("city", "Stockholm");
   }
 
-  private URI create(String email) {
-    final CreatePersonRequest request = new PersonDtoBuilder().email(email).toCreatePersonRequest();
-    var location =
+  @Test
+  void shouldCreateAndUpdate() {
+    final String email = "test.update@example.com";
+    final PersonCreateRequest request = new PersonCreateRequestBuilder().email(email).build();
+    final String id = create(request);
+    final PersonDto personDto =
+        new PersonDtoBuilder()
+            .id(id)
+            .email("test.update2@example.com")
+            .name("Jane Doe")
+            .birthDate(LocalDate.of(2002, 10, 12))
+            .addPhone(new PhoneDto("+46736791311", "SE", "MOBILE"))
+            .addProperty("city", "Sundsvall")
+            .build();
+    given()
+        .contentType(ContentType.JSON)
+        .body(personDto)
+        .when()
+        .put("api/v1/persons")
+        .then()
+        .header(TraceWebFilter.TRACE_ID_HEADER, notNullValue())
+        .statusCode(RestResponse.StatusCode.NO_CONTENT);
+    final String jsonBody = read(id);
+    assertThatJson(jsonBody)
+        .isObject()
+        .containsOnlyKeys("id", "name", "birthDate", "email", "phones", "properties")
+        .containsEntry("name", "Jane Doe")
+        .containsEntry("birthDate", "2002-10-12")
+        .containsEntry("email", "test.update2@example.com");
+    assertThatJson(jsonBody).node("phones").isArray().hasSize(2);
+    assertThatJson(jsonBody)
+        .node("phones[0]")
+        .isObject()
+        .containsOnlyKeys("number", "region", "type")
+        .containsEntry("number", "+46736791310")
+        .containsEntry("region", "SE")
+        .containsEntry("type", "MOBILE");
+    assertThatJson(jsonBody).node("properties").isObject().containsEntry("city", "Sundsvall");
+  }
+
+  @Test
+  void shouldCreateAndDelete() {
+    final String email = "test.delete.delete@example.com";
+    final PersonCreateRequest request = new PersonCreateRequestBuilder().email(email).build();
+    final String id = create(request);
+    given()
+        .when()
+        .delete("api/v1/persons/{id}", id)
+        .then()
+        .header(TraceWebFilter.TRACE_ID_HEADER, notNullValue())
+        .statusCode(RestResponse.StatusCode.NO_CONTENT);
+  }
+
+  @Test
+  void shouldReadPage() {
+    IntStream.range(1, 11)
+        .forEach(
+            i -> {
+              final PersonCreateRequest request =
+                  new PersonCreateRequestBuilder()
+                      .email("john.doe%d@example.com".formatted(i))
+                      .build();
+              final String _ = create(request);
+            });
+    final String jsonBody =
+        given()
+            .when()
+            .param("page", 0)
+            .param("size", 10)
+            .get("api/v1/persons")
+            .then()
+            .statusCode(RestResponse.StatusCode.OK)
+            .header(TraceWebFilter.TRACE_ID_HEADER, notNullValue())
+            .extract()
+            .body()
+            .asString();
+    assertThatJson(jsonBody).isArray().hasSize(10);
+  }
+
+  private String create(PersonCreateRequest request) {
+    String location =
         given()
             .contentType(ContentType.JSON)
             .body(request)
             .when()
             .post("api/v1/persons")
             .then()
-            .statusCode(201)
+            .statusCode(RestResponse.StatusCode.CREATED)
+            .header(TraceWebFilter.TRACE_ID_HEADER, notNullValue())
             .extract()
             .header("Location");
-    return URI.create(location);
+    return location.substring(location.lastIndexOf("/") + 1);
+  }
+
+  private String read(String id) {
+    return given()
+        .when()
+        .get("api/v1/persons/{id}", id)
+        .then()
+        .statusCode(RestResponse.StatusCode.OK)
+        .header(TraceWebFilter.TRACE_ID_HEADER, notNullValue())
+        .extract()
+        .body()
+        .asString();
   }
 }

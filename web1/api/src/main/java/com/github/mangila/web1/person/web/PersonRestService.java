@@ -8,8 +8,11 @@ import com.github.mangila.web1.person.domain.model.Id;
 import com.github.mangila.web1.person.web.mapper.CreatePersonRestMapper;
 import com.github.mangila.web1.person.web.mapper.IdRestMapper;
 import com.github.mangila.web1.person.web.mapper.PersonRestMapper;
-import com.github.mangila.web1.person.web.model.CreatePersonRequest;
+import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import com.github.mangila.web1.person.web.model.PersonDto;
+import io.quarkus.cache.CacheInvalidate;
+import io.quarkus.cache.CacheKey;
+import io.quarkus.cache.CacheResult;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
@@ -38,7 +41,8 @@ public class PersonRestService {
     return personService.findPage(page).stream().map(personRestMapper::toDto).toList();
   }
 
-  public PersonDto findById(String id) {
+  @CacheResult(cacheName = "persons")
+  public PersonDto findById(@CacheKey String id) {
     final Id domainId = idRestMapper.toDomain(id);
     return personService
         .findById(domainId)
@@ -46,11 +50,12 @@ public class PersonRestService {
         .orElseThrow(() -> PersonHttpProblemException.notFound(id));
   }
 
-  public UUID create(CreatePersonRequest request) {
+  public UUID create(PersonCreateRequest request) {
     final CreatePersonCommand command = createPersonRestMapper.toDomain(request);
     return personService.create(command);
   }
 
+  @CacheInvalidate(cacheName = "persons", keyGenerator = PersonDtoCacheKeyGenerator.class)
   public void update(PersonDto dto) {
     final Person person = personRestMapper.toDomain(dto);
     try {
@@ -60,7 +65,8 @@ public class PersonRestService {
     }
   }
 
-  public void delete(String id) {
+  @CacheInvalidate(cacheName = "persons")
+  public void delete(@CacheKey String id) {
     final Id domainId = idRestMapper.toDomain(id);
     try {
       personService.delete(domainId);

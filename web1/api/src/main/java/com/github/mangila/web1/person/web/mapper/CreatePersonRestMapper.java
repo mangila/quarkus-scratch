@@ -1,12 +1,12 @@
 package com.github.mangila.web1.person.web.mapper;
 
 import com.github.mangila.web1.person.domain.cqrs.CreatePersonCommand;
-import com.github.mangila.web1.person.web.model.CreatePersonRequest;
+import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public final class CreatePersonRestMapper
-    implements RestMapper<CreatePersonCommand, CreatePersonRequest> {
+    implements RestMapper<CreatePersonCommand, PersonCreateRequest> {
 
   private final NameRestMapper nameRestMapper;
   private final BirthDateRestMapper birthDateRestMapper;
@@ -28,17 +28,17 @@ public final class CreatePersonRestMapper
   }
 
   @Override
-  public CreatePersonCommand toDomain(CreatePersonRequest createPersonRequest) {
+  public CreatePersonCommand toDomain(PersonCreateRequest personCreateRequest) {
     return new CreatePersonCommand(
-        nameRestMapper.toDomain(createPersonRequest.name()),
-        birthDateRestMapper.toDomain(createPersonRequest.birthDate()),
-        emailRestMapper.toDomain(createPersonRequest.email()),
-        phoneRestMapper.toDomain(createPersonRequest.phones()),
-        propertiesRestMapper.toDomain(createPersonRequest.properties()));
+        nameRestMapper.toDomain(personCreateRequest.name()),
+        birthDateRestMapper.toDomain(personCreateRequest.birthDate()),
+        emailRestMapper.toDomain(personCreateRequest.email()),
+        phoneRestMapper.toDomain(personCreateRequest.phones()),
+        propertiesRestMapper.toDomain(personCreateRequest.properties()));
   }
 
   @Override
-  public CreatePersonRequest toDto(CreatePersonCommand createPersonCommand) {
+  public PersonCreateRequest toDto(CreatePersonCommand createPersonCommand) {
     throw new UnsupportedOperationException();
   }
 }
