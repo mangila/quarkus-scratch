@@ -22,13 +22,12 @@ public class PersonDataService {
   @Transactional
   public PersonEntityPage findPage(Page page) {
     final Sort sort = Sort.by("name").and("email");
-    final PanacheQuery<PersonEntity> query = personPostgresRepository.findAll(sort);
-    query.page(page);
-    final List<PersonEntity> content = query.list();
-    final long count = query.count();
-    final int pageCount = query.pageCount();
-    final boolean hasNextPage = query.hasNextPage();
-    final boolean hasPreviousPage = query.hasPreviousPage();
+    final PanacheQuery<PersonEntity> pageQuery = personPostgresRepository.findAll(sort).page(page);
+    final List<PersonEntity> content = pageQuery.list();
+    final long count = pageQuery.count();
+    final int pageCount = pageQuery.pageCount();
+    final boolean hasNextPage = pageQuery.hasNextPage();
+    final boolean hasPreviousPage = pageQuery.hasPreviousPage();
     return new PersonEntityPage(content, count, pageCount, hasNextPage, hasPreviousPage);
   }
 
