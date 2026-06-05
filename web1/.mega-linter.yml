@@ -3,11 +3,13 @@
 # Configuration documentation: https://megalinter.io/latest/configuration/
 # Linters documentation: https://megalinter.io/latest/descriptors/
 ---
-APPLY_FIXES: all
+APPLY_FIXES: none
 VALIDATE_ALL_CODEBASE: true
 PRINT_ALL_FILES: true
 SHOW_ELAPSED_TIME: true
 PARALLEL: true
+CLEAR_REPORT_FOLDER: true
+FLAVOR_SUGGESTIONS: false
 
 FAIL_IF_MISSING_LINTER_IN_FLAVOR: true
 ENABLE_LINTERS:
@@ -26,7 +28,7 @@ FILTER_REGEX_EXCLUDE: (target/|build/|.quarkus/|.venv/|.idea/|.git/)
 
 # Reporting
 LOG_LEVEL: INFO
-CONSOLE_REPORTER: true
-OUTPUT_DETAIL: detailed
+SARIF_REPORTER: true
+CONSOLE_REPORTER: false
 # Human-readable reports
 MARKDOWN_SUMMARY_REPORTER: true

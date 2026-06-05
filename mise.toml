@@ -1,7 +1,7 @@
 experimental_monorepo_root = true
 
 [monorepo]
-config_roots = ["web1"]
+config_roots = ["web1", "web2"]
 
 [settings]
 experimental = true

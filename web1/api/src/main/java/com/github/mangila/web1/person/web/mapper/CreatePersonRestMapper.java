@@ -1,12 +1,12 @@
 package com.github.mangila.web1.person.web.mapper;
 
-import com.github.mangila.web1.person.domain.cqrs.CreatePersonCommand;
+import com.github.mangila.web1.person.domain.cqrs.PersonCreateCommand;
 import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public final class CreatePersonRestMapper
-    implements RestMapper<CreatePersonCommand, PersonCreateRequest> {
+    implements RestMapper<PersonCreateCommand, PersonCreateRequest> {
 
   private final NameRestMapper nameRestMapper;
   private final BirthDateRestMapper birthDateRestMapper;
@@ -28,8 +28,8 @@ public final class CreatePersonRestMapper
   }
 
   @Override
-  public CreatePersonCommand toDomain(PersonCreateRequest personCreateRequest) {
-    return new CreatePersonCommand(
+  public PersonCreateCommand toDomain(PersonCreateRequest personCreateRequest) {
+    return new PersonCreateCommand(
         nameRestMapper.toDomain(personCreateRequest.name()),
         birthDateRestMapper.toDomain(personCreateRequest.birthDate()),
         emailRestMapper.toDomain(personCreateRequest.email()),
@@ -38,7 +38,7 @@ public final class CreatePersonRestMapper
   }
 
   @Override
-  public PersonCreateRequest toDto(CreatePersonCommand createPersonCommand) {
+  public PersonCreateRequest toDto(PersonCreateCommand personCreateCommand) {
     throw new UnsupportedOperationException();
   }
 }

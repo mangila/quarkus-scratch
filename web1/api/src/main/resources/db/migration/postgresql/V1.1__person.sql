@@ -1,4 +1,4 @@
-CREATE TABLE person
+CREATE TABLE public.person
 (
     id UUID NOT NULL,
     person_name TEXT NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE person
     PRIMARY KEY (id)
 );
 
-CREATE TABLE person_audit
+CREATE TABLE public.person_audit
 (
     rev INTEGER NOT NULL,
     revtype SMALLINT,
@@ -26,7 +26,7 @@ CREATE TABLE person_audit
     PRIMARY KEY (rev, id)
 );
 
-ALTER TABLE IF EXISTS person_audit
+ALTER TABLE IF EXISTS public.person_audit
 ADD CONSTRAINT fkbhx7sqiw4trc9x7kuc0j5neq5
 FOREIGN KEY (rev)
 REFERENCES revinfo;

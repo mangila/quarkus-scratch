@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.mangila.web1.person.PersonCreateRequestBuilder;
-import com.github.mangila.web1.person.domain.cqrs.CreatePersonCommand;
+import com.github.mangila.web1.person.domain.cqrs.PersonCreateCommand;
 import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import com.github.mangila.web1.shared.UuidFactory;
 import io.quarkus.jackson.runtime.ObjectMapperProducer;
@@ -29,7 +29,7 @@ class CreatePersonRestMapperTest {
   @Test
   void testToDomain() {
     final PersonCreateRequest request = new PersonCreateRequestBuilder().build();
-    final CreatePersonCommand command = mapper.toDomain(request);
+    final PersonCreateCommand command = mapper.toDomain(request);
     assertThat(command)
         .isNotNull()
         .hasNoNullFieldsOrProperties()

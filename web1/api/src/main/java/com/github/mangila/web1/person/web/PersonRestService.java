@@ -4,11 +4,13 @@ import com.github.mangila.web1.person.domain.Person;
 import com.github.mangila.web1.person.domain.PersonException;
 import com.github.mangila.web1.person.domain.PersonPage;
 import com.github.mangila.web1.person.domain.PersonService;
-import com.github.mangila.web1.person.domain.cqrs.CreatePersonCommand;
+import com.github.mangila.web1.person.domain.cqrs.PersonCreateCommand;
+import com.github.mangila.web1.person.domain.cqrs.PersonCreateManyCommand;
 import com.github.mangila.web1.person.domain.model.Id;
 import com.github.mangila.web1.person.web.mapper.CreatePersonRestMapper;
 import com.github.mangila.web1.person.web.mapper.IdRestMapper;
 import com.github.mangila.web1.person.web.mapper.PersonRestMapper;
+import com.github.mangila.web1.person.web.model.PersonCreateManyResponse;
 import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import com.github.mangila.web1.person.web.model.PersonDto;
 import com.github.mangila.web1.person.web.model.PersonDtoPage;
@@ -61,8 +63,16 @@ public class PersonRestService {
   }
 
   public UUID create(PersonCreateRequest request) {
-    final CreatePersonCommand command = createPersonRestMapper.toDomain(request);
+    final PersonCreateCommand command = createPersonRestMapper.toDomain(request);
     return personService.create(command);
+  }
+
+  public PersonCreateManyResponse createMany(List<PersonCreateRequest> request) {
+    final List<PersonCreateCommand> commands =
+        request.stream().map(createPersonRestMapper::toDomain).toList();
+    final List<UUID> persistedUuids =
+        personService.createMany(new PersonCreateManyCommand(commands));
+    return new PersonCreateManyResponse(persistedUuids, persistedUuids.size());
   }
 
   @CacheInvalidate(cacheName = "persons", keyGenerator = PersonDtoCacheKeyGenerator.class)

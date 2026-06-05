@@ -24,18 +24,26 @@ run = [
     "mvn -f api/pom.xml verify",
 ]
 
-[tasks.tests-k6]
+[tasks.k6-read-write]
 description = "Run k6 tests in api module"
 dir = "tests/k6"
 run = [
-    "k6 run read-write-api-k6-test.js"
+    "k6 run read-write-api-k6-test.js",
 ]
 
-[env]
-SONAR_HOST_URL = "http://localhost:9050"
-SONAR_USERNAME = "admin"
-# note: need to change pw at first login
-SONAR_PASSWORD = "admin1"
+[tasks.k6-crud]
+description = "Run k6 tests in api module"
+dir = "tests/k6"
+run = [
+    "k6 run crud-lifecycle-k6-test.js",
+]
+
+[tasks.k6-bulk]
+description = "Run k6 tests in api module"
+dir = "tests/k6"
+run = [
+    "k6 run bulk-api-k6-test.js"
+]
 
 [tasks.megalint]
 description = "Megalint with Java flavor"
@@ -48,6 +56,12 @@ run = "docker run --rm -p 9050:9000 sonarqube:lts-community"
 [tasks."sonar:scan"]
 description = "Run SonarQube analysis with JaCoCo coverage in api module"
 dir = "api"
+env = {
+    SONAR_HOST_URL = "http://localhost:9050",
+    SONAR_USERNAME = "admin",
+    # note: need to change pw at first login
+    SONAR_PASSWORD = "admin1"
+}
 run = """
 sonar-scanner \
   -Dsonar.host.url=$SONAR_HOST_URL \

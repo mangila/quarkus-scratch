@@ -3,7 +3,8 @@ package com.github.mangila.web1.person.domain;
 import com.github.mangila.web1.person.data.PersonDataService;
 import com.github.mangila.web1.person.data.PersonEntity;
 import com.github.mangila.web1.person.data.PersonEntityPage;
-import com.github.mangila.web1.person.domain.cqrs.CreatePersonCommand;
+import com.github.mangila.web1.person.domain.cqrs.PersonCreateCommand;
+import com.github.mangila.web1.person.domain.cqrs.PersonCreateManyCommand;
 import com.github.mangila.web1.person.domain.mapper.PersonMapper;
 import com.github.mangila.web1.person.domain.model.Id;
 import io.quarkus.panache.common.Page;
@@ -43,10 +44,17 @@ public class PersonService {
     return personDataService.findById(uuid).map(personMapper::toDomain);
   }
 
-  public UUID create(CreatePersonCommand command) {
+  public UUID create(PersonCreateCommand command) {
     final Person person = personFactory.newInstance(command);
     final PersonEntity entity = personMapper.toEntity(person);
     return personDataService.persist(entity);
+  }
+
+  public List<UUID> createMany(PersonCreateManyCommand command) {
+    final List<PersonEntity> entities =
+        command.toStream().map(personFactory::newInstance).map(personMapper::toEntity).toList();
+    personDataService.persist(entities);
+    return entities.stream().map(PersonEntity::getId).toList();
   }
 
   public void update(Person person) throws PersonException {

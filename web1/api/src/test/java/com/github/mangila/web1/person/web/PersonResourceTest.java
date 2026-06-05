@@ -12,6 +12,7 @@ import com.github.mangila.web1.person.web.model.PhoneDto;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.IntStream;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.junit.jupiter.api.Test;
@@ -102,7 +103,7 @@ class PersonResourceTest {
             i -> {
               final PersonCreateRequest request =
                   new PersonCreateRequestBuilder()
-                      .email("john.doe%d@example.com".formatted(i))
+                      .email("page.doe%d@example.com".formatted(i))
                       .build();
               final String _ = create(request);
             });
@@ -128,6 +129,34 @@ class PersonResourceTest {
         .node("content")
         .isArray()
         .hasSize(10);
+  }
+
+  @Test
+  void shouldCreateMany() {
+    final List<PersonCreateRequest> request =
+        IntStream.range(1, 501)
+            .mapToObj(
+                i -> {
+                  return new PersonCreateRequestBuilder()
+                      .email("bulk.doe%d@example.com".formatted(i))
+                      .build();
+                })
+            .toList();
+
+    final String jsonBody =
+        given()
+            .contentType(ContentType.JSON)
+            .body(request)
+            .when()
+            .post("api/v1/persons/bulk")
+            .then()
+            .statusCode(RestResponse.StatusCode.OK)
+            .header(TraceWebFilter.TRACE_ID_HEADER, notNullValue())
+            .extract()
+            .body()
+            .asString();
+
+    assertThatJson(jsonBody).isObject().containsEntry("count", 500);
   }
 
   private String create(PersonCreateRequest request) {

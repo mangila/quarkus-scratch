@@ -1,5 +1,6 @@
 package com.github.mangila.web1.person.web;
 
+import com.github.mangila.web1.person.web.model.PersonCreateManyResponse;
 import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import com.github.mangila.web1.person.web.model.PersonDto;
 import com.github.mangila.web1.person.web.model.PersonDtoPage;
@@ -7,6 +8,7 @@ import io.quarkus.panache.common.Page;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.ws.rs.*;
@@ -14,6 +16,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.List;
 import org.hibernate.validator.constraints.UUID;
 import org.jboss.resteasy.reactive.RestResponse;
 
@@ -53,6 +56,17 @@ public class PersonResource {
     final java.util.UUID id = personRestService.create(request);
     final URI location = uriInfo.getAbsolutePathBuilder().path(id.toString()).build();
     return RestResponse.created(location);
+  }
+
+  @Path("/bulk")
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RunOnVirtualThread
+  public RestResponse<PersonCreateManyResponse> createMany(
+      @NotEmpty List<@Valid PersonCreateRequest> request) {
+    final PersonCreateManyResponse response = personRestService.createMany(request);
+    return RestResponse.ok(response);
   }
 
   @PUT

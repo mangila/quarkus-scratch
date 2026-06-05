@@ -1,6 +1,6 @@
 package com.github.mangila.web1.person.domain;
 
-import com.github.mangila.web1.person.domain.cqrs.CreatePersonCommand;
+import com.github.mangila.web1.person.domain.cqrs.PersonCreateCommand;
 import com.github.mangila.web1.person.domain.model.Id;
 import com.github.mangila.web1.shared.UuidFactory;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,7 +15,7 @@ public class PersonFactory {
     this.uuidFactory = uuidFactory;
   }
 
-  public Person newInstance(CreatePersonCommand command) {
+  public Person newInstance(PersonCreateCommand command) {
     final UUID id = uuidFactory.create();
     return new Person(
         Id.newInstance(id),

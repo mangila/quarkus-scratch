@@ -45,6 +45,8 @@ class PersonResourceValidationTest {
             .when()
             .get("url-not-found")
             .then()
+            .log()
+            .all()
             .statusCode(RestResponse.StatusCode.NOT_FOUND)
             .header(HttpHeaders.CONTENT_TYPE, Matchers.equalTo("application/problem+json"))
             .extract()
@@ -72,6 +74,8 @@ class PersonResourceValidationTest {
               .pathParam("id", id)
               .get("api/v1/persons/{id}")
               .then()
+              .log()
+              .all()
               .extract()
               .body()
               .asString();
@@ -99,6 +103,8 @@ class PersonResourceValidationTest {
               .queryParam("size", 20)
               .get("api/v1/persons")
               .then()
+              .log()
+              .all()
               .extract()
               .body()
               .asString();
@@ -121,6 +127,8 @@ class PersonResourceValidationTest {
               .queryParam("size", pageSize)
               .get("api/v1/persons")
               .then()
+              .log()
+              .all()
               .extract()
               .body()
               .asString();
@@ -166,6 +174,8 @@ class PersonResourceValidationTest {
               .when()
               .post("api/v1/persons")
               .then()
+              .log()
+              .all()
               .extract()
               .body()
               .asString();
@@ -205,10 +215,44 @@ class PersonResourceValidationTest {
               .when()
               .put("api/v1/persons")
               .then()
+              .log()
+              .all()
               .extract()
               .body()
               .asString();
       assertThatJson(jsonBody).node(VIOLATIONS_KEY).isArray();
+      assertThatJson(jsonBody)
+          .node(VIOLATIONS_KEY.concat("[0]"))
+          .isObject()
+          .containsEntry(VIOLATIONS_IN_KEY, "body");
+    }
+  }
+
+  @Nested
+  @DisplayName("POST: api/v1/persons/bulk")
+  class CreateMany {
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = {
+          "data/validation/person-create-many-empty.json",
+          "data/validation/person-create-many-empty-name.json"
+        })
+    void shouldValidateBulkRequest(String resourceName) {
+      final String body = TestResourcesUtils.getTestResource(resourceName);
+      final String jsonBody =
+          given()
+              .contentType(ContentType.JSON)
+              .body(body)
+              .when()
+              .post("api/v1/persons/bulk")
+              .then()
+              .log()
+              .all()
+              .extract()
+              .body()
+              .asString();
+
       assertThatJson(jsonBody)
           .node(VIOLATIONS_KEY.concat("[0]"))
           .isObject()
@@ -229,6 +273,8 @@ class PersonResourceValidationTest {
               .pathParam("id", id)
               .delete("api/v1/persons/{id}")
               .then()
+              .log()
+              .all()
               .extract()
               .body()
               .asString();

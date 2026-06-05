@@ -43,6 +43,11 @@ public class PersonDataService {
   }
 
   @Transactional
+  public void persist(List<PersonEntity> entities) {
+    personPostgresRepository.persist(entities);
+  }
+
+  @Transactional
   public void update(PersonEntity entityToUpdate) throws EntityNotFoundException {
     final PersonEntity managed =
         personPostgresRepository
