@@ -9,6 +9,7 @@ import com.github.mangila.web1.person.PersonDtoBuilder;
 import com.github.mangila.web1.person.web.model.PersonCreateRequest;
 import com.github.mangila.web1.person.web.model.PersonDto;
 import com.github.mangila.web1.person.web.model.PhoneDto;
+import com.github.mangila.web1.shared.TraceWebFilter;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;

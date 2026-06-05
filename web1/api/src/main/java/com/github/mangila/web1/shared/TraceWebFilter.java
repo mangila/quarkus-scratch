@@ -1,6 +1,5 @@
-package com.github.mangila.web1.person.web;
+package com.github.mangila.web1.shared;
 
-import com.github.mangila.web1.shared.UuidFactory;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.ext.Provider;
