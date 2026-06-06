@@ -18,7 +18,7 @@ export const options = {
 const BASE_URL = 'http://localhost:8080';
 
 export default function () {
-    const bulkSize = 10;
+    const bulkSize = 101;
     const persons = [];
 
     for (let i = 0; i < bulkSize; i++) {
@@ -28,7 +28,7 @@ export default function () {
             email: `bulk.${i}.${Math.floor(Math.random() * 1000000)}@example.com`,
             phones: [
                 {
-                    "number": `070000000${i}`,
+                    "number": `0736791310`,
                     "region": "SE",
                     "type": "home"
                 }
@@ -49,5 +49,5 @@ export default function () {
         'has correct count': (r) => r.json().count === bulkSize,
     });
 
-    sleep(2);
+    sleep(1);
 }

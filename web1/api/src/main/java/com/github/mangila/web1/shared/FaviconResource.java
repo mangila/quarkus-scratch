@@ -14,9 +14,9 @@ public class FaviconResource {
    * Handles implicit browser requests for {@code /favicon.ico}.
    *
    * <p>This application does not provide a favicon, but browsers commonly request one
-   * automatically. Returning an empty {@code 204 No Content} response prevents those
-   * requests from being treated as missing REST endpoints and allows clients to cache
-   * the result for a short period.
+   * automatically. Returning an empty {@code 204 No Content} response prevents those requests from
+   * being treated as missing REST endpoints and allows clients to cache the result for a short
+   * period.
    *
    * @return an empty cached response indicating that no favicon is available
    */

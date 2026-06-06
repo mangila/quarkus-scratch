@@ -19,7 +19,9 @@ public record Phone(String number, String region, String type) {
     type = type.toUpperCase(Locale.ROOT);
     number = PhoneNumberUtil.normalizeDigitsOnly(number);
     final Phonenumber.PhoneNumber parsed = parsePhoneNumberOrThrow(number, region);
-    Ensure.isTrue(PHONE_NUMBER_UTIL.isValidNumber(parsed), "phone number is not valid");
+    Ensure.isTrue(
+        PHONE_NUMBER_UTIL.isValidNumber(parsed),
+        "phone number is not valid: %s - %s".formatted(number, region));
     number = PHONE_NUMBER_UTIL.format(parsed, PhoneNumberUtil.PhoneNumberFormat.E164);
   }
 
