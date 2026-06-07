@@ -12,12 +12,13 @@ import java.net.URI;
 public class EnsureExceptionMapper extends ExceptionMapperBase<EnsureException> {
 
   private static final URI DEFAULT_TYPE = URI.create("about:blank");
+  private static final String DEFAULT_TITLE = "Validation Error";
 
   @Override
   protected HttpProblem toProblem(EnsureException exception) {
     return builder()
         .withType(DEFAULT_TYPE)
-        .withTitle("Validation Error")
+        .withTitle(DEFAULT_TITLE)
         .withDetail(exception.getMessage())
         .withStatus(422)
         .build();

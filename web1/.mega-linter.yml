@@ -3,7 +3,7 @@
 # Configuration documentation: https://megalinter.io/latest/configuration/
 # Linters documentation: https://megalinter.io/latest/descriptors/
 ---
-APPLY_FIXES: none
+APPLY_FIXES: all
 VALIDATE_ALL_CODEBASE: true
 PRINT_ALL_FILES: true
 SHOW_ELAPSED_TIME: true
