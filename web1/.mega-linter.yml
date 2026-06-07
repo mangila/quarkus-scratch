@@ -21,7 +21,7 @@ ENABLE_LINTERS:
 
 JAVA_CHECKSTYLE_CONFIG_FILE: megalinter-config/google-checks.xml
 JAVA_PMD_CONFIG_FILE: megalinter-config/pmd-ruleset.xml
-SQL_SQLFLUFF_CONFIG_FILE: megalinter-config/sqlfluff
+SQL_SQLFLUFF_CONFIG_FILE: megalinter-config/sqlfluff.ini
 
 # Exclude generated/IDE/build/report directories
 FILTER_REGEX_EXCLUDE: (target/|build/|.quarkus/|.venv/|.idea/|.git/)
