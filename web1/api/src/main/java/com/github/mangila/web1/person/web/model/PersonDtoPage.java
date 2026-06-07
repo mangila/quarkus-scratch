@@ -1,10 +1,13 @@
 package com.github.mangila.web1.person.web.model;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 public record PersonDtoPage(
-    List<PersonDto> content,
-    long totalCount,
-    int pageCount,
+    @NotNull List<@Valid PersonDto> content,
+    @PositiveOrZero long totalCount,
+    @PositiveOrZero int pageCount,
     boolean hasNextPage,
     boolean hasPreviousPage) {}

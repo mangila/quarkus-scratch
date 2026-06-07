@@ -4,6 +4,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.CacheControl;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 
 @Path("/favicon.ico")
 public class FaviconResource {
@@ -21,6 +22,7 @@ public class FaviconResource {
    * @return an empty cached response indicating that no favicon is available
    */
   @GET
+  @Operation(hidden = true)
   public Response favicon() {
     final CacheControl cacheControl = new CacheControl();
     cacheControl.setMaxAge(TWENTY_FOUR_HOURS);
