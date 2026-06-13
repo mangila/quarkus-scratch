@@ -1,9 +1,11 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { personApi } from '../../lib/api';
+import Layout from '../layouts/Layout.astro';
+import { personApi } from '../lib/api';
+import PersonForm from '../components/PersonForm.astro';
 
 export const prerender = false;
-const { id } = Astro.params;
+const { searchParams } = Astro.url;
+const id = searchParams.get('id');
 
 if (!id) {
   return Astro.redirect('/');
@@ -23,46 +25,11 @@ try {
       <a href="/" class="btn btn-ghost btn-sm mb-4">← Back to List</a>
       <h1 class="text-3xl font-bold text-primary">Edit Person</h1>
     </div>
-
-    <form id="personForm" class="bg-base-100 p-6 rounded-lg shadow space-y-4">
-      <input type="hidden" name="id" value={person.id} />
-      
-      <div class="form-control">
-        <label class="label"><span class="label-text">Name</span></label>
-        <input type="text" name="name" value={person.name} required class="input input-bordered" minlength="2" maxlength="32" />
-      </div>
-
-      <div class="form-control">
-        <label class="label"><span class="label-text">Email</span></label>
-        <input type="email" name="email" value={person.email} required class="input input-bordered" />
-      </div>
-
-      <div class="form-control">
-        <label class="label"><span class="label-text">Birth Date</span></label>
-        <input type="date" name="birthDate" value={person.birthDate} required class="input input-bordered" />
-      </div>
-
-      <div class="divider">Phones</div>
-      <div id="phoneList" class="space-y-2">
-        {person.phones.map((phone, index) => (
-          <div class="flex gap-2">
-            <input type="text" placeholder="Number" value={phone.number} class="input input-bordered flex-1 phone-number" required minlength="5" maxlength="20" />
-            <input type="text" placeholder="Region" value={phone.region} class="input input-bordered w-24 phone-region" required minlength="2" maxlength="2" />
-            <input type="text" placeholder="Type" value={phone.type} class="input input-bordered w-32 phone-type" required />
-            {index > 0 && <button type="button" class="btn btn-square btn-error remove-phone">✕</button>}
-          </div>
-        ))}
-      </div>
-      <button type="button" id="addPhone" class="btn btn-xs btn-outline mt-2">Add Another Phone</button>
-
-      <div class="pt-6">
-        <button type="submit" class="btn btn-primary w-full">Update Person</button>
-      </div>
-    </form>
+   {person && <PersonForm person={person} />}
   </div>
 
   <script>
-    import { personApi } from '../../lib/api';
+    import { personApi } from '../lib/api';
 
     const form = document.getElementById('personForm') as HTMLFormElement;
     const phoneList = document.getElementById('phoneList')!;
@@ -90,7 +57,7 @@ try {
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
-      
+
       const phones = Array.from(phoneList.children).map(child => ({
         number: (child.querySelector('.phone-number') as HTMLInputElement).value,
         region: (child.querySelector('.phone-region') as HTMLInputElement).value,

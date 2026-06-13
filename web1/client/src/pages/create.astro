@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PersonForm from '../components/PersonForm.astro';
 ---
 
 <Layout>
@@ -8,37 +9,7 @@ import Layout from '../layouts/Layout.astro';
       <a href="/" class="btn btn-ghost btn-sm mb-4">← Back to List</a>
       <h1 class="text-3xl font-bold text-primary">Add New Person</h1>
     </div>
-
-    <form id="personForm" class="bg-base-100 p-6 rounded-lg shadow space-y-4">
-      <div class="form-control">
-        <label class="label"><span class="label-text">Name</span></label>
-        <input type="text" name="name" required class="input input-bordered" minlength="2" maxlength="32" />
-      </div>
-
-      <div class="form-control">
-        <label class="label"><span class="label-text">Email</span></label>
-        <input type="email" name="email" required class="input input-bordered" />
-      </div>
-
-      <div class="form-control">
-        <label class="label"><span class="label-text">Birth Date</span></label>
-        <input type="date" name="birthDate" required class="input input-bordered" />
-      </div>
-
-      <div class="divider">Phones</div>
-      <div id="phoneList" class="space-y-2">
-        <div class="flex gap-2">
-          <input type="text" placeholder="Number" class="input input-bordered flex-1 phone-number" required minlength="5" maxlength="20" />
-          <input type="text" placeholder="Region (e.g. US)" class="input input-bordered w-24 phone-region" required minlength="2" maxlength="2" />
-          <input type="text" placeholder="Type" class="input input-bordered w-32 phone-type" required />
-        </div>
-      </div>
-      <button type="button" id="addPhone" class="btn btn-xs btn-outline">Add Another Phone</button>
-
-      <div class="pt-6">
-        <button type="submit" class="btn btn-primary w-full">Create Person</button>
-      </div>
-    </form>
+     <PersonForm />
   </div>
 
   <script>
