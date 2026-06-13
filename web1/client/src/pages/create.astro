@@ -1,0 +1,91 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <div class="p-8 max-w-2xl mx-auto">
+    <div class="mb-6">
+      <a href="/" class="btn btn-ghost btn-sm mb-4">← Back to List</a>
+      <h1 class="text-3xl font-bold text-primary">Add New Person</h1>
+    </div>
+
+    <form id="personForm" class="bg-base-100 p-6 rounded-lg shadow space-y-4">
+      <div class="form-control">
+        <label class="label"><span class="label-text">Name</span></label>
+        <input type="text" name="name" required class="input input-bordered" minlength="2" maxlength="32" />
+      </div>
+
+      <div class="form-control">
+        <label class="label"><span class="label-text">Email</span></label>
+        <input type="email" name="email" required class="input input-bordered" />
+      </div>
+
+      <div class="form-control">
+        <label class="label"><span class="label-text">Birth Date</span></label>
+        <input type="date" name="birthDate" required class="input input-bordered" />
+      </div>
+
+      <div class="divider">Phones</div>
+      <div id="phoneList" class="space-y-2">
+        <div class="flex gap-2">
+          <input type="text" placeholder="Number" class="input input-bordered flex-1 phone-number" required minlength="5" maxlength="20" />
+          <input type="text" placeholder="Region (e.g. US)" class="input input-bordered w-24 phone-region" required minlength="2" maxlength="2" />
+          <input type="text" placeholder="Type" class="input input-bordered w-32 phone-type" required />
+        </div>
+      </div>
+      <button type="button" id="addPhone" class="btn btn-xs btn-outline">Add Another Phone</button>
+
+      <div class="pt-6">
+        <button type="submit" class="btn btn-primary w-full">Create Person</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    import { personApi } from '../lib/api';
+
+    const form = document.getElementById('personForm') as HTMLFormElement;
+    const phoneList = document.getElementById('phoneList')!;
+    const addPhoneBtn = document.getElementById('addPhone')!;
+
+    addPhoneBtn.addEventListener('click', () => {
+      const div = document.createElement('div');
+      div.className = 'flex gap-2';
+      div.innerHTML = `
+        <input type="text" placeholder="Number" class="input input-bordered flex-1 phone-number" required minlength="5" maxlength="20" />
+        <input type="text" placeholder="Region" class="input input-bordered w-24 phone-region" required minlength="2" maxlength="2" />
+        <input type="text" placeholder="Type" class="input input-bordered w-32 phone-type" required />
+        <button type="button" class="btn btn-square btn-error remove-phone">✕</button>
+      `;
+      phoneList.appendChild(div);
+      
+      div.querySelector('.remove-phone')?.addEventListener('click', () => div.remove());
+    });
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      
+      const phones = Array.from(phoneList.children).map(child => ({
+        number: (child.querySelector('.phone-number') as HTMLInputElement).value,
+        region: (child.querySelector('.phone-region') as HTMLInputElement).value,
+        type: (child.querySelector('.phone-type') as HTMLInputElement).value,
+      }));
+
+      const person = {
+        name: formData.get('name') as string,
+        email: formData.get('email') as string,
+        birthDate: formData.get('birthDate') as string,
+        phones,
+        properties: {},
+      };
+
+      try {
+        await personApi.create(person);
+        window.location.href = '/';
+      } catch (err) {
+        alert('Error creating person: ' + err);
+      }
+    });
+  </script>
+</Layout>

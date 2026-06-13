@@ -1,11 +1,91 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { personApi } from '../lib/api';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const { searchParams } = Astro.url;
+const page = parseInt(searchParams.get('page') || '0');
+const size = 10;
+
+let personsPage;
+let error = '';
+
+try {
+  personsPage = await personApi.findPage(page, size);
+} catch (e) {
+console.error(e)
+  error = 'Failed to load persons. Is the API running?';
+}
 ---
 
 <Layout>
-	<Welcome />
+  <div class="p-8">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-primary">Persons Management</h1>
+      <a href="/create" class="btn btn-primary">Add New Person</a>
+    </div>
+
+    {error && (
+      <div class="alert alert-error mb-6">
+        <span>{error}</span>
+      </div>
+    )}
+
+    <div class="overflow-x-auto bg-base-100 rounded-lg shadow">
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Birth Date</th>
+            <th>Phones</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {personsPage?.content.map((person) => (
+            <tr>
+              <td>{person.name}</td>
+              <td>{person.email}</td>
+              <td>{person.birthDate}</td>
+              <td>
+                {person.phones.map(p => (
+                  <div class="badge badge-ghost badge-sm mr-1">{p.number} ({p.type})</div>
+                ))}
+              </td>
+              <td class="flex gap-2">
+                <a href={`/edit/${person.id}`} class="btn btn-sm btn-info">Edit</a>
+                <button 
+                  class="btn btn-sm btn-error" 
+                  onclick={`if(confirm('Are you sure?')) { fetch('/api/v1/persons/${person.id}', { method: 'DELETE' }).then(() => window.location.reload()) }`}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+          {personsPage?.content.length === 0 && (
+            <tr>
+              <td colspan="5" class="text-center py-8 text-base-content/50">No persons found.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex justify-center mt-6 join">
+      <a 
+        href={`/persons?page=${page - 1}`} 
+        class={`join-item btn ${!personsPage?.hasPreviousPage ? 'btn-disabled' : ''}`}
+      >
+        Previous
+      </a>
+      <button class="join-item btn">Page {page + 1} of {personsPage?.pageCount || 1}</button>
+      <a 
+        href={`/persons?page=${page + 1}`} 
+        class={`join-item btn ${!personsPage?.hasNextPage ? 'btn-disabled' : ''}`}
+      >
+        Next
+      </a>
+    </div>
+  </div>
 </Layout>
