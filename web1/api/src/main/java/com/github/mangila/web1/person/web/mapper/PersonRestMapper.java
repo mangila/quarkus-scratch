@@ -1,8 +1,13 @@
 package com.github.mangila.web1.person.web.mapper;
 
 import com.github.mangila.web1.person.domain.Person;
+import com.github.mangila.web1.person.domain.model.*;
 import com.github.mangila.web1.person.web.model.PersonDto;
+import com.github.mangila.web1.person.web.model.PhoneDto;
 import jakarta.enterprise.context.ApplicationScoped;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @ApplicationScoped
 public final class PersonRestMapper implements RestMapper<Person, PersonDto> {
@@ -31,23 +36,23 @@ public final class PersonRestMapper implements RestMapper<Person, PersonDto> {
 
   @Override
   public PersonDto toDto(Person person) {
-    return new PersonDto(
-        idRestMapper.toDto(person.id()),
-        nameRestMapper.toDto(person.name()),
-        birthDateRestMapper.toDto(person.birthDate()),
-        emailRestMapper.toDto(person.email()),
-        phoneRestMapper.toDto(person.phones()),
-        propertiesRestMapper.toDto(person.properties()));
+    final String id = idRestMapper.toDto(person.id());
+    final String name = nameRestMapper.toDto(person.name());
+    final LocalDate birthDate = birthDateRestMapper.toDto(person.birthDate());
+    final String email = emailRestMapper.toDto(person.email());
+    final List<PhoneDto> phones = phoneRestMapper.toDto(person.phones());
+    final Map<String, String> properties = propertiesRestMapper.toDto(person.properties());
+    return new PersonDto(id, name, birthDate, email, phones, properties);
   }
 
   @Override
   public Person toDomain(PersonDto dto) {
-    return new Person(
-        idRestMapper.toDomain(dto.id()),
-        nameRestMapper.toDomain(dto.name()),
-        birthDateRestMapper.toDomain(dto.birthDate()),
-        emailRestMapper.toDomain(dto.email()),
-        phoneRestMapper.toDomain(dto.phones()),
-        propertiesRestMapper.toDomain(dto.properties()));
+    final Id id = idRestMapper.toDomain(dto.id());
+    final Name name = nameRestMapper.toDomain(dto.name());
+    final BirthDate birthDate = birthDateRestMapper.toDomain(dto.birthDate());
+    final Email email = emailRestMapper.toDomain(dto.email());
+    final PhoneCollection phones = phoneRestMapper.toDomain(dto.phones());
+    final Properties properties = propertiesRestMapper.toDomain(dto.properties());
+    return new Person(id, name, birthDate, email, phones, properties);
   }
 }

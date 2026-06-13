@@ -2,28 +2,28 @@ package com.github.mangila.web1.person.web.mapper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mangila.web1.person.domain.model.Properties;
+import com.github.mangila.web1.shared.ObjectMapperService;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Map;
 
 @ApplicationScoped
 public final class PropertiesRestMapper implements RestMapper<Properties, Map<String, String>> {
 
-  private final ObjectMapper objectMapper;
+  private final ObjectMapperService objectMapperService;
 
-  public PropertiesRestMapper(ObjectMapper objectMapper) {
-    this.objectMapper = objectMapper;
+  public PropertiesRestMapper(ObjectMapperService objectMapperService) {
+    this.objectMapperService = objectMapperService;
   }
 
   @Override
   public Properties toDomain(Map<String, String> propertiesAsMap) {
-    final JsonNode properties = objectMapper.valueToTree(propertiesAsMap);
+    final JsonNode properties = objectMapperService.valueToTree(propertiesAsMap);
     return Properties.newInstance(properties);
   }
 
   @Override
   public Map<String, String> toDto(Properties properties) {
-    return objectMapper.convertValue(properties.value(), new TypeReference<>() {});
+    return objectMapperService.convertValue(properties.value(), new TypeReference<>() {});
   }
 }

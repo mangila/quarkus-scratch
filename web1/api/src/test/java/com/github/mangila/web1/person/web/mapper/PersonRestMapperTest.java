@@ -6,6 +6,7 @@ import com.github.mangila.web1.person.PersonBuilder;
 import com.github.mangila.web1.person.PersonDtoBuilder;
 import com.github.mangila.web1.person.domain.Person;
 import com.github.mangila.web1.person.web.model.PersonDto;
+import com.github.mangila.web1.shared.ObjectMapperService;
 import com.github.mangila.web1.shared.UuidFactory;
 import io.quarkus.jackson.runtime.ObjectMapperProducer;
 import io.quarkus.test.component.QuarkusComponentTest;
@@ -20,7 +21,9 @@ import org.junit.jupiter.api.Test;
       BirthDateRestMapper.class,
       EmailRestMapper.class,
       PhoneCollectionRestMapper.class,
+      PhoneRestMapper.class,
       PropertiesRestMapper.class,
+      ObjectMapperService.class,
       ObjectMapperProducer.class
     })
 class PersonRestMapperTest {

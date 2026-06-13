@@ -6,6 +6,7 @@ import com.github.mangila.web1.person.PersonBuilder;
 import com.github.mangila.web1.person.PersonEntityBuilder;
 import com.github.mangila.web1.person.data.PersonEntity;
 import com.github.mangila.web1.person.domain.mapper.*;
+import com.github.mangila.web1.shared.ObjectMapperService;
 import io.quarkus.jackson.runtime.ObjectMapperProducer;
 import io.quarkus.test.component.QuarkusComponentTest;
 import jakarta.inject.Inject;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test;
       EmailMapper.class,
       PhoneCollectionMapper.class,
       PropertiesMapper.class,
+      ObjectMapperService.class,
       ObjectMapperProducer.class
     })
 class PersonMapperTest {

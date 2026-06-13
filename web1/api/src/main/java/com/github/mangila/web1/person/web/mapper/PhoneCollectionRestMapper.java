@@ -24,6 +24,7 @@ public final class PhoneCollectionRestMapper
 
   @Override
   public List<PhoneDto> toDto(PhoneCollection phoneCollection) {
-    return phoneCollection.value().stream().map(phoneRestMapper::toDto).toList();
+    final List<Phone> phones = phoneCollection.value();
+    return phones.stream().map(phoneRestMapper::toDto).toList();
   }
 }

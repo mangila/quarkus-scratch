@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.github.mangila.web1.person.PersonCreateRequestBuilder;
 import com.github.mangila.web1.person.domain.cqrs.PersonCreateCommand;
 import com.github.mangila.web1.person.web.model.PersonCreateRequest;
+import com.github.mangila.web1.shared.ObjectMapperService;
 import com.github.mangila.web1.shared.UuidFactory;
 import io.quarkus.jackson.runtime.ObjectMapperProducer;
 import io.quarkus.test.component.QuarkusComponentTest;
@@ -19,7 +20,9 @@ import org.junit.jupiter.api.Test;
       BirthDateRestMapper.class,
       EmailRestMapper.class,
       PhoneCollectionRestMapper.class,
+      PhoneRestMapper.class,
       PropertiesRestMapper.class,
+      ObjectMapperService.class,
       ObjectMapperProducer.class
     })
 class CreatePersonRestMapperTest {

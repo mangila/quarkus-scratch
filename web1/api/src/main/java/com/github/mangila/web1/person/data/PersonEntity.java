@@ -1,6 +1,7 @@
 package com.github.mangila.web1.person.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.github.mangila.ensure4j.Ensure;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import java.time.Instant;
@@ -25,7 +26,7 @@ public class PersonEntity {
   private String name;
 
   @Column(name = "birth_date", columnDefinition = "DATE", nullable = false)
-  public LocalDate birthDate;
+  private LocalDate birthDate;
 
   @Column(nullable = false, unique = true, columnDefinition = "TEXT")
   private String email;
@@ -62,12 +63,12 @@ public class PersonEntity {
       String email,
       JsonNode phones,
       JsonNode properties) {
-    this.id = id;
-    this.name = name;
-    this.birthDate = birthDate;
-    this.email = email;
-    this.phones = phones;
-    this.properties = properties;
+    this.id = Ensure.notNull(id, "id cannot be null");
+    this.name = Ensure.notBlank(name, "name cannot be null");
+    this.birthDate = Ensure.notNull(birthDate, "birthDate cannot be null");
+    this.email = Ensure.notBlank(email, "email cannot be null");
+    this.phones = Ensure.notNull(phones, "phones cannot be null");
+    this.properties = Ensure.notNull(properties, "properties cannot be null");
   }
 
   public UUID getId() {
