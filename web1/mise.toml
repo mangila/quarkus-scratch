@@ -47,7 +47,7 @@ run = [
 
 [tasks.megalint]
 description = "Megalint with Java flavor"
-run = "podman run --rm -v $(pwd):/tmp/lint:rw docker.io/oxsecurity/megalinter-java"
+run = "podman run --rm -v $(pwd):/tmp/lint:rw docker.io/oxsecurity/megalinter"
 
 [tasks.sonarqube]
 description = "Start SonarQube server on port 9050"

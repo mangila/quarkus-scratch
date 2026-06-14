@@ -18,17 +18,36 @@ ENABLE_LINTERS:
   - SQL_SQLFLUFF
   - YAML_YAMLLINT
   - MARKDOWN_MARKDOWNLINT
+  - JSON_PRETTIER
+
+EXCLUDED_DIRECTORIES:
+  - target
+  - build
+  - .quarkus
+  - .venv
+  - .idea
+  - .git
+  - node_modules
+  - .astro
+  - .scannerwork
+
+PRE_COMMANDS:
+  - command: npm install prettier-plugin-astro
+    secured_env: true
+    cwd: workspace
+  - command: npm install prettier-plugin-tailwindcss
+    secured_env: true
+    cwd: workspace
 
 JAVA_CHECKSTYLE_CONFIG_FILE: megalinter-config/google-checks.xml
 JAVA_PMD_CONFIG_FILE: megalinter-config/pmd-ruleset.xml
 SQL_SQLFLUFF_CONFIG_FILE: megalinter-config/sqlfluff.ini
-
-# Exclude generated/IDE/build/report directories
-FILTER_REGEX_EXCLUDE: (target/|build/|.quarkus/|.venv/|.idea/|.git/)
+JSON_PRETTIER_CONFIG_FILE: megalinter-config/.prettierrc.mjs
+JSON_PRETTIER_FILE_EXTENSIONS: [".astro"]
 
 # Reporting
-LOG_LEVEL: INFO
+LOG_LEVEL: DEBUG
 SARIF_REPORTER: true
-CONSOLE_REPORTER: false
+CONSOLE_REPORTER: true
 # Human-readable reports
 MARKDOWN_SUMMARY_REPORTER: true

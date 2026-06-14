@@ -1,39 +1,41 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { personApi } from '../lib/api';
+import Layout from "../layouts/Layout.astro";
+import { personApi } from "../lib/api";
 
 export const prerender = false;
 
 const { searchParams } = Astro.url;
-const page = parseInt(searchParams.get('page') || '0');
+const page = parseInt(searchParams.get("page") || "0");
 const size = 10;
 
 let personsPage;
-let error = '';
+let error = "";
 
 try {
-  console.log(Astro.url)
+  console.log(Astro.url);
   personsPage = await personApi.findPage(page, size);
 } catch (e) {
-console.error(e)
-  error = 'Failed to load persons. Is the API running?';
+  console.error(e);
+  error = "Failed to load persons. Is the API running?";
 }
 ---
 
 <Layout>
   <div class="p-8">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold text-primary">Persons Management</h1>
+    <div class="mb-6 flex items-center justify-between">
+      <h1 class="text-primary text-3xl font-bold">Persons Management</h1>
       <a href="/create" class="btn btn-primary">Add New Person</a>
     </div>
 
-    {error && (
-      <div class="alert alert-error mb-6">
-        <span>{error}</span>
-      </div>
-    )}
+    {
+      error && (
+        <div class="alert alert-error mb-6">
+          <span>{error}</span>
+        </div>
+      )
+    }
 
-    <div class="overflow-x-auto bg-base-100 rounded-lg shadow">
+    <div class="bg-base-100 overflow-x-auto rounded-lg shadow">
       <table class="table w-full">
         <thead>
           <tr>
@@ -45,47 +47,59 @@ console.error(e)
           </tr>
         </thead>
         <tbody>
-          {personsPage?.content.map((person) => (
-            <tr>
-              <td>{person.name}</td>
-              <td>{person.email}</td>
-              <td>{person.birthDate}</td>
-              <td>
-                {person.phones.map(p => (
-                  <div class="badge badge-ghost badge-sm mr-1">{p.number} ({p.type})</div>
-                ))}
-              </td>
-              <td class="flex gap-2">
-                <a href={`/edit?id=${person.id}`} class="btn btn-sm btn-info">Edit</a>
-                <button 
-                  class="btn btn-sm btn-error delete-btn" 
-                  data-id={person.id}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-          {personsPage?.content.length === 0 && (
-            <tr>
-              <td colspan="5" class="text-center py-8 text-base-content/50">No persons found.</td>
-            </tr>
-          )}
+          {
+            personsPage?.content.map((person) => (
+              <tr>
+                <td>{person.name}</td>
+                <td>{person.email}</td>
+                <td>{person.birthDate}</td>
+                <td>
+                  {person.phones.map((p) => (
+                    <div class="badge badge-ghost badge-sm mr-1">
+                      {p.number} ({p.type})
+                    </div>
+                  ))}
+                </td>
+                <td class="flex gap-2">
+                  <a href={`/edit?id=${person.id}`} class="btn btn-sm btn-info">
+                    Edit
+                  </a>
+                  <button
+                    class="btn btn-sm btn-error delete-btn"
+                    data-id={person.id}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          }
+          {
+            personsPage?.content.length === 0 && (
+              <tr>
+                <td colspan="5" class="text-base-content/50 py-8 text-center">
+                  No persons found.
+                </td>
+              </tr>
+            )
+          }
         </tbody>
       </table>
     </div>
 
-    <div class="flex justify-center mt-6 join">
-      <a 
+    <div class="join mt-6 flex justify-center">
+      <a
         href={`/?page=${page - 1}`}
-        class={`join-item btn ${!personsPage?.hasPreviousPage ? 'btn-disabled' : ''}`}
+        class={`join-item btn ${!personsPage?.hasPreviousPage ? "btn-disabled" : ""}`}
       >
         Previous
       </a>
-      <button class="join-item btn">Page {page + 1} of {personsPage?.pageCount || 1}</button>
-      <a 
+      <button class="join-item btn"
+        >Page {page + 1} of {personsPage?.pageCount || 1}</button
+      >
+      <a
         href={`/?page=${page + 1}`}
-        class={`join-item btn ${!personsPage?.hasNextPage ? 'btn-disabled' : ''}`}
+        class={`join-item btn ${!personsPage?.hasNextPage ? "btn-disabled" : ""}`}
       >
         Next
       </a>
@@ -94,18 +108,18 @@ console.error(e)
 </Layout>
 
 <script>
-  import { personApi } from '../lib/api';
+  import { personApi } from "../lib/api";
 
-  const buttons = document.querySelectorAll('.delete-btn');
-  
-  buttons.forEach(button => {
-    button.addEventListener('click', async (e) => {
-      const id = button.getAttribute('data-id');
-      
-      if (confirm('Are you sure?')) {
+  const buttons = document.querySelectorAll(".delete-btn");
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", async (e) => {
+      const id = button.getAttribute("data-id");
+
+      if (confirm("Are you sure?")) {
         try {
           await personApi.delete(id);
-          button.closest('tr')?.remove();
+          button.closest("tr")?.remove();
         } catch (err) {
           console.error("Delete failed", err);
         }

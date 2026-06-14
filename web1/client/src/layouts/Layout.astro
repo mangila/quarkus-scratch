@@ -1,25 +1,26 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body class="bg-base-200 min-h-screen">
-        <nav class="navbar bg-primary text-primary-content shadow-lg">
-            <div class="flex-1">
-                <a href="/" class="btn btn-ghost normal-case text-xl">Quarkus + Astro</a>
-            </div>
-        </nav>
-        <main class="container mx-auto">
-		    <slot />
-        </main>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro Basics</title>
+  </head>
+  <body class="bg-base-200 min-h-screen">
+    <nav class="navbar bg-primary text-primary-content shadow-lg">
+      <div class="flex-1">
+        <a href="/" class="btn btn-ghost text-xl normal-case">Quarkus + Astro</a
+        >
+      </div>
+    </nav>
+    <main class="container mx-auto">
+      <slot />
+    </main>
+  </body>
 </html>
 <style>
-@import "tailwindcss";
-@plugin "daisyui";
+  @import "tailwindcss";
+  @plugin "daisyui";
 </style>
