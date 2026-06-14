@@ -23,16 +23,14 @@ const formPerson = ref<PersonDto>({
 });
 
 watch(() => props.person, (p) => {
-  if (p) {
-    formPerson.value = {
-      id: p.id,
-      name: p.name,
-      email: p.email,
-      birthDate: p.birthDate,
-      phones: p.phones,
-      properties: p.properties,
-    };
-  }
+  formPerson.value = {
+    id: p.id,
+    name: p.name,
+    email: p.email,
+    birthDate: p.birthDate,
+    phones: p.phones,
+    properties: p.properties,
+  };
 }, {immediate: true});
 
 const addPhone = () => {

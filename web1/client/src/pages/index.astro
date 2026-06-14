@@ -1,28 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { personApi } from "../lib/api";
-import PersonList from "../components/PersonList.vue";
-
-const { searchParams } = Astro.url;
-const page = parseInt(searchParams.get("page") || "0");
-const size = 10;
-
-let personsPage;
-let error = "";
-
-try {
-  personsPage = await personApi.findPage(page, size);
-} catch (e) {
-  console.error(e);
-  error = "Failed to load persons. Is the API running?";
-}
+import PersonTableView from "../components/PersonTableView.vue";
 ---
 
 <Layout>
-  <PersonList
-    client:load
-    initialPersonsPage={personsPage}
-    initialPage={page}
-    pageSize={size}
-  />
+  <div class="m-4 flex items-center justify-between">
+    <h1 class="text-primary text-3xl font-bold">Persons Management</h1>
+    <a href="/create" class="btn btn-primary">Add New Person</a>
+  </div>
+  <PersonTableView client:load />
 </Layout>

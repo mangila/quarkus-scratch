@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PersonForm from "./PersonForm.vue";
-import {onMounted, ref, watch, watchEffect} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import {personApi, type PersonDto} from "../lib/api.ts";
 
 interface Props {
