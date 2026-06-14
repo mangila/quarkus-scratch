@@ -3,7 +3,7 @@ package com.github.mangila.web1.person.web;
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
-import com.github.mangila.web1.TestResourcesUtils;
+import com.github.mangila.web1.ResourcesUtils;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpHeaders;
@@ -166,7 +166,7 @@ class PersonResourceValidationTest {
           "data/validation/person-create-null-email.json",
         })
     void shouldValidatePersonCreateRequest(String resourceName) {
-      final String body = TestResourcesUtils.getTestResource(resourceName);
+      final String body = ResourcesUtils.getTestResource(resourceName);
       final String jsonBody =
           given()
               .contentType(ContentType.JSON)
@@ -207,7 +207,7 @@ class PersonResourceValidationTest {
           "data/validation/person-dto-null-properties.json",
         })
     void shouldValidatePersonDto(String resourceName) {
-      final String body = TestResourcesUtils.getTestResource(resourceName);
+      final String body = ResourcesUtils.getTestResource(resourceName);
       final String jsonBody =
           given()
               .body(body)
@@ -239,7 +239,7 @@ class PersonResourceValidationTest {
           "data/validation/person-create-many-empty-name.json"
         })
     void shouldValidateBulkRequest(String resourceName) {
-      final String body = TestResourcesUtils.getTestResource(resourceName);
+      final String body = ResourcesUtils.getTestResource(resourceName);
       final String jsonBody =
           given()
               .contentType(ContentType.JSON)

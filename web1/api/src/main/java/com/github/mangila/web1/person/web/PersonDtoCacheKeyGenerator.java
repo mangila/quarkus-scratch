@@ -8,7 +8,7 @@ public class PersonDtoCacheKeyGenerator implements CacheKeyGenerator {
 
   @Override
   public Object generate(Method method, Object... methodParams) {
-    PersonDto dto = (PersonDto) methodParams[0];
+    final PersonDto dto = (PersonDto) methodParams[0];
     return dto.id();
   }
 }

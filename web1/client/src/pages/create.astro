@@ -1,66 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import PersonForm from "../components/PersonForm.astro";
+import PersonView from "../components/PersonView.vue";
 ---
 
 <Layout>
-  <div class="mx-auto max-w-2xl p-8">
-    <div class="mb-6">
-      <a href="/" class="btn btn-ghost btn-sm mb-4">← Back to List</a>
-      <h1 class="text-primary text-3xl font-bold">Add New Person</h1>
-    </div>
-    <PersonForm />
-  </div>
-
-  <script>
-    import { personApi } from "../lib/api";
-
-    const form = document.getElementById("personForm") as HTMLFormElement;
-    const phoneList = document.getElementById("phoneList")!;
-    const addPhoneBtn = document.getElementById("addPhone")!;
-
-    addPhoneBtn.addEventListener("click", () => {
-      const div = document.createElement("div");
-      div.className = "flex gap-2";
-      div.innerHTML = `
-        <input type="text" placeholder="Number" class="input input-bordered flex-1 phone-number" required minlength="5" maxlength="20" />
-        <input type="text" placeholder="Region" class="input input-bordered w-24 phone-region" required minlength="2" maxlength="2" />
-        <input type="text" placeholder="Type" class="input input-bordered w-32 phone-type" required />
-        <button type="button" class="btn btn-square btn-error remove-phone">✕</button>
-      `;
-      phoneList.appendChild(div);
-
-      div
-        .querySelector(".remove-phone")
-        ?.addEventListener("click", () => div.remove());
-    });
-
-    form?.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-
-      const phones = Array.from(phoneList.children).map((child) => ({
-        number: (child.querySelector(".phone-number") as HTMLInputElement)
-          .value,
-        region: (child.querySelector(".phone-region") as HTMLInputElement)
-          .value,
-        type: (child.querySelector(".phone-type") as HTMLInputElement).value,
-      }));
-
-      const person = {
-        name: formData.get("name") as string,
-        email: formData.get("email") as string,
-        birthDate: formData.get("birthDate") as string,
-        phones,
-        properties: {},
-      };
-
-      try {
-        await personApi.create(person);
-        window.location.href = "/";
-      } catch (err) {
-        alert("Error creating person: " + err);
-      }
-    });
-  </script>
+  <PersonView client:load title="Create Person" />
 </Layout>
