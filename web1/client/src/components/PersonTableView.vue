@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { personApi, type PersonDtoPage } from '../lib/api';
-import PersonList from './PersonList.vue';
+import PersonTable from './PersonTable.vue';
 
 const personsPage = ref<PersonDtoPage | null>(null);
 const page = ref(0);
@@ -53,7 +53,7 @@ onMounted(() => {
       <span>{{ error }}</span>
     </div>
     
-    <PersonList 
+    <PersonTable
       v-if="personsPage"
       :persons-page="personsPage"
       :page="page"
